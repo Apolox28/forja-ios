@@ -15,7 +15,27 @@ struct ExerciseAnimationView: UIViewRepresentable {
     var patternKey: String { ExerciseSeed.pattern(for: exercise).rawValue }
     var equipmentKey: String { ExerciseSeed.animationEquipment(exercise.equipment) }
 
+    /// Para ejercicios personalizados, resalta el músculo elegido por el usuario.
+    var muscleKey: String {
+        guard exercise.isCustom else { return "" }
+        switch exercise.muscle {
+        case .chest: return "chest"
+        case .back: return "back"
+        case .shoulders: return "shoulders"
+        case .biceps: return "biceps"
+        case .triceps: return "triceps"
+        case .forearms: return "forearms"
+        case .quads: return "quads"
+        case .hamstrings: return "hamstrings"
+        case .glutes: return "glutes"
+        case .calves: return "calves"
+        case .core: return "core"
+        case .cardio, .fullBody: return ""
+        }
+    }
+
     func makeUIView(context: Context) -> WKWebView {
+        // (las animaciones se dibujan a 60 fps dentro de la vista web)
         let config = WKWebViewConfiguration()
         let web = WKWebView(frame: .zero, configuration: config)
         web.isOpaque = false
@@ -47,7 +67,7 @@ struct ExerciseAnimationView: UIViewRepresentable {
         canvas{display:block;width:100vw;height:100vw;border-radius:16px}</style>
         </head><body><canvas id="c"></canvas>
         <script>\(ExerciseAnimationView.script)</script>
-        <script>FORJA.animate(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', 2600);</script>
+        <script>FORJA.animate(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', 3000, '\(muscleKey)');</script>
         </body></html>
         """
         web.loadHTMLString(html, baseURL: nil)
