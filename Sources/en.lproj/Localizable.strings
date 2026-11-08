@@ -1,0 +1,191 @@
+/* Forja — English translation. Keys are the Spanish source strings. */
+
+/* Tabs */
+"Inicio" = "Home";
+"Entrenar" = "Workout";
+"Ejercicios" = "Exercises";
+"Progreso" = "Progress";
+"Perfil" = "Profile";
+
+/* Home */
+"Historial" = "History";
+"Esta semana" = "This week";
+"%lld de %lld entrenamientos" = "%lld of %lld workouts";
+"Racha" = "Streak";
+"%lld sem." = "%lld wk";
+"Aún no hay entrenamientos. Ve a «Entrenar» para empezar el primero." = "No workouts yet. Go to “Workout” to start your first one.";
+"Sin resultados." = "No results.";
+"Buscar entrenamiento o ejercicio" = "Search workout or exercise";
+"Calendario" = "Calendar";
+"Entrenamientos del mes" = "This month's workouts";
+"Ninguno este mes" = "None this month";
+"Entrenamientos" = "Workouts";
+"Tiempo" = "Time";
+
+/* Workout detail */
+"Entrenamiento eliminado" = "Workout deleted";
+"Duración" = "Duration";
+"Volumen" = "Volume";
+"Series" = "Sets";
+"Repetir este entrenamiento" = "Repeat this workout";
+"Editar entrenamiento" = "Edit workout";
+"Guardar como rutina" = "Save as routine";
+"Compartir resumen" = "Share summary";
+"Eliminar entrenamiento" = "Delete workout";
+"¿Eliminar este entrenamiento?" = "Delete this workout?";
+"Eliminar" = "Delete";
+"Cancelar" = "Cancel";
+"Guardar" = "Save";
+"Rutina guardada" = "Routine saved";
+"La encontrarás en la pestaña «Entrenar»." = "You'll find it in the “Workout” tab.";
+"Superserie" = "Superset";
+"Nombre" = "Name";
+"Hora de inicio" = "Start time";
+"Hora de fin" = "End time";
+"Notas" = "Notes";
+
+/* Active workout */
+"Entrenamiento" = "Workout";
+"Nombre del entrenamiento" = "Workout name";
+"Notas del entrenamiento" = "Workout notes";
+"Notas del ejercicio" = "Exercise notes";
+"Empieza añadiendo un ejercicio" = "Start by adding an exercise";
+"Añadir ejercicio" = "Add exercise";
+"Añadir serie" = "Add set";
+"Descartar entrenamiento" = "Discard workout";
+"¿Descartar este entrenamiento?" = "Discard this workout?";
+"Descartar" = "Discard";
+"Se perderán todas las series registradas." = "All logged sets will be lost.";
+"Terminar" = "Finish";
+"Listo" = "Done";
+"¿Terminar el entrenamiento?" = "Finish workout?";
+"Terminar y guardar" = "Finish and save";
+"Solo se guardarán las series marcadas como completadas." = "Only sets marked as completed will be saved.";
+"No hay series completadas" = "No completed sets";
+"Entendido" = "Got it";
+"Marca al menos una serie con ✓ para guardar el entrenamiento, o descártalo." = "Mark at least one set with ✓ to save the workout, or discard it.";
+"SERIE" = "SET";
+"ANTERIOR" = "PREVIOUS";
+"REPS" = "REPS";
+"SEG" = "SEC";
+"KM" = "KM";
+"Descanso: %@" = "Rest: %@";
+"Superserie con…" = "Superset with…";
+"Quitar de la superserie" = "Remove from superset";
+"Mover arriba" = "Move up";
+"Mover abajo" = "Move down";
+"Quitar ejercicio" = "Remove exercise";
+"Sin RPE" = "No RPE";
+"Descanso" = "Rest";
+"Saltar" = "Skip";
+"Ya tienes un entrenamiento en curso" = "You already have a workout in progress";
+"Continuar el actual" = "Continue current";
+"Descartar y empezar nuevo" = "Discard and start new";
+"¿Qué quieres hacer con él?" = "What do you want to do with it?";
+"Reanudar" = "Resume";
+
+/* Summary */
+"Resumen" = "Summary";
+"¡Buen trabajo!" = "Great job!";
+"Has completado tu entrenamiento nº %lld" = "You completed workout #%lld";
+"Récords personales" = "Personal records";
+"Cerrar" = "Close";
+
+/* Routines */
+"Empezar entrenamiento vacío" = "Start empty workout";
+"Nueva rutina" = "New routine";
+"Explorar programas predefinidos" = "Explore ready-made programs";
+"Crea una rutina o añade un programa predefinido para empezar más rápido." = "Create a routine or add a ready-made program to get started faster.";
+"Mis rutinas" = "My routines";
+"Editar" = "Edit";
+"Duplicar" = "Duplicate";
+"Sin ejercicios" = "No exercises";
+"Empezar rutina" = "Start routine";
+"Editar rutina" = "Edit routine";
+"Nombre de la rutina" = "Routine name";
+"Carpeta (opcional)" = "Folder (optional)";
+"Notas (opcional)" = "Notes (optional)";
+"Programas" = "Programs";
+"Añadir a mis rutinas" = "Add to my routines";
+"Programa añadido" = "Program added";
+
+/* Exercise picker / library */
+"Añadir ejercicios" = "Add exercises";
+"Buscar ejercicio" = "Search exercise";
+"Músculo" = "Muscle";
+"Todos" = "All";
+"Equipamiento" = "Equipment";
+"Todo" = "All";
+"Crear ejercicio personalizado" = "Create custom exercise";
+"Recientes" = "Recent";
+"Todos (%lld)" = "All (%lld)";
+"Añadir (%lld)" = "Add (%lld)";
+"Nuevo ejercicio" = "New exercise";
+"Nombre del ejercicio" = "Exercise name";
+"Músculo principal" = "Primary muscle";
+"Tipo de registro" = "Tracking type";
+"Editar ejercicio" = "Edit exercise";
+"Eliminar ejercicio" = "Delete exercise";
+"¿Eliminar este ejercicio?" = "Delete this exercise?";
+"No se puede eliminar porque se usa en tu historial o en rutinas." = "It can't be deleted because it's used in your history or routines.";
+"1RM estimado" = "Estimated 1RM";
+"Peso máximo" = "Heaviest weight";
+"Mejor serie (vol.)" = "Best set (vol.)";
+"Reps máximas" = "Most reps";
+"Veces realizado" = "Times performed";
+"Volumen total" = "Total volume";
+"Métrica" = "Metric";
+"Mejor peso por repeticiones" = "Best weight by reps";
+"Todavía no has hecho este ejercicio." = "You haven't done this exercise yet.";
+"Ejercicio eliminado" = "Deleted exercise";
+
+/* Progress */
+"Total" = "Total";
+"Entrenamientos por semana" = "Workouts per week";
+"Series por músculo · últimos 30 días" = "Sets per muscle · last 30 days";
+"Sin datos todavía" = "No data yet";
+"Medidas corporales" = "Body measurements";
+"Añadir" = "Add";
+"Medida" = "Measurement";
+"Registra tu peso y medidas para ver tu evolución." = "Log your weight and measurements to see your progress.";
+"Nueva medida" = "New measurement";
+"Fecha" = "Date";
+"% grasa corporal" = "Body fat %";
+
+/* Profile */
+"Todas las funciones incluidas · sin suscripción" = "All features included · no subscription";
+"Ajustes" = "Settings";
+"Unidad de peso" = "Weight unit";
+"Objetivo semanal: %lld días" = "Weekly goal: %lld days";
+"Idioma de la app (Español / English)" = "App language (Español / English)";
+"Notificaciones del descanso" = "Rest notifications";
+"Herramientas" = "Tools";
+"Calculadora de 1RM" = "1RM calculator";
+"Calculadora de discos" = "Plate calculator";
+"Series de calentamiento" = "Warm-up sets";
+"Pasar mis datos desde Hevy" = "Bring my data from Hevy";
+"En Hevy: Perfil → Ajustes → Exportar e importar datos → Exportar entrenamientos. Guarda el archivo .csv en Archivos (o Google Drive) e impórtalo aquí." = "In Hevy: Profile → Settings → Export & Import Data → Export workouts. Save the .csv file to Files (or Google Drive) and import it here.";
+"Importar CSV de Hevy" = "Import Hevy CSV";
+"Copia de seguridad" = "Backup";
+"Puedes guardar la copia en iCloud Drive, Google Drive o enviártela por correo. Los datos se guardan solo en este iPhone." = "You can save the backup to iCloud Drive, Google Drive or email it to yourself. Data is stored only on this iPhone.";
+"Crear copia de seguridad (JSON)" = "Create backup (JSON)";
+"Restaurar copia de seguridad" = "Restore backup";
+"Exportar entrenamientos (CSV)" = "Export workouts (CSV)";
+"Borrar todos los datos" = "Delete all data";
+"¿Borrar todos los datos?" = "Delete all data?";
+"Borrar todo" = "Delete everything";
+"Se eliminarán entrenamientos, rutinas, medidas y ejercicios personalizados. No se puede deshacer." = "Workouts, routines, measurements and custom exercises will be deleted. This can't be undone.";
+"Acerca de" = "About";
+"Versión" = "Version";
+"Ejercicios en la biblioteca" = "Exercises in library";
+
+/* Tools */
+"Tu serie" = "Your set";
+"Repeticiones" = "Reps";
+"Porcentajes" = "Percentages";
+"Barra" = "Bar";
+"Discos por lado" = "Plates per side";
+"Peso de tu serie efectiva" = "Working set weight";
+"Calentamiento sugerido" = "Suggested warm-up";
+"Serie efectiva" = "Working set";
+"Calentamiento" = "Warm-up";
