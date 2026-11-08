@@ -117,13 +117,17 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   function dirS(a) { return V(Math.sin(rad(a)), -Math.cos(rad(a)), 0); }          // plano sagital
   function dirF(a, sg) { return V(0, -Math.cos(rad(a)), sg * Math.sin(rad(a))); } // plano frontal
 
+  function num(v) { return typeof v === 'boolean' ? (v ? 1 : 0) : v; }
   function mixVal(a, b, t) {
+    a = num(a); b = num(b);
+    if (typeof a === 'number' && b === undefined) return lerp(a, 0, t);
+    if (a === undefined && typeof b === 'number') return lerp(0, b, t);
     if (typeof a === 'number' && typeof b === 'number') return lerp(a, b, t);
     if (Array.isArray(a) && Array.isArray(b)) return a.map(function (v, i) { return mixVal(v, b[i], t); });
     if (a && b && typeof a === 'object' && typeof b === 'object') {
       var r = {}, k;
-      for (k in a) r[k] = (k in b) ? mixVal(a[k], b[k], t) : a[k];
-      for (k in b) if (!(k in r)) r[k] = b[k];
+      for (k in a) r[k] = (k in b) ? mixVal(a[k], b[k], t) : (typeof num(a[k]) === 'number' && !Array.isArray(a[k]) ? mixVal(a[k], undefined, t) : a[k]);
+      for (k in b) if (!(k in r)) r[k] = (typeof num(b[k]) === 'number' && !Array.isArray(b[k])) ? mixVal(undefined, b[k], t) : b[k];
       return r;
     }
     return t < 0.5 ? a : b;
@@ -155,7 +159,10 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       else if (A.rel) target = sh.clone().add(V(A.rel[0], A.rel[1], (A.rel[2] || 0) * sg));
       else if (A.chest) target = j.shoC.clone().add(j.fwd.clone().multiplyScalar(0.13)).add(j.up.clone().multiplyScalar(-0.12)).add(V(0, 0, -sg * 0.05));
       if (target) {
-        if (A.straight) target = sh.clone().add(target.clone().sub(sh).normalize().multiplyScalar(UA + FA - 0.005));
+        if (A.straight) {
+          var full = sh.clone().add(target.clone().sub(sh).normalize().multiplyScalar(UA + FA - 0.005));
+          target = target.clone().lerp(full, clamp(num(A.straight), 0, 1));
+        }
         var pole = A.pole ? V(A.pole[0], A.pole[1], (A.pole[2] || 0) * sg)
           : j.fwd.clone().multiplyScalar(-0.6).add(j.up.clone().multiplyScalar(-1)).add(V(0, 0, sg * 0.35));
         var r = ik(sh, target, UA, FA, pole);
@@ -449,6 +456,22 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     };
   }
 
+  function machineStack(parent, x, z, rotY) {
+    var g = new T.Group(), M = mats();
+    g.position.set(x, 0, z); g.rotation.y = rotY || 0;
+    box(g, 0.42, 0.06, 0.46, M.frame, 0, 0.03, 0);
+    box(g, 0.04, 1.45, 0.42, M.frame, -0.17, 0.75, 0);
+    box(g, 0.04, 1.45, 0.42, M.frame, 0.17, 0.75, 0);
+    box(g, 0.38, 0.05, 0.42, M.frame, 0, 1.48, 0);
+    box(g, 0.38, 1.4, 0.02, M.frame, 0, 0.75, -0.2);
+    var stack = new T.Group(); g.add(stack);
+    for (var i = 0; i < 12; i++) box(stack, 0.28, 0.045, 0.2, M.stack, 0, 0.1 + i * 0.05, 0);
+    cyl(g, 0.008, 1.35, M.metal).position.set(-0.07, 0.75, 0);
+    cyl(g, 0.008, 1.35, M.metal).position.set(0.07, 0.75, 0);
+    parent.add(g);
+    return { group: g, stack: stack, compact: true };
+  }
+
   // ---------------------------------------------------------------------------
   //  Ejercicios (posturas A = inicio, B = trabajo)
   // ---------------------------------------------------------------------------
@@ -476,25 +499,25 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   def('lunge', { p: ['quads', 'glutes'], s: ['hams'], load: 'hands', smith: true,
     A: { hip: [-0.03, 0.93], torso: 2, legsR: { ik: [0.36, 0.08] }, legsL: { ik: [-0.42, 0.13], foot: 35 }, arms: { rel: [0.02, -0.62, 0.04] } },
     B: { hip: [-0.03, 0.55], torso: 4, legsR: { ik: [0.36, 0.08] }, legsL: { ik: [-0.42, 0.13], foot: 35 }, arms: { rel: [0.02, -0.62, 0.04] } } });
-  def('legPress', { p: ['quads', 'glutes'], s: ['hams'], load: 'sled', scene: ['legPress'], cam: { dist: 1.2, az: 40 },
+  def('legPress', { p: ['quads', 'glutes'], s: ['hams'], load: 'sled', scene: ['legPress'], cam: { dist: 0.92, az: 30 },
     A: { hip: [-0.32, 0.55], torso: -52, legs: { ik: [0.12, 0.78], fw: 0.15, foot: -45 }, arms: { ik: [-0.15, 0.5], gw: 0.32 } },
     B: { hip: [-0.32, 0.55], torso: -52, legs: { ik: [0.5, 1.14], fw: 0.15, foot: -45 }, arms: { ik: [-0.15, 0.5], gw: 0.32 } } });
-  def('legExt', { p: ['quads'], load: 'machine', stack: true, scene: ['legExt'],
+  def('legExt', { p: ['quads'], load: 'machine', stack: true, scene: ['legExt'], machinePos: [-0.45, -0.62, 0],
     A: { hip: [-0.08, 0.58], torso: -10, legs: { th: 90, sh: 8 }, arms: { ik: [0.0, 0.52], gw: 0.3 } },
     B: { hip: [-0.08, 0.58], torso: -10, legs: { th: 90, sh: 86 }, arms: { ik: [0.0, 0.52], gw: 0.3 } } });
-  def('legCurl', { p: ['hams'], s: ['calves'], load: 'machine', stack: true, scene: ['legCurl'],
+  def('legCurl', { p: ['hams'], s: ['calves'], load: 'machine', stack: true, scene: ['legCurl'], machinePos: [0.9, -0.55, 0],
     A: { hip: [-0.05, 0.63], torso: 91, legs: { th: -88, sh: -90, footFlip: true }, arms: { ik: [0.62, 0.5], gw: 0.25 } },
     B: { hip: [-0.05, 0.63], torso: 91, legs: { th: -88, sh: -185, footFlip: true }, arms: { ik: [0.62, 0.5], gw: 0.25 } } });
   def('calf', { p: ['calves'], load: 'hands', stack: true, scene: ['step'],
     A: { hip: [0.0, 0.95], torso: 0, legs: { toes: [0.13, 0.12], foot: -18 }, arms: { rel: [0.02, -0.62, 0.05] }, calf: true },
     B: { hip: [0.0, 1.05], torso: 0, legs: { toes: [0.13, 0.12], foot: 32 }, arms: { rel: [0.02, -0.62, 0.05] }, calf: true } });
-  def('seatedCalf', { p: ['calves'], load: 'machine', stack: true, scene: ['seatedCalf'],
+  def('seatedCalf', { p: ['calves'], load: 'machine', stack: true, scene: ['seatedCalf'], machinePos: [-0.6, -0.55, 0],
     A: { hip: [-0.2, 0.6], torso: 0, legs: { toes: [0.42, 0.14], foot: -15, pole: [1, 0.6, 0] }, arms: { ik: [0.2, 0.68], gw: 0.25 } },
     B: { hip: [-0.2, 0.6], torso: 0, legs: { toes: [0.42, 0.14], foot: 30, pole: [1, 0.6, 0] }, arms: { ik: [0.2, 0.72], gw: 0.25 } } });
   def('hipThrust', { p: ['glutes'], s: ['hams', 'quads'], load: 'hip', stack: true, scene: ['thrustBench'],
     A: { hip: [-0.05, 0.27], torso: -63, legs: { ik: [0.42, 0.08], fw: 0.17 }, arms: { bar: 'hip', pole: [0, -1, 0.4] } },
     B: { hip: [0.0, 0.6], torso: -100, legs: { ik: [0.42, 0.08], fw: 0.17 }, arms: { bar: 'hip', pole: [0, -1, 0.4] } } });
-  def('gluteKickback', { p: ['glutes'], s: ['hams'], load: 'ankle', stack: true, scene: ['towerFront'],
+  def('gluteKickback', { p: ['glutes'], s: ['hams'], load: 'ankle', stack: true, scene: ['towerFront'], cam: { az: 6 },
     A: { hip: [0, 0.96], torso: 22, legsL: FEET, legsR: { th: 2, sh: 0 }, arms: { ik: [0.42, 1.18], gw: 0.2 } },
     B: { hip: [0, 0.96], torso: 22, legsL: FEET, legsR: { th: -42, sh: -30 }, arms: { ik: [0.42, 1.18], gw: 0.2 } } });
 
@@ -511,12 +534,12 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   def('pullover', { p: ['lats', 'pecs'], s: ['triceps'], load: 'hands', scene: ['bench'], liftAt: 0, cam: { y: 0.75 },
     A: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.58, 0.08], fw: 0.24 }, arms: { ua: 178, fa: 182 } },
     B: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.58, 0.08], fw: 0.24 }, arms: { ua: 262, fa: 268 } } });
-  def('chestPress', { p: ['pecs'], s: ['triceps', 'delts'], load: 'machine', stack: true, scene: ['chestPress'],
+  def('chestPress', { p: ['pecs'], s: ['triceps', 'delts'], load: 'machine', stack: true, scene: ['chestPress'], machinePos: [-0.7, -0.5, 0],
     A: { hip: [-0.1, 0.56], torso: -8, legs: { ik: [0.4, 0.08], fw: 0.17 }, arms: { ik: [0.15, 1.22], gw: 0.28, pole: [-1, -0.4, 0.5] } },
     B: { hip: [-0.1, 0.56], torso: -8, legs: { ik: [0.4, 0.08], fw: 0.17 }, arms: { ik: [0.6, 1.24], gw: 0.25, pole: [-1, -0.4, 0.5] } } });
   def('cableFly', { p: ['pecs'], s: ['delts'], load: 'twinCable', stack: true, cam: { az: 55, dist: 1.1 },
-    A: { hip: [0, 0.96], torso: 14, legsL: { ik: [-0.18, 0.08] }, legsR: { ik: [0.22, 0.08] }, arms: { ik: [-0.02, 1.58, 0.78], pole: [-0.4, -0.5, 0.6] } },
-    B: { hip: [0, 0.96], torso: 14, legsL: { ik: [-0.18, 0.08] }, legsR: { ik: [0.22, 0.08] }, arms: { ik: [0.5, 1.12, 0.07], pole: [-0.4, -0.5, 0.6] } } });
+    A: { hip: [0, 0.96], torso: 14, legsL: { ik: [-0.18, 0.08] }, legsR: { ik: [0.22, 0.08] }, arms: { ik: [0.24, 1.47, 0.74], pole: [-0.6, 0.1, 0.8] } },
+    B: { hip: [0, 0.96], torso: 14, legsL: { ik: [-0.18, 0.08] }, legsR: { ik: [0.22, 0.08] }, arms: { ik: [0.56, 1.16, 0.08], pole: [-0.6, 0.1, 0.8] } } });
   def('dip', { p: ['triceps', 'pecs'], s: ['delts'], load: 'none', scene: ['dipStation'], liftAt: 0,
     A: { hip: [-0.02, 1.33], torso: 6, legs: { rel: [-0.28, -0.72] }, arms: { ik: [0.0, 1.26], gw: 0.27, pole: [-1, 0, 0.2] } },
     B: { hip: [-0.06, 0.98], torso: 22, legs: { rel: [-0.28, -0.72] }, arms: { ik: [0.0, 1.26], gw: 0.27, pole: [-1, 0, 0.2] } } });
@@ -526,11 +549,11 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
 
   // ---- Espalda ----
   def('row', { p: ['lats', 'traps'], s: ['biceps', 'delts', 'lowback'], load: 'hands',
-    A: { hip: [-0.15, 0.87], torso: 66, legs: FEET, arms: { ik: [0.27, 0.48], gw: 0.27, straight: true } },
-    B: { hip: [-0.15, 0.87], torso: 66, legs: FEET, arms: { ik: [0.12, 0.8], gw: 0.27, pole: [-1, 0.4, 0.5] } } });
+    A: { hip: [-0.15, 0.87], torso: 64, legs: FEET, arms: { ik: [0.3, 0.47], gw: 0.27, pole: [-1, 0.5, 0.35] } },
+    B: { hip: [-0.15, 0.87], torso: 64, legs: FEET, arms: { ik: [0.14, 0.82], gw: 0.27, pole: [-1, 0.5, 0.35] } } });
   def('dbRow', { p: ['lats'], s: ['biceps', 'traps'], load: 'handR', scene: ['rowBench'], cam: { az: 25 },
     A: { hip: [-0.1, 0.78], torso: 80, legsL: { ik: [-0.48, 0.5], pole: [1, -1, 0] }, legsR: { ik: [0.0, 0.08, 0.32] },
-      armsL: { ik: [0.46, 0.48, 0.2] }, armsR: { ik: [0.42, 0.24, 0.24], straight: true } },
+      armsL: { ik: [0.46, 0.48, 0.2] }, armsR: { ik: [0.4, 0.21, 0.24], pole: [-1, 0.6, 0.3] } },
     B: { hip: [-0.1, 0.78], torso: 80, legsL: { ik: [-0.48, 0.5], pole: [1, -1, 0] }, legsR: { ik: [0.0, 0.08, 0.32] },
       armsL: { ik: [0.46, 0.48, 0.2] }, armsR: { ik: [0.12, 0.7, 0.24], pole: [-1, 0.6, 0.3] } } });
   def('pulldown', { p: ['lats'], s: ['biceps', 'traps'], load: 'pulldown', stack: true, scene: ['pulldown'],
@@ -540,13 +563,13 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     A: { hip: [-0.03, 1.08], torso: 0, legs: { rel: [-0.2, -0.82], fw: 0.06 }, arms: { ik: [0.0, 2.22], gw: 0.42, pole: [0.2, -1, 0.7] } },
     B: { hip: [-0.06, 1.56], torso: -8, legs: { rel: [-0.2, -0.82], fw: 0.06 }, arms: { ik: [0.0, 2.22], gw: 0.42, pole: [0.2, -1, 0.7] } } });
   def('seatedRow', { p: ['lats', 'traps'], s: ['biceps'], load: 'seatedRow', stack: true, scene: ['seatedRow'],
-    A: { hip: [-0.36, 0.45], torso: 18, legs: { ik: [0.42, 0.3], fw: 0.14, foot: -70 }, arms: { ik: [0.5, 0.84], gw: 0.1, straight: true } },
-    B: { hip: [-0.36, 0.45], torso: -6, legs: { ik: [0.42, 0.3], fw: 0.14, foot: -70 }, arms: { ik: [0.02, 0.85], gw: 0.12, pole: [-1, -0.3, 0.3] } } });
-  def('facePull', { p: ['delts', 'traps'], s: ['biceps'], load: 'facePull', stack: true, scene: ['towerFront'],
-    A: { hip: [-0.05, 0.96], torso: -3, legsL: { ik: [-0.2, 0.08] }, legsR: { ik: [0.12, 0.08] }, arms: { ik: [0.6, 1.57], gw: 0.06, straight: true } },
+    A: { hip: [-0.36, 0.45], torso: 14, legs: { ik: [0.42, 0.3], fw: 0.14, foot: -70 }, arms: { ik: [0.4, 0.88], gw: 0.11, pole: [-1, -0.5, 0.25] } },
+    B: { hip: [-0.36, 0.45], torso: -4, legs: { ik: [0.42, 0.3], fw: 0.14, foot: -70 }, arms: { ik: [-0.02, 0.86], gw: 0.13, pole: [-1, -0.5, 0.25] } } });
+  def('facePull', { p: ['delts', 'traps'], s: ['biceps'], load: 'facePull', stack: true, scene: ['towerFront'], cam: { az: 6 },
+    A: { hip: [-0.05, 0.96], torso: -3, legsL: { ik: [-0.2, 0.08] }, legsR: { ik: [0.12, 0.08] }, arms: { ik: [0.55, 1.56], gw: 0.07, pole: [-0.6, 0.6, 1] } },
     B: { hip: [-0.05, 0.96], torso: -3, legsL: { ik: [-0.2, 0.08] }, legsR: { ik: [0.12, 0.08] }, arms: { ik: [0.1, 1.64], gw: 0.3, pole: [-0.6, 0.6, 1] } } });
   def('hyperext', { p: ['lowback', 'glutes'], s: ['hams'], load: 'none', scene: ['hyperBench'], cam: { az: 12 },
-    A: { hip: [0, 0.98], torso: 160, legs: { ik: [-0.6, 0.36], fw: 0.1 }, arms: { chest: true } },
+    A: { hip: [0, 0.98], torso: 132, legs: { ik: [-0.6, 0.36], fw: 0.1 }, arms: { chest: true } },
     B: { hip: [0, 0.98], torso: 48, legs: { ik: [-0.6, 0.36], fw: 0.1 }, arms: { chest: true } } });
   def('shrug', { view: 'front', p: ['traps'], s: ['forearms'], load: 'handsFront', stack: true,
     A: { hip: STAND, torso: 0, legs: FEET, arms: { rel: [0.05, -0.62, 0.05] }, shr: 0 },
@@ -572,9 +595,9 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     A: { hip: STAND, torso: 0, legs: FEET, arms: { ua: 2, fa: 4 } },
     B: { hip: STAND, torso: 0, legs: FEET, arms: { ua: 10, fa: 150 } } });
   def('preacherCurl', { p: ['biceps'], s: ['forearms'], load: 'hands', stack: true, scene: ['preacher'], cam: { az: 68 },
-    A: { hip: [-0.12, 0.6], torso: 14, legs: { ik: [0.3, 0.08], fw: 0.16 }, arms: { ua: 45, fa: 62, gwz: 0 } },
+    A: { hip: [-0.12, 0.6], torso: 14, legs: { ik: [0.3, 0.08], fw: 0.16 }, arms: { ua: 45, fa: 55 } },
     B: { hip: [-0.12, 0.6], torso: 14, legs: { ik: [0.3, 0.08], fw: 0.16 }, arms: { ua: 45, fa: 168 } } });
-  def('pushdown', { p: ['triceps'], load: 'pushdown', stack: true, scene: ['towerFront'],
+  def('pushdown', { p: ['triceps'], load: 'pushdown', stack: true, scene: ['towerFront'], cam: { az: 6 },
     A: { hip: [-0.05, 0.96], torso: 10, legs: FEET, arms: { ua: -6, fa: 105 } },
     B: { hip: [-0.05, 0.96], torso: 10, legs: FEET, arms: { ua: -6, fa: 4 } } });
   def('ohExt', { p: ['triceps'], load: 'overhead', stack: true, liftAt: 0,
@@ -717,7 +740,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       [-1, 1].forEach(function (sg) { box(G, 0.06, 1.25, 0.06, M.frame, -0.62, 0.62, sg * 0.55); box(G, 0.12, 0.04, 0.06, M.metal, -0.56, 1.12, sg * 0.55); });
       box(G, 0.3, 0.04, 1.2, M.frame, -0.62, 0.02, 0);
     }
-    if (sc.indexOf('rack') >= 0) {
+    if (sc.indexOf('rack') >= 0 && !(eq === 'machine' && d.smith)) {
       [-1, 1].forEach(function (sg) { box(G, 0.07, 1.75, 0.07, M.frame, -0.42, 0.875, sg * 0.62); box(G, 0.14, 0.05, 0.07, M.metal, -0.35, 1.38, sg * 0.62); box(G, 0.55, 0.05, 0.07, M.frame, -0.2, 0.03, sg * 0.62); });
       box(G, 0.8, 0.03, 1.4, M.pad, 0, 0.015, 0);
     }
@@ -746,8 +769,8 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       box(G, 0.06, 0.88, 0.06, M.frame, 0.12, 0.44, 0); box(G, 1.1, 0.04, 0.5, M.frame, -0.2, 0.02, 0);
     }
     if (sc.indexOf('preacher') >= 0) {
-      var pp = rbox(G, 0.32, 0.06, 0.5, M.pad, 0.2, 0.98, 0); pp.rotation.z = rad(-45);
-      box(G, 0.06, 0.95, 0.06, M.frame, 0.3, 0.47, 0); rbox(G, 0.32, 0.07, 0.32, M.pad, -0.12, 0.5, 0); box(G, 0.06, 0.48, 0.06, M.frame, -0.12, 0.24, 0);
+      var pp = rbox(G, 0.34, 0.06, 0.5, M.pad, 0.07, 0.93, 0); pp.rotation.z = rad(-45);
+      box(G, 0.06, 0.88, 0.06, M.frame, 0.12, 0.44, 0); rbox(G, 0.32, 0.07, 0.32, M.pad, -0.12, 0.5, 0); box(G, 0.06, 0.48, 0.06, M.frame, -0.12, 0.24, 0);
     }
     if (sc.indexOf('legExt') >= 0) {
       rbox(G, 0.45, 0.08, 0.42, M.pad, 0.1, 0.5, 0);
@@ -816,6 +839,13 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
 
     // Cargas en las manos / torres
     var tw = null, tw2 = null;
+    var cableLoads = ['pulldown', 'seatedRow', 'facePull', 'pushdown', 'twinCable', 'ankle', 'ankleSide'];
+    var compactMachine = needsStack && eq === 'machine' && cableLoads.indexOf(d.load) < 0;
+    if (compactMachine) {
+      var mp = d.machinePos || [-0.62, -0.55, 0];
+      tw = machineStack(scene, mp[0], mp[1], rad(mp[2] || 0));
+      needsStack = false;
+    }
     if (needsStack) {
       var towerPos = { pulldown: [-0.45, -0.0], seatedRow: [1.0, 0], facePull: [0.95, 0], pushdown: [0.55, 0], twinCable: null };
       if (d.load === 'twinCable') { tw = stackTower(scene, -0.05, -1.05); tw2 = stackTower(scene, -0.05, 1.05); }
@@ -824,9 +854,9 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       else if (sc.indexOf('towerFront') >= 0) tw = stackTower(scene, 0.75, 0);
       else tw = stackTower(scene, -0.75, -0.45);
     }
-    if (sc.indexOf('towerFront') >= 0 && !tw) tw = stackTower(scene, 0.75, 0);
+    if (sc.indexOf('towerFront') >= 0 && !tw && eq !== 'machine') tw = stackTower(scene, 0.75, 0);
     var pulleyPts = null;
-    if (tw) eqp.cables.push(cableMesh(scene), cableMesh(scene), cableMesh(scene));
+    if (tw && !tw.compact) eqp.cables.push(cableMesh(scene), cableMesh(scene), cableMesh(scene));
     if (tw2) eqp.cables.push(cableMesh(scene), cableMesh(scene), cableMesh(scene));
 
     var bar = null, dbs = [], kb = null, handle = null, rope = null, smithRails = null;
@@ -842,7 +872,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       else dbs.push(dumbbell(scene), dumbbell(scene));
     }
     if (eq === 'kettlebell' || d.load === 'kb') kb = kettlebell(scene);
-    if (tw || d.load === 'pulldown') {
+    if ((tw && !tw.compact) || d.load === 'pulldown') {
       handle = new T.Group(); scene.add(handle);
       var hw = (d.load === 'pulldown') ? 1.1 : (d.load === 'seatedRow' || d.load === 'facePull' || d.load === 'pushdown') ? 0.32 : 0.14;
       var hb2 = cyl(handle, 0.016, hw, M.metal); hb2.rotation.x = Math.PI / 2;
@@ -900,7 +930,11 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       }
       if (dbs.length === 2) { dbs[0].position.copy(j.hand.L); dbs[1].position.copy(j.hand.R); }
       else if (dbs.length === 1) dbs[0].position.copy(d.load === 'handR' ? j.hand.R : (f._bar || hm));
-      if (kb) { kb.position.copy(hm); }
+      if (kb) {
+        kb.position.copy(hm);
+        var armDir = hm.clone().sub(j.shoC).normalize();
+        kb.quaternion.setFromUnitVectors(V(0, -1, 0), armDir);
+      }
       if (handle) {
         handle.position.copy(d.load === 'ankle' ? j.ank.R : (d.load === 'ankleSide' ? j.ank.R : hm));
       }
@@ -940,7 +974,8 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       }
 
       // Torres y cables
-      if (tw) {
+      if (tw && tw.compact) tw.stack.position.y = lift * 0.3;
+      if (tw && !tw.compact) {
         tw.stack.position.y = lift * 0.32;
         if (tw2) tw2.stack.position.y = lift * 0.32;
         var top = tw.top(), st = tw.stackTop();
