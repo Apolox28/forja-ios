@@ -15,6 +15,7 @@ struct ForjaApp: App {
 
 struct RootView: View {
     @EnvironmentObject var store: Store
+    @State var importMessage: String? = nil
 
     var body: some View {
         TabView {
@@ -63,6 +64,19 @@ struct RootView: View {
         }
         .onAppear {
             store.requestNotifications()
+        }
+        .onOpenURL { url in
+            // «Abrir con Forja» desde Archivos, Drive, correo…
+            guard url.isFileURL else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                importMessage = store.importAny(url)
+            }
+        }
+        .alert("Importación", isPresented: Binding(get: { importMessage != nil },
+                                                   set: { if !$0 { importMessage = nil } })) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(importMessage ?? "")
         }
     }
 }

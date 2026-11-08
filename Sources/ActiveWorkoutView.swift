@@ -147,6 +147,7 @@ struct ExerciseSection: View {
     var siblings: [WorkoutExercise] = []
     var onAction: (ExerciseAction) -> Void
     var onSetCompleted: (Int) -> Void = { _ in }
+    @State var showInfo = false
 
     var exercise: Exercise? { store.exercise(entry.exerciseID) }
     var kind: ExerciseKind { exercise?.kind ?? .weightReps }
@@ -190,10 +191,30 @@ struct ExerciseSection: View {
                     .fill(supersetColor(g))
                     .frame(width: 4, height: 30)
             }
+            if let ex = exercise {
+                Button {
+                    showInfo = true
+                } label: {
+                    ExerciseThumbnail(exercise: ex, size: 36)
+                }
+                .buttonStyle(.borderless)
+            }
             VStack(alignment: .leading, spacing: 1) {
-                Text(exercise?.name ?? "Ejercicio eliminado")
-                    .font(.headline)
-                    .foregroundColor(.brand)
+                Button {
+                    showInfo = true
+                } label: {
+                    Text(exercise?.name ?? "Ejercicio eliminado")
+                        .font(.headline)
+                        .foregroundColor(.brand)
+                        .multilineTextAlignment(.leading)
+                }
+                .buttonStyle(.borderless)
+                .sheet(isPresented: $showInfo) {
+                    if let ex = exercise {
+                        ExerciseInfoSheet(exercise: ex)
+                            .environmentObject(store)
+                    }
+                }
                 if let g = entry.supersetID {
                     Text("Superserie")
                         .font(.caption2.bold())
@@ -399,45 +420,100 @@ struct RestTimerBar: View {
     @EnvironmentObject var store: Store
 
     var body: some View {
-        if let end = store.restEnd {
-            TimelineView(.periodic(from: Date(), by: 0.5)) { ctx in
-                RestTimerContent(remaining: end.timeIntervalSince(ctx.date))
+        ZStack {
+            if let end = store.restEnd {
+                TimelineView(.animation) { ctx in
+                    RestTimerContent(end: end, now: ctx.date)
+                }
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
+        .animation(.spring(response: 0.45, dampingFraction: 0.85), value: store.restEnd != nil)
     }
 }
 
 struct RestTimerContent: View {
     @EnvironmentObject var store: Store
-    let remaining: TimeInterval
+    let end: Date
+    let now: Date
 
+    var remaining: Double { max(0, end.timeIntervalSince(now)) }
     var total: Double { Double(max(store.restTotal, 1)) }
+    var progress: Double { min(1, max(0, remaining / total)) }
 
     var body: some View {
-        if remaining > 0 {
-            VStack(spacing: 8) {
-                ProgressView(value: min(max(remaining, 0), total), total: total)
-                    .tint(.brand)
-                HStack(spacing: 10) {
-                    Button("−15") { store.adjustRest(-15) }
-                        .buttonStyle(.bordered)
-                    Spacer()
-                    VStack(spacing: 0) {
-                        Text("Descanso").font(.caption).foregroundColor(.secondary)
-                        Text(Fmt.clock(remaining.rounded(.up)))
-                            .font(.title2.monospacedDigit().bold())
-                    }
-                    Spacer()
-                    Button("+15") { store.adjustRest(15) }
-                        .buttonStyle(.bordered)
-                    Button("Saltar") { store.skipRest() }
-                        .buttonStyle(.borderedProminent)
-                }
+        HStack(spacing: 16) {
+            ZStack {
+                Circle()
+                    .stroke(Color.brand.opacity(0.18), lineWidth: 6)
+                Circle()
+                    .trim(from: 0, to: progress)
+                    .stroke(AngularGradient(gradient: Gradient(colors: [Color.brand.opacity(0.7), Color.brand]),
+                                            center: .center),
+                            style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                Image(systemName: "timer")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.brand)
             }
-            .padding(.horizontal)
-            .padding(.vertical, 10)
-            .background(.ultraThinMaterial)
+            .frame(width: 48, height: 48)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text("Descanso")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                Text(Fmt.clock(remaining.rounded(.up)))
+                    .font(.system(size: 30, weight: .bold, design: .rounded).monospacedDigit())
+            }
+
+            Spacer(minLength: 4)
+
+            HStack(spacing: 8) {
+                RestPill(title: "−15") { store.adjustRest(-15) }
+                RestPill(title: "+15") { store.adjustRest(15) }
+                Button {
+                    withAnimation(.easeInOut(duration: 0.25)) { store.skipRest() }
+                } label: {
+                    Image(systemName: "forward.end.fill")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 42, height: 42)
+                        .background(Circle().fill(Color.brand))
+                }
+                .buttonStyle(.plain)
+            }
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(.regularMaterial)
+                .shadow(color: Color.black.opacity(0.18), radius: 16, x: 0, y: 6)
+        )
+        .padding(.horizontal, 12)
+        .padding(.bottom, 6)
+        .onChange(of: remaining <= 0) { finished in
+            if finished {
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                withAnimation(.easeInOut(duration: 0.3)) { store.skipRest() }
+            }
+        }
+    }
+}
+
+struct RestPill: View {
+    let title: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundColor(.primary)
+                .frame(width: 46, height: 42)
+                .background(Capsule().fill(Color(.tertiarySystemFill)))
+        }
+        .buttonStyle(.plain)
     }
 }
 

@@ -11,6 +11,8 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: Sources
+      - path: Resources
+        buildPhase: resources
     info:
       path: Support/Info.plist
       properties:
@@ -19,19 +21,31 @@ targets:
         CFBundleLocalizations:
           - es
           - en
-        CFBundleShortVersionString: "1.2"
-        CFBundleVersion: "3"
+        CFBundleShortVersionString: "1.3"
+        CFBundleVersion: "4"
         UILaunchScreen: {}
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         ITSAppUsesNonExemptEncryption: false
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: CSV
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - public.comma-separated-values-text
+              - public.plain-text
+          - CFBundleTypeName: JSON
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Alternate
+            LSItemContentTypes:
+              - public.json
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.forja.app
-        MARKETING_VERSION: "1.2"
-        CURRENT_PROJECT_VERSION: "3"
+        MARKETING_VERSION: "1.3"
+        CURRENT_PROJECT_VERSION: "4"
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

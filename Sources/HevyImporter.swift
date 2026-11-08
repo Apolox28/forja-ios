@@ -11,7 +11,17 @@ struct CSVImportResult {
 }
 
 enum CSV {
+    /// Detecta el separador (coma, punto y coma o tabulador) mirando la primera línea.
+    static func detectDelimiter(_ text: String) -> Character {
+        let firstLine = text.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: true).first.map(String.init) ?? text
+        let counts: [(Character, Int)] = [(",", firstLine.filter { $0 == "," }.count),
+                                          (";", firstLine.filter { $0 == ";" }.count),
+                                          ("\t", firstLine.filter { $0 == "\t" }.count)]
+        return counts.max(by: { $0.1 < $1.1 })?.0 ?? ","
+    }
+
     static func parse(_ text: String) -> [[String]] {
+        let delimiter = detectDelimiter(text)
         var rows: [[String]] = []
         var row: [String] = []
         var field = ""
@@ -36,7 +46,7 @@ enum CSV {
                 switch c {
                 case "\"":
                     inQuotes = true
-                case ",":
+                case delimiter:
                     row.append(field)
                     field = ""
                 case "\n", "\r\n":
@@ -142,9 +152,77 @@ enum HevyImporter {
         "yyyy-MM-dd'T'HH:mm:ss.SSSZ", "MMM d, yyyy, h:mm a", "d MMM yyyy HH:mm",
     ]
 
+    static let monthNames: [String: Int] = [
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6, "jul": 7, "aug": 8, "sep": 9, "sept": 9, "oct": 10, "nov": 11, "dec": 12,
+        "ene": 1, "abr": 4, "ago": 8, "dic": 12, "set": 9,
+    ]
+
+    /// Lector manual de fechas: «8 Nov 2026, 18:30», «08 nov. 2026 6:30 PM», «2026-11-08 18:30:00», «08/11/2026 18:30»…
+    static func looseDate(_ s: String) -> Date? {
+        let lower = s.lowercased()
+        var numbers: [Int] = []
+        var words: [String] = []
+        var current = ""
+        var isNumber = false
+        for ch in lower {
+            if ch.isNumber {
+                if !isNumber && !current.isEmpty { words.append(current); current = "" }
+                isNumber = true
+                current.append(ch)
+            } else if ch.isLetter {
+                if isNumber && !current.isEmpty { numbers.append(Int(current) ?? 0); current = "" }
+                isNumber = false
+                current.append(ch)
+            } else if !current.isEmpty {
+                if isNumber { numbers.append(Int(current) ?? 0) } else { words.append(current) }
+                current = ""
+            }
+        }
+        if !current.isEmpty {
+            if isNumber { numbers.append(Int(current) ?? 0) } else { words.append(current) }
+        }
+        let pm = words.contains("pm") || words.contains("p")
+        let am = words.contains("am") || words.contains("a")
+        var month: Int? = nil
+        for w in words {
+            if let m = monthNames[String(w.prefix(4))] ?? monthNames[String(w.prefix(3))] { month = m; break }
+        }
+        var day = 0, mon = 0, year = 0, hour = 0, minute = 0, second = 0
+        if let m = month {
+            guard numbers.count >= 2 else { return nil }
+            mon = m
+            if numbers[0] > 31 { year = numbers[0]; day = numbers[1] } else { day = numbers[0]; year = numbers[1] }
+            if numbers.count > 2 { hour = numbers[2] }
+            if numbers.count > 3 { minute = numbers[3] }
+            if numbers.count > 4 { second = numbers[4] }
+        } else {
+            guard numbers.count >= 3 else { return nil }
+            if numbers[0] > 31 {
+                year = numbers[0]; mon = numbers[1]; day = numbers[2]
+            } else {
+                day = numbers[0]; mon = numbers[1]; year = numbers[2]
+                if mon > 12 { let t = day; day = mon; mon = t }
+            }
+            if numbers.count > 3 { hour = numbers[3] }
+            if numbers.count > 4 { minute = numbers[4] }
+            if numbers.count > 5 { second = numbers[5] }
+        }
+        if year < 100 { year += 2000 }
+        if pm && hour < 12 { hour += 12 }
+        if am && hour == 12 { hour = 0 }
+        guard (1...12).contains(mon), (1...31).contains(day), year > 1990 else { return nil }
+        var comps = DateComponents()
+        comps.year = year; comps.month = mon; comps.day = day
+        comps.hour = hour; comps.minute = minute; comps.second = second
+        return Calendar(identifier: .gregorian).date(from: comps)
+    }
+
     static func parseDate(_ s: String) -> Date? {
         let trimmed = s.trimmingCharacters(in: .whitespaces)
         if trimmed.isEmpty { return nil }
+        if let unix = Double(trimmed), unix > 1_000_000_000 {
+            return Date(timeIntervalSince1970: unix > 10_000_000_000 ? unix / 1000 : unix)
+        }
         let iso = ISO8601DateFormatter()
         if let d = iso.date(from: trimmed) { return d }
         let f = DateFormatter()
@@ -159,7 +237,7 @@ enum HevyImporter {
             f.dateFormat = format
             if let d = f.date(from: trimmed) { return d }
         }
-        return nil
+        return looseDate(trimmed)
     }
 
     static func guessEquipment(_ title: String) -> Equipment {
@@ -196,7 +274,11 @@ enum HevyImporter {
     static func importCSV(_ text: String, into store: Store) -> CSVImportResult {
         var result = CSVImportResult()
         let rows = CSV.parse(text)
-        guard let header = rows.first?.map({ $0.trimmingCharacters(in: .whitespaces).lowercased() }) else {
+        guard let header = rows.first?.map({ h -> String in
+            h.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "\"\u{FEFF}")))
+                .lowercased()
+                .replacingOccurrences(of: " ", with: "_")
+        }) else {
             result.error = "El archivo está vacío."
             return result
         }
@@ -204,8 +286,8 @@ enum HevyImporter {
             for n in names { if let i = header.firstIndex(of: n) { return i } }
             return nil
         }
-        guard let cTitle = col("title"), let cStart = col("start_time"), let cExercise = col("exercise_title") else {
-            result.error = "No parece un CSV de Hevy. Faltan las columnas title, start_time o exercise_title."
+        guard let cTitle = col("title", "workout_name", "name"), let cStart = col("start_time", "date", "start"), let cExercise = col("exercise_title", "exercise_name", "exercise") else {
+            result.error = "No parece un CSV de Hevy. Columnas encontradas: " + header.prefix(8).joined(separator: ", ")
             return result
         }
         let cEnd = col("end_time")

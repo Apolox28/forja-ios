@@ -45,6 +45,12 @@ final class Store: ObservableObject {
         }
         if loaded.exercises.isEmpty {
             loaded.exercises = ExerciseSeed.make()
+        } else {
+            // Añade los ejercicios nuevos de la biblioteca sin tocar los existentes.
+            let existing = Set(loaded.exercises.map { $0.name.lowercased() })
+            for ex in ExerciseSeed.make() where !existing.contains(ex.name.lowercased()) {
+                loaded.exercises.append(ex)
+            }
         }
         data = loaded
         UNUserNotificationCenter.current().delegate = notificationDelegate
@@ -98,6 +104,60 @@ final class Store: ObservableObject {
         if decoded.exercises.isEmpty { decoded.exercises = ExerciseSeed.make() }
         data = decoded
         return true
+    }
+
+    func encodedData() -> Data? {
+        try? JSONEncoder().encode(data)
+    }
+
+    func restore(from raw: Data) -> String {
+        guard var decoded = try? JSONDecoder().decode(AppData.self, from: raw) else {
+            return "La copia no es válida."
+        }
+        let existing = Set(decoded.exercises.map { $0.name.lowercased() })
+        for ex in ExerciseSeed.make() where !existing.contains(ex.name.lowercased()) {
+            decoded.exercises.append(ex)
+        }
+        data = decoded
+        return "Datos restaurados: \(decoded.workouts.count) entrenamientos y \(decoded.routines.count) rutinas."
+    }
+
+    func autoBackupToGoogle() {
+        guard let payload = encodedData() else { return }
+        Task { @MainActor in
+            let sync = GoogleSync.shared
+            guard sync.autoBackup, sync.isSignedIn else { return }
+            try? await sync.backup(payload)
+        }
+    }
+
+    /// Importa un CSV (Hevy/Forja) o una copia JSON. Devuelve el mensaje para el usuario.
+    func importAny(_ url: URL, mode: ImportMode? = nil) -> String {
+        let scoped = url.startAccessingSecurityScopedResource()
+        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+        guard let raw = try? Data(contentsOf: url), !raw.isEmpty else {
+            return "No se pudo leer el archivo."
+        }
+        let ext = url.pathExtension.lowercased()
+        let looksJSON = ext == "json" || raw.first == UInt8(ascii: "{")
+        if mode == .backupJSON || (mode == nil && looksJSON) {
+            guard var decoded = try? JSONDecoder().decode(AppData.self, from: raw) else {
+                return "El archivo no es una copia de seguridad válida de Forja."
+            }
+            if decoded.exercises.isEmpty { decoded.exercises = ExerciseSeed.make() }
+            data = decoded
+            return "Copia de seguridad restaurada."
+        }
+        let text = String(data: raw, encoding: .utf8)
+            ?? String(data: raw, encoding: .utf16)
+            ?? String(data: raw, encoding: .isoLatin1)
+            ?? ""
+        let r = HevyImporter.importCSV(text, into: self)
+        if let err = r.error { return err }
+        if r.workouts == 0 && r.skippedDuplicates == 0 {
+            return "No se encontraron entrenamientos en el archivo. Comprueba que es el CSV de «Exportar entrenamientos» de Hevy."
+        }
+        return "Importados \(r.workouts) entrenamientos y \(r.sets) series. Ejercicios nuevos: \(r.newExercises). Duplicados omitidos: \(r.skippedDuplicates)."
     }
 
     func resetAll() {
@@ -213,6 +273,7 @@ final class Store: ObservableObject {
 
         showActiveWorkout = false
         skipRest()
+        autoBackupToGoogle()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) { [weak self] in
             self?.lastFinished = w
         }

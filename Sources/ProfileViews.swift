@@ -7,11 +7,46 @@ enum ImportMode {
     case backupJSON
 }
 
+enum ProfileSheet: Identifiable {
+    case share(ShareItem)
+    case picker(ImportMode)
+
+    var id: String {
+        switch self {
+        case .share(let item): return "share-" + item.id.uuidString
+        case .picker(let mode): return mode == .hevyCSV ? "picker-csv" : "picker-json"
+        }
+    }
+}
+
+/// Selector de archivos nativo de iOS (copia el archivo a la app, sin problemas de permisos).
+struct DocumentPicker: UIViewControllerRepresentable {
+    let onPick: (URL) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(onPick: onPick) }
+
+    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+        let types: [UTType] = [.commaSeparatedText, .json, .plainText, .text, .data, .item]
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: types, asCopy: true)
+        picker.allowsMultipleSelection = false
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
+
+    final class Coordinator: NSObject, UIDocumentPickerDelegate {
+        let onPick: (URL) -> Void
+        init(onPick: @escaping (URL) -> Void) { self.onPick = onPick }
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            if let url = urls.first { onPick(url) }
+        }
+    }
+}
+
 struct ProfileView: View {
     @EnvironmentObject var store: Store
-    @State var importMode: ImportMode = .hevyCSV
-    @State var showImporter = false
-    @State var shareItem: ShareItem? = nil
+    @State var sheet: ProfileSheet? = nil
     @State var message: String? = nil
     @State var confirmReset = false
 
@@ -72,11 +107,12 @@ struct ProfileView: View {
                     }
                 }
 
+                GoogleAccountSection()
+
                 Section(header: Text("Pasar mis datos desde Hevy"),
                         footer: Text("En Hevy: Perfil → Ajustes → Exportar e importar datos → Exportar entrenamientos. Guarda el archivo .csv en Archivos (o Google Drive) e impórtalo aquí.")) {
                     Button {
-                        importMode = .hevyCSV
-                        showImporter = true
+                        sheet = .picker(.hevyCSV)
                     } label: {
                         Label("Importar CSV de Hevy", systemImage: "square.and.arrow.down.on.square")
                     }
@@ -86,20 +122,19 @@ struct ProfileView: View {
                         footer: Text("Puedes guardar la copia en iCloud Drive, Google Drive o enviártela por correo. Los datos se guardan solo en este iPhone.")) {
                     Button {
                         if let url = store.exportFile() {
-                            shareItem = ShareItem(items: [url])
+                            sheet = .share(ShareItem(items: [url]))
                         }
                     } label: {
                         Label("Crear copia de seguridad (JSON)", systemImage: "externaldrive.badge.plus")
                     }
                     Button {
-                        importMode = .backupJSON
-                        showImporter = true
+                        sheet = .picker(.backupJSON)
                     } label: {
                         Label("Restaurar copia de seguridad", systemImage: "arrow.counterclockwise")
                     }
                     Button {
                         if let url = HevyImporter.exportCSV(store) {
-                            shareItem = ShareItem(items: [url])
+                            sheet = .share(ShareItem(items: [url]))
                         }
                     } label: {
                         Label("Exportar entrenamientos (CSV)", systemImage: "tablecells")
@@ -126,12 +161,19 @@ struct ProfileView: View {
                 }
             }
             .navigationTitle("Perfil")
-            .fileImporter(isPresented: $showImporter,
-                          allowedContentTypes: [.commaSeparatedText, .json, .plainText, .data]) { result in
-                handleImport(result)
-            }
-            .sheet(item: $shareItem) { item in
-                ShareSheet(items: item.items)
+            .sheet(item: $sheet) { s in
+                switch s {
+                case .share(let item):
+                    ShareSheet(items: item.items)
+                case .picker(let mode):
+                    DocumentPicker { url in
+                        sheet = nil
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            message = store.importAny(url, mode: mode)
+                        }
+                    }
+                    .ignoresSafeArea()
+                }
             }
             .alert("Forja", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) {
                 Button("OK", role: .cancel) {}
@@ -147,34 +189,6 @@ struct ProfileView: View {
             .activeWorkoutBanner()
         }
         .navigationViewStyle(.stack)
-    }
-
-    func handleImport(_ result: Result<URL, Error>) {
-        switch result {
-        case .failure(let error):
-            message = "No se pudo abrir el archivo: \(error.localizedDescription)"
-        case .success(let url):
-            switch importMode {
-            case .backupJSON:
-                message = store.importFile(url)
-                    ? "Copia de seguridad restaurada."
-                    : "El archivo no es una copia de seguridad válida de Forja."
-            case .hevyCSV:
-                let scoped = url.startAccessingSecurityScopedResource()
-                defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-                guard let raw = try? Data(contentsOf: url) else {
-                    message = "No se pudo leer el archivo."
-                    return
-                }
-                let text = String(data: raw, encoding: .utf8) ?? String(data: raw, encoding: .isoLatin1) ?? ""
-                let r = HevyImporter.importCSV(text, into: store)
-                if let err = r.error {
-                    message = err
-                } else {
-                    message = "Importados \(r.workouts) entrenamientos y \(r.sets) series. Ejercicios nuevos: \(r.newExercises). Duplicados omitidos: \(r.skippedDuplicates)."
-                }
-            }
-        }
     }
 }
 

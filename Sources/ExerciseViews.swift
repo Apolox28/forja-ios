@@ -93,13 +93,7 @@ struct ExerciseDetailView: View {
     var body: some View {
         List {
             if let ex = exercise {
-                Section {
-                    HStack {
-                        StatTile(title: "Músculo", value: ex.muscle.rawValue)
-                        StatTile(title: "Equipamiento", value: ex.equipment.rawValue)
-                    }
-                    Text(ex.kind.rawValue).font(.caption).foregroundColor(.secondary)
-                }
+                ExerciseHowToSections(exercise: ex)
 
                 Section(header: Text("Récords personales")) {
                     HStack {

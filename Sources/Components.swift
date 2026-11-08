@@ -83,13 +83,7 @@ struct ExerciseRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
-                Circle().fill(Color.brand.opacity(0.18))
-                Text(String(exercise.name.prefix(1)))
-                    .font(.headline)
-                    .foregroundColor(.brand)
-            }
-            .frame(width: 40, height: 40)
+            ExerciseThumbnail(exercise: exercise, size: 48)
             VStack(alignment: .leading, spacing: 2) {
                 Text(exercise.name)
                     .font(.body)
