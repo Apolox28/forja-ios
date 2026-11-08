@@ -1,58 +1,57 @@
-# Forja — registro de entrenamientos para iOS 15+
+<p align="center">
+  <img src="docs/logo.png" width="260" alt="Forja">
+</p>
 
-App propia para registrar entrenamientos de gimnasio. Todas las funciones incluidas, sin suscripción, sin anuncios y sin cuenta. Idiomas: español e inglés (según el idioma del iPhone, o en Ajustes → Forja → Idioma).
+<h3 align="center">Tu diario de gimnasio. Gratis, sin cuentas y sin anuncios.</h3>
 
-## Funciones
+<p align="center">
+  <a href="https://github.com/Apolox28/forja-ios/releases/latest/download/Forja.ipa"><b>⬇️ Descargar Forja.ipa</b></a>
+  &nbsp;·&nbsp; iOS 15 o superior
+</p>
 
-- **Entrenamiento en vivo**: series con peso/reps, columna «Anterior» (lo que hiciste la última vez), marcar series ✓ (rellena con lo anterior si lo dejas vacío), tipos de serie (calentamiento, drop set, al fallo), RPE, notas por ejercicio y por entrenamiento, superseries, reordenar ejercicios, minimizar y reanudar.
-- **Temporizador de descanso** automático al completar una serie, con ±15 s, configurable por ejercicio, y notificación aunque la app esté en segundo plano.
-- **Rutinas** con carpetas, duplicar, editar, y **programas predefinidos** (cuerpo completo, torso/pierna, empuje/tirón/pierna, en casa).
-- **Historial** con buscador, **calendario** mensual, editar entrenamientos pasados, repetir, guardar como rutina y compartir el resumen.
-- **Récords personales (PR)** automáticos, resumen al terminar.
-- **Ejercicios**: más de 70 incluidos y personalizados; por cada uno, 1RM estimado, peso máximo, mejor serie, mejor peso por repeticiones, gráfica de progreso e historial.
-- **Progreso**: volumen y entrenamientos por semana, series por músculo, racha semanal, objetivo semanal y medidas corporales con gráfica.
-- **Herramientas**: calculadora de 1RM, calculadora de discos y calculadora de series de calentamiento.
-- **Datos**: importar el CSV de Hevy, exportar en CSV, copia de seguridad JSON (a iCloud Drive, Google Drive, correo…) y restaurarla.
+---
 
-> No incluye funciones que necesitan un servidor (red social o sincronización en la nube): todo se guarda en tu iPhone. Usa la copia de seguridad.
+## Instalar
 
-## Pasar tus datos desde Hevy
+1. Descarga **[Forja.ipa](https://github.com/Apolox28/forja-ios/releases/latest/download/Forja.ipa)** desde el iPhone.
+2. Ábrelo con **TrollStore** y pulsa *Install*.
 
-1. En Hevy: **Perfil → Ajustes → Exportar e importar datos → Exportar entrenamientos**. Guarda el `.csv` en Archivos o en Google Drive.
-2. En Forja: **Perfil → Importar CSV de Hevy** y elige el archivo.
+¿No tienes TrollStore? Instálala con Sideloadly o AltStore.
 
-Los ejercicios más comunes se emparejan con los de Forja. El resto se crea como ejercicio personalizado; puedes editarlos después.
+## Qué puedes hacer
 
-## Cómo obtener el .ipa (sin Mac)
+**🏋️ Entrenar**
+- Apunta peso, repeticiones y RPE en cada serie
+- Mira lo que hiciste la última vez al lado de cada serie
+- Series normales, de calentamiento, drop sets y al fallo
+- Superseries y notas por ejercicio
 
-Un `.ipa` solo se puede compilar con Xcode en macOS. GitHub te presta un Mac gratis:
+**⏱️ Descansar**
+- El temporizador arranca solo al marcar la serie
+- Súmale o réstale 15 segundos cuando quieras
+- Te avisa aunque cierres la app
 
-1. Crea una cuenta en github.com y un **repositorio nuevo** (puede ser privado).
-2. Sube **todo el contenido de esta carpeta** (incluida la carpeta oculta `.github`). Puedes arrastrarlo en «Add file → Upload files», o con GitHub Desktop.
-3. Ve a la pestaña **Actions**. El flujo «Compilar IPA» se ejecuta solo (o pulsa «Run workflow»). Tarda unos 5–10 minutos.
-4. Cuando termine con ✓ verde, entra en la ejecución y descarga el artefacto **Forja-ipa** (un .zip que contiene `Forja.ipa`).
+**📋 Organizarte**
+- Rutinas en carpetas y programas listos para usar
+- Más de 70 ejercicios y los que quieras crear
 
-Si sale ❌ rojo, copia el error del registro y pásamelo para corregirlo.
+**📈 Ver tu progreso**
+- Historial y calendario de entrenamientos
+- Récords personales automáticos
+- Gráficas por ejercicio, volumen semanal y series por músculo
+- Peso y medidas corporales
 
-## Instalar en el iPhone (iOS 15)
+**🧰 Extras**
+- Calculadora de 1RM, de discos y de calentamiento
+- Importa tu historial desde un CSV de Hevy
+- Copias de seguridad en iCloud Drive o Google Drive
+- En español e inglés
 
-El `.ipa` sale **sin firmar**. Elige una opción:
+## Pasar tus entrenamientos desde Hevy
 
-- **TrollStore** (si tu iPhone con iOS 15 es compatible): instalación permanente, no caduca.
-- **Sideloadly** (Windows): conecta el iPhone por cable, arrastra el `.ipa` e inicia sesión con tu Apple ID. Con un Apple ID gratuito, la app **caduca a los 7 días** y hay que volver a instalarla (los datos se conservan si usas el mismo Apple ID).
-- **AltStore**: igual que Sideloadly, y se renueva sola por Wi‑Fi.
+1. En Hevy: *Perfil → Ajustes → Exportar e importar datos → Exportar entrenamientos*.
+2. En Forja: *Perfil → Importar CSV de Hevy*.
 
-Después ve a Ajustes → General → VPN y gestión de dispositivos y confía en tu perfil de desarrollador.
+---
 
-## Licencia y aviso
-
-Código bajo licencia MIT (ver `LICENSE`).
-
-**Aviso:** Forja es un proyecto independiente. No está afiliado, patrocinado ni respaldado por Hevy ni por ninguna otra aplicación. Los nombres mencionados pertenecen a sus respectivos dueños y solo se usan para describir la compatibilidad de importación.
-
-## Estructura
-
-- `project.yml`: definición del proyecto (XcodeGen genera el `.xcodeproj`).
-- `Sources/`: código SwiftUI (iOS 15.0 como mínimo).
-- `Sources/en.lproj/Localizable.strings`: traducción al inglés.
-- `.github/workflows/build-ipa.yml`: compilación automática del `.ipa`.
+<sub>Forja es un proyecto independiente y no tiene relación con Hevy ni con ninguna otra app. Código bajo licencia MIT.</sub>
