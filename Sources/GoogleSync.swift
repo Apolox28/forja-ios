@@ -9,7 +9,7 @@ import Security
 
 enum GoogleConfig {
     /// ID de cliente iOS creado en Google Cloud Console (se puede cambiar dentro de la app).
-    static let defaultClientID = ""
+    static let defaultClientID = "733914063882-7t7oqcnlvmcmocp0hv0l70cnrl9vl5vb.apps.googleusercontent.com"
 
     static var clientID: String {
         get {
@@ -358,10 +358,6 @@ struct GoogleAccountSection: View {
                         if sync.busy { ProgressView() }
                     }
                 }
-                Button("Cambiar ID de cliente") {
-                    configured = false
-                }
-                .font(.caption)
             }
         }
         .alert("Google", isPresented: Binding(get: { message != nil }, set: { if !$0 { message = nil } })) {
