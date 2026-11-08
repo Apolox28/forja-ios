@@ -2,15 +2,17 @@ import SwiftUI
 import UIKit
 import WebKit
 
-/// Animación en bucle del ejercicio (muñeco + equipamiento), dibujada con el motor de Resources/figure.js.
+/// Animación 3D en bucle del ejercicio (maniquí + equipamiento), dibujada con three.js y Resources/forja3d.js.
 struct ExerciseAnimationView: UIViewRepresentable {
     let exercise: Exercise
 
-    static let script: String = {
-        guard let url = Bundle.main.url(forResource: "figure", withExtension: "js"),
+    static func resource(_ name: String) -> String {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "js"),
               let js = try? String(contentsOf: url, encoding: .utf8) else { return "" }
         return js
-    }()
+    }
+    static let three: String = resource("three.min")
+    static let engine: String = resource("forja3d")
 
     var patternKey: String { ExerciseSeed.pattern(for: exercise).rawValue }
     var equipmentKey: String { ExerciseSeed.animationEquipment(exercise.equipment) }
@@ -63,11 +65,22 @@ struct ExerciseAnimationView: UIViewRepresentable {
         let html = """
         <!doctype html><html><head>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-        <style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}
-        canvas{display:block;width:100vw;height:100vw;border-radius:16px}</style>
-        </head><body><canvas id="c"></canvas>
-        <script>\(ExerciseAnimationView.script)</script>
-        <script>FORJA.animate(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', 3000, '\(muscleKey)');</script>
+        <style>
+        html,body{margin:0;padding:0;background:transparent;overflow:hidden}
+        #w{position:relative;width:100vw;height:100vw;border-radius:18px;overflow:hidden;
+           background:radial-gradient(120% 90% at 50% 25%,#30333c 0%,#1b1d23 55%,#121317 100%)}
+        canvas{display:block;width:100%;height:100%}
+        #l{position:absolute;top:12px;left:12px;padding:5px 11px;border-radius:999px;
+           font:700 14px -apple-system,system-ui,sans-serif;color:#ff8a3d;background:rgba(255,138,61,.16)}
+        </style>
+        </head><body><div id="w"><canvas id="c"></canvas><div id="l"></div></div>
+        <script>\(ExerciseAnimationView.three)</script>
+        <script>\(ExerciseAnimationView.engine)</script>
+        <script>
+        var st = FORJA3D.mount(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', { muscle: '\(muscleKey)', period: 3200 });
+        var l = document.getElementById('l');
+        if (st && st.label) { l.textContent = st.label; } else { l.remove(); }
+        </script>
         </body></html>
         """
         web.loadHTMLString(html, baseURL: nil)
@@ -88,7 +101,7 @@ struct ExerciseThumbnail: View {
         if let img = ExerciseThumbnail.cache[key] { return img }
         let candidates = [key, "thumb_\(p)_none"]
         for name in candidates {
-            if let path = Bundle.main.path(forResource: name, ofType: "png"), let img = UIImage(contentsOfFile: path) {
+            if let path = Bundle.main.path(forResource: name, ofType: "jpg"), let img = UIImage(contentsOfFile: path) {
                 ExerciseThumbnail.cache[key] = img
                 return img
             }
