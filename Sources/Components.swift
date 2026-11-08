@@ -10,7 +10,7 @@ extension Binding where Value == Int {
         Binding<Double>(
             get: { Double(self.wrappedValue) },
             set: { newValue in
-                let clamped = min(max(newValue, 0), 1_000_000)
+                let clamped = Swift.min(Swift.max(newValue, 0), 1_000_000)
                 self.wrappedValue = Int(clamped)
             }
         )
