@@ -4530,6 +4530,16 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       else if (A.relC) target = j.shoC.clone().add(j.fwd.clone().multiplyScalar(A.relC[0])).add(j.up.clone().multiplyScalar(A.relC[1])).add(V(0, 0, sg * gw));
       else if (A.rel) target = sh.clone().add(V(A.rel[0], A.rel[1], (A.rel[2] || 0) * sg));
       else if (A.temple) target = j.head.clone().add(j.headFwd.clone().multiplyScalar(-0.02)).add(V(0, -0.01, sg * 0.105));
+      // desplazamiento precalculado para que la pesa no atraviese el cuerpo
+      var hOff = f._hOff && f._hOff[k];
+      if (hOff && (Math.abs(hOff[0]) + Math.abs(hOff[1]) + Math.abs(hOff[2])) > 1e-4) {
+        if (!target) {
+          var dA0 = A.plane === 'f' ? dirF(A.ua, sg) : dirS(A.ua), dB0 = A.plane === 'f' ? dirF(A.fa, sg) : dirS(A.fa);
+          target = sh.clone().add(dA0.multiplyScalar(UA)).add(dB0.multiplyScalar(FA));
+          if (!A.pole) A = Object.assign({}, A, { pole: [0, -1, 0.35] });
+        }
+        target = target.clone().add(V(hOff[0], hOff[1], hOff[2]));
+      }
       if (target) {
         if (A.straight) {
           var full = sh.clone().add(target.clone().sub(sh).normalize().multiplyScalar(REACH - 0.004));
@@ -4839,9 +4849,9 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   // Mancuerna: eje del agarre = eje Z local
   function dumbbell(parent) {
     var g = new T.Group(), M = mats();
-    cylZ(g, 0.016, 0.15, M.metal, 0, 0, 0);
+    cylZ(g, 0.016, 0.14, M.metal, 0, 0, 0);
     [-1, 1].forEach(function (sg) {
-      var p = cyl(g, 0.1, 0.07, M.plate, 6); p.rotation.x = Math.PI / 2; p.rotation.y = 0; p.position.z = sg * 0.115;
+      var p = cyl(g, 0.08, 0.06, M.plate, 6); p.rotation.x = Math.PI / 2; p.rotation.y = 0; p.position.z = sg * 0.1;
       cylZ(g, 0.03, 0.02, M.metal, 0, 0, sg * 0.072);
     });
     parent.add(g); return g;
@@ -4857,7 +4867,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     var g = new T.Group(), M = mats();
     g.position.set(x, 0, z); g.rotation.y = rotY || 0;
     box(g, 0.06, 2.3, 0.06, M.frame, 0, 1.15, -0.18); box(g, 0.06, 2.3, 0.06, M.frame, 0, 1.15, 0.18);
-    box(g, 0.1, 0.06, 0.44, M.frame, 0, 2.3, 0); box(g, 0.36, 0.05, 0.5, M.frame, 0, 0.025, 0);
+    box(g, 0.1, 0.06, 0.44, M.frame, 0, 2.3, 0); box(g, 0.36, 0.014, 0.5, M.frame, 0, 0.007, 0);
     box(g, 0.02, 1.9, 0.38, M.frameLight, -0.1, 1.05, 0);
     cyl(g, 0.007, 1.9, M.metal).position.set(0, 1.05, -0.06); cyl(g, 0.007, 1.9, M.metal).position.set(0, 1.05, 0.06);
     var stack = new T.Group(); g.add(stack);
@@ -5204,55 +5214,174 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   //  Modelo humano (Mixamo): esqueleto movido por la cinemática + músculos en la piel
   // ---------------------------------------------------------------------------
   var MODEL = null, MODEL_SCALE = 0.97 / 116.5, MUSCLE_CACHE = null;
+  var BAKED = {"bench:barbell":{"pads":[[2,0,-0.0291,0]]},"bench:dumbbell":{"pads":[[2,0,-0.0291,0]]},"incline:barbell":{"pads":[[3,0,-0.0278,0]]},"incline:dumbbell":{"pads":[[3,0,-0.0278,0]]},"bench:machine":{"pads":[[2,0,-0.0291,0]]},"incline:machine":{"pads":[[3,0,-0.0278,0]]},"chestPress:machine":{"pads":[[2,0,-0.0165,0],[5,0,0.0129,0]]},"chestPress:cable":{"pads":[[2,0,-0.0165,0],[5,0,0.0129,0]]},"fly:dumbbell":{"pads":[[2,0,-0.0291,0]]},"pullover:dumbbell":{"pads":[[2,0,-0.0291,0]]},"deadlift:dumbbell":{"h":[[17,-3,-32,18,-3,34],[17,-3,-33,18,-3,35],[17,-3,-33,18,-3,35],[17,-1,-34,18,-1,36],[16,4,-42,17,4,43],[16,8,-58,16,8,58],[17,11,-74,17,11,74],[19,12,-83,19,12,82],[21,12,-85,20,13,84],[21,12,-85,21,13,84],[21,12,-85,21,13,84],[21,12,-82,21,12,82],[20,11,-75,20,11,75],[17,9,-60,17,9,60],[16,6,-44,16,6,45],[16,2,-35,17,2,36],[17,-1,-32,18,-1,34],[17,-3,-33,18,-3,35],[17,-3,-33,18,-3,35],[17,-3,-32,17,-3,34],[17,-3,-32,17,-3,34]]},"dbRow:dumbbell":{"pads":[[2,0,-0.0339,0]],"h":[[0,0,0,3,0,1],[0,0,0,10,1,4],[0,0,0,20,2,8],[0,0,0,30,4,13],[0,0,0,35,4,15],[0,0,0,36,4,15],[0,0,0,36,4,15],[0,0,0,36,4,15],[0,0,0,35,3,15],[0,0,0,35,3,15],[0,0,0,35,4,16],[0,0,0,36,4,16],[0,0,0,35,4,16],[0,0,0,33,4,15],[0,0,0,28,3,12],[0,0,0,20,2,9],[0,0,0,11,1,5],[0,0,0,4,1,2],[0,0,0,1,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"row:dumbbell":{"h":[[14,5,-33,14,5,34],[14,6,-36,15,6,37],[15,7,-37,15,8,38],[15,8,-38,15,8,38],[15,8,-37,15,8,38],[15,8,-37,15,8,38],[14,8,-36,14,8,36],[13,8,-35,13,8,34],[12,8,-33,12,8,32],[13,8,-33,12,8,33],[13,8,-34,13,8,34],[14,8,-36,14,8,36],[15,8,-37,15,8,37],[15,8,-38,15,8,38],[16,7,-38,15,8,38],[16,7,-38,16,7,38],[15,6,-37,15,7,37],[14,5,-34,14,6,34],[13,4,-30,12,5,30],[12,4,-28,12,4,28],[12,4,-27,12,4,27]]},"seatedRow:cable":{"pads":[[4,0.0397,0,0],[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"seatedRow:machine":{"pads":[[4,0.0397,0,0],[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"pulldown:cable":{"pads":[[2,0,-0.027,0],[4,0,-0.0333,0],[5,0,0.0235,0],[12,0,-0.009,0]]},"pulldown:machine":{"pads":[[2,0,-0.027,0],[4,0,-0.0333,0],[5,0,0.0235,0],[12,0,-0.009,0]]},"hyperext:none":{"pads":[[2,0,0.0597,0]]},"shrug:dumbbell":{"h":[[11,14,-92,11,14,93],[11,14,-92,11,14,93],[12,14,-92,12,13,93],[12,13,-92,12,13,93],[12,13,-92,12,13,92],[12,13,-90,12,13,91],[12,12,-88,12,12,88],[11,12,-86,11,12,86],[11,12,-85,11,12,85],[11,12,-85,11,12,85],[12,12,-85,11,12,85],[12,12,-87,12,12,86],[12,12,-90,12,13,88],[12,13,-91,12,13,90],[12,13,-92,12,14,92],[12,14,-92,12,14,92],[12,14,-92,12,14,92],[11,14,-92,12,14,92],[11,14,-92,11,14,92],[11,14,-91,11,14,92],[11,14,-91,11,14,91]]},"ohp:dumbbell":{"h":[[5,3,-19,5,3,20],[5,3,-19,5,3,19],[5,4,-19,4,3,19],[4,3,-16,4,3,15],[3,2,-10,3,2,9],[1,1,-4,1,1,4],[0,0,-1,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1,0,0,1],[2,1,-5,1,1,5],[3,2,-12,3,2,12],[5,3,-17,4,3,17],[5,4,-19,5,3,19],[5,4,-19,5,3,20],[5,3,-19,5,3,20],[5,2,-19,5,2,20],[4,2,-19,5,2,20]]},"lateral:dumbbell":{"h":[[-13,16,-151,37,12,159],[-13,16,-151,37,12,159],[-12,16,-151,37,12,157],[-11,15,-150,36,12,151],[-9,14,-145,36,10,139],[-8,12,-133,34,8,123],[-6,9,-114,30,5,103],[-5,4,-90,25,2,81],[-6,0,-63,18,0,59],[-10,-1,-50,6,-2,49],[-15,0,-63,-10,-2,63],[-21,4,-90,-20,-1,91],[-25,9,-117,-23,3,118],[-27,12,-136,-26,7,138],[-28,15,-147,-27,10,149],[-29,16,-150,-28,12,153],[-29,17,-150,-29,13,153],[-29,17,-150,-30,13,153],[-29,17,-150,-31,14,153],[-29,17,-150,-31,14,152],[-28,17,-150,-31,15,152]]},"curl:dumbbell":{"h":[[30,19,-152,27,18,152],[30,19,-152,27,18,152],[31,19,-151,27,18,152],[30,18,-150,27,17,150],[30,17,-145,26,17,146],[28,16,-133,24,16,135],[24,16,-115,22,16,116],[21,16,-93,20,16,93],[19,16,-70,19,16,71],[19,16,-59,19,16,58],[19,16,-65,19,16,64],[19,16,-81,19,16,80],[19,16,-98,19,16,97],[18,15,-117,18,16,116],[7,15,-135,7,15,134],[-13,16,-145,-13,16,145],[-23,17,-148,-23,16,149],[-9,18,-149,-8,17,152],[19,18,-153,21,17,154],[33,18,-154,36,18,154],[33,18,-154,36,18,154]]},"preacherCurl:dumbbell":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0327,0]]},"preacherCurl:barbell":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0327,0]]},"preacherCurl:machine":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0327,0]]},"skullCrusher:barbell":{"pads":[[2,0,-0.0291,0]]},"skullCrusher:dumbbell":{"pads":[[2,0,-0.0291,0]],"h":[[0,0,0,0,0,0],[0,0,-1,0,0,1],[0,2,-5,0,2,5],[-1,4,-15,-1,4,15],[-1,5,-25,-1,5,25],[-1,6,-31,-1,6,31],[-1,5,-33,-1,5,32],[-1,4,-33,-1,4,32],[-1,3,-33,-1,3,32],[-1,3,-33,-1,3,32],[-1,4,-33,-1,4,32],[-1,5,-32,-1,5,32],[-1,5,-30,-1,5,30],[-1,4,-24,-1,4,23],[-1,3,-13,-1,3,13],[0,1,-4,0,1,4],[0,0,-1,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"ohExt:dumbbell":{"h":[[-100,232,0,-100,232,0],[-103,232,1,-103,232,1],[-108,232,1,-108,232,1],[-111,231,1,-111,231,1],[-112,229,1,-112,229,1],[-109,209,1,-109,209,1],[-101,166,1,-101,166,1],[-93,122,1,-93,122,1],[-89,94,1,-89,94,1],[-89,90,1,-89,90,1],[-95,112,1,-95,112,1],[-104,154,1,-104,154,1],[-113,199,1,-113,199,1],[-117,225,1,-117,225,1],[-116,231,1,-116,231,1],[-113,232,1,-113,232,1],[-108,233,1,-108,233,1],[-103,233,0,-103,233,0],[-94,234,-1,-94,234,-1],[-81,234,-1,-81,234,-1],[-69,234,-1,-69,234,-1]]},"kickback:dumbbell":{"pads":[[2,0,-0.0339,0]],"h":[[0,0,0,91,41,33],[0,0,0,91,51,33],[0,0,0,91,59,34],[0,0,0,91,61,34],[0,0,0,88,62,34],[0,0,0,73,62,33],[0,0,0,36,59,32],[0,0,0,-5,53,28],[0,0,0,-22,45,25],[0,0,0,-24,46,29],[0,0,0,-11,54,36],[0,0,0,28,60,41],[0,0,0,68,62,43],[0,0,0,90,63,44],[0,0,0,98,62,44],[0,0,0,99,60,45],[0,0,0,99,53,44],[0,0,0,96,41,42],[0,0,0,92,26,38],[0,0,0,87,13,32],[0,0,0,83,6,26]]},"kickback:cable":{"pads":[[2,0,-0.0339,0]]},"walk:dumbbell":{"h":[[-183,32,-18,-166,-1,46],[-183,32,-23,-166,5,46],[-182,31,-29,-166,13,46],[-178,30,-35,-165,18,46],[-172,27,-39,-164,23,45],[-164,22,-43,-163,26,44],[-160,9,-45,-164,28,42],[-161,-5,-46,-169,29,40],[-164,-11,-47,-175,30,37],[-164,-11,-47,-179,31,34],[-165,-10,-47,-180,31,31],[-165,-4,-47,-181,32,28],[-165,9,-47,-180,31,30],[-165,18,-47,-177,30,34],[-163,22,-46,-171,27,38],[-162,25,-44,-164,23,41],[-163,27,-41,-161,12,44],[-166,28,-39,-162,-2,46],[-168,29,-37,-164,-9,47],[-168,29,-35,-165,-9,47],[-168,29,-33,-165,-9,47]]},"frontSquat:dumbbell":{"h":[[-71,40,-2,-71,40,-2],[-71,43,-2,-71,43,-2],[-71,48,-2,-71,48,-2],[-71,52,-2,-71,52,-2],[-71,57,-2,-71,57,-2],[-69,62,-2,-69,62,-2],[-67,66,-2,-67,66,-2],[-64,68,-1,-64,68,-1],[-62,68,-1,-62,68,-1],[-63,68,-2,-63,68,-2],[-65,68,-2,-65,68,-2],[-67,66,-2,-67,66,-2],[-69,63,-2,-69,63,-2],[-70,58,-2,-70,58,-2],[-70,53,-2,-70,53,-2],[-70,48,-2,-70,48,-2],[-70,43,-2,-70,43,-2],[-70,40,-2,-70,40,-2],[-70,38,-2,-70,38,-2],[-70,37,-2,-70,37,-2],[-70,36,-2,-70,36,-2]]},"squat:machine":{"pads":[[51,0,-0.015,0]]},"lunge:dumbbell":{"h":[[-73,-3,-37,0,0,0],[-78,-3,-38,0,0,0],[-85,-3,-39,0,0,0],[-90,-3,-40,0,0,0],[-94,-3,-41,0,0,0],[-99,-3,-41,0,0,0],[-106,-3,-42,0,0,0],[-114,-1,-43,0,0,0],[-121,3,-45,0,0,0],[-124,5,-46,0,0,0],[-125,5,-46,0,0,0],[-124,5,-46,0,0,0],[-122,4,-45,0,0,0],[-118,2,-43,0,0,0],[-111,-1,-42,0,0,0],[-104,-3,-42,0,0,0],[-98,-3,-42,0,0,0],[-94,-3,-41,0,0,0],[-90,-3,-40,0,0,0],[-84,-3,-39,0,0,0],[-79,-3,-38,0,0,0]]},"legPress:machine":{"pads":[[3,0,0.0057,0]]},"legExt:machine":{"pads":[[2,0,-0.0179,0],[5,0,0.0134,0]]},"rdl:dumbbell":{"h":[[22,15,-83,22,14,83],[22,15,-83,23,14,83],[23,15,-83,23,14,83],[22,15,-80,23,14,80],[22,14,-74,22,14,74],[21,13,-66,21,13,66],[20,11,-57,20,11,58],[19,9,-49,19,9,50],[18,6,-42,19,7,43],[18,4,-38,18,5,39],[18,5,-38,18,5,39],[18,8,-42,18,7,44],[19,10,-50,19,10,51],[20,12,-59,21,12,60],[21,13,-67,22,14,69],[22,14,-74,23,14,76],[22,15,-80,23,15,80],[22,15,-83,23,15,83],[22,15,-84,23,15,84],[21,15,-84,21,15,85],[18,15,-84,18,14,85]]},"legCurl:machine":{"pads":[[2,0,-0.0625,0]]},"legCurl:dumbbell":{"pads":[[2,0,-0.0625,0]]},"legCurl:none":{"pads":[[2,0,-0.0625,0]]},"hipThrust:dumbbell":{"h":[[12,90,-52,12,90,-52],[12,90,-52,12,90,-52],[12,89,-52,12,89,-52],[12,85,-52,12,85,-52],[12,81,-51,12,81,-51],[12,76,-50,12,76,-50],[12,68,-48,12,68,-48],[12,58,-43,12,58,-43],[12,49,-38,12,49,-38],[12,48,-35,12,48,-35],[12,55,-39,12,55,-39],[12,64,-45,12,64,-45],[12,73,-50,12,73,-50],[12,78,-53,12,78,-53],[12,82,-55,12,82,-55],[12,85,-57,12,85,-57],[12,86,-58,12,86,-58],[12,87,-58,12,87,-58],[11,87,-59,11,87,-59],[10,87,-59,10,87,-59],[9,86,-59,9,86,-59]]},"calf:machine":{"pads":[[2,0,-0.0254,0]]},"calf:dumbbell":{"pads":[[2,0,-0.0254,0]],"h":[[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-53,-3,28],[-53,-3,-27,-53,-3,27],[-51,-3,-27,-52,-3,27],[-50,-2,-26,-51,-2,26],[-51,-2,-26,-51,-2,26],[-52,-3,-27,-52,-2,27],[-53,-3,-27,-53,-3,27],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-2,-28,-54,-3,28],[-53,-2,-28,-54,-3,28],[-53,-2,-28,-53,-3,28],[-53,-2,-28,-53,-2,28]]},"calf:none":{"pads":[[2,0,-0.0254,0]]},"crunch:none":{"pads":[[2,0,-0.01,0]]},"crunch:cable":{"pads":[[2,0,-0.01,0]]},"crunch:machine":{"pads":[[2,0,-0.01,0],[5,-0.035,0,0]]},"legRaise:none":{"pads":[[2,0,-0.01,0]]},"bike:machine":{"pads":[[3,-0.0528,-0.0151,0],[5,0,-0.055,0]]},"bike:none":{"pads":[[3,-0.0528,-0.0151,0],[5,0,-0.055,0]]},"rowErg:machine":{"pads":[[6,0.0309,-0.0164,0],[7,0.0309,-0.0164,0]]},"frontSquat:kettlebell":{"h":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,1,0,0,1,0],[2,3,0,2,3,0],[4,7,0,4,7,0],[5,9,0,5,9,0],[6,10,0,6,10,0],[6,10,1,6,10,1],[6,10,1,6,10,1],[6,10,1,6,10,1],[5,9,1,5,9,1],[4,6,0,4,6,0],[2,3,0,2,3,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"crunch:kettlebell":{"pads":[[2,0,-0.01,0]],"h":[[-18,-26,0,-18,-26,0],[-22,-26,0,-22,-26,0],[-28,-26,0,-28,-26,0],[-32,-25,0,-32,-25,0],[-35,-24,0,-35,-24,0],[-36,-21,0,-36,-21,0],[-36,-17,0,-36,-17,0],[-36,-12,0,-36,-12,0],[-36,-10,0,-36,-10,0],[-36,-10,0,-36,-10,0],[-36,-12,0,-36,-12,0],[-36,-16,0,-36,-16,0],[-36,-20,0,-36,-20,0],[-35,-23,0,-35,-23,0],[-32,-25,0,-32,-25,0],[-29,-26,0,-29,-26,0],[-24,-26,0,-24,-26,0],[-19,-26,0,-19,-26,0],[-15,-26,0,-15,-26,0],[-13,-26,0,-13,-26,0],[-12,-26,0,-12,-26,0]]},"bench:none":{"pads":[[2,0,-0.0291,0]]},"incline:none":{"pads":[[3,0,-0.0278,0]]},"fly:none":{"pads":[[2,0,-0.0291,0]]},"pulldown:none":{"pads":[[2,0,-0.027,0],[4,0,-0.0333,0],[5,0,0.0235,0],[12,0,-0.009,0]]},"seatedRow:none":{"pads":[[4,0.0397,0,0],[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"legExt:none":{"pads":[[2,0,-0.0179,0],[5,0,0.0134,0]]},"chestPress:none":{"pads":[[2,0,-0.0165,0],[5,0,0.0129,0]]},"legPress:none":{"pads":[[3,0,0.0057,0]]},"kickback:none":{"pads":[[2,0,-0.0339,0]]},"preacherCurl:none":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0327,0]]},"skullCrusher:none":{"pads":[[2,0,-0.0291,0]]},"rowErg:none":{"pads":[[6,0.0309,-0.0164,0],[7,0.0309,-0.0164,0]]},"pullover:none":{"pads":[[2,0,-0.0291,0]]},"dbRow:none":{"pads":[[2,0,-0.0339,0]]}}; // se rellena con colisiones precalculadas (ver más abajo)
+  var GRIP_R = 0.016, FING_R = 0.0075; // radio del agarre y grosor de un dedo (m)
   var MUSCLE_IDS = { none: 0, pecs: 1, abs: 2, lats: 3, traps: 4, lowback: 5, glutes: 6, delts: 7, biceps: 8, triceps: 9, forearms: 10, quads: 11, hams: 12, calves: 13 };
   function boneKey(name) { return name.replace(/^mixamorig[:_]?/i, ''); }
 
-  // Clasifica cada vértice del modelo en reposo según el hueso dominante y su posición (delante/detrás)
+  // Mapa anatómico: cada músculo es una zona con bordes suaves definida sobre el modelo en reposo
+  // (coordenadas del modelo: y arriba, z adelante, x hacia la izquierda del modelo; ~1 u = 0.83 cm).
+  function ssm(e0, e1, x) { var t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); }
   function classifyMuscles(root) {
     root.updateMatrixWorld(true);
     var bonePos = {};
     root.traverse(function (o) { if (o.isBone) bonePos[boneKey(o.name)] = new T.Vector3().setFromMatrixPosition(o.matrixWorld); });
     function bp(n) { return bonePos[n] || new T.Vector3(); }
-    function along(p, a, b) { var d = b.clone().sub(a), L2 = d.lengthSq() || 1; var t = clamp(p.clone().sub(a).dot(d) / L2, 0, 1); return { t: t, c: a.clone().add(d.multiplyScalar(t)) }; }
+    // forma 2D (vista frontal x,y) con borde suave; e = distancia normalizada (1 = borde)
+    function soft(e, edge) { return 1 - ssm(1 - (edge || 0.18), 1 + (edge || 0.18), e); }
+    function ell(x, y, cx, cy, rx, ry, ang) {
+      var dx = x - cx, dy = y - cy;
+      if (ang) { var c = Math.cos(ang), s = Math.sin(ang), u = dx * c + dy * s, w = -dx * s + dy * c; dx = u; dy = w; }
+      return Math.sqrt(dx * dx / (rx * rx) + dy * dy / (ry * ry));
+    }
+    function sup(x, y, cx, cy, rx, ry) { var a = Math.abs(x - cx) / rx, b = Math.abs(y - cy) / ry; return Math.pow(a * a * a * a + b * b * b * b, 0.25); }
+    // segmento de extremidad: t a lo largo del hueso y ángulo alrededor (0 = delante, +90 = hacia fuera)
+    function limb(v, a, b, sideSign) {
+      var d = b.clone().sub(a), L = d.length(); d.divideScalar(L);
+      var t = v.clone().sub(a).dot(d) / L;
+      var r = v.clone().sub(a).sub(d.clone().multiplyScalar(t * L));
+      var fr = V(0, 0, 1); fr.sub(d.clone().multiplyScalar(fr.dot(d))).normalize();
+      var lat = d.clone().cross(fr).normalize(); if (lat.x * sideSign < 0) lat.multiplyScalar(-1);
+      return { t: t, ang: Math.atan2(r.dot(lat), r.dot(fr)) * 180 / Math.PI };
+    }
+    function angW(ang, center, half, edge) { var d = Math.abs(((ang - center + 540) % 360) - 180); return 1 - ssm(half - edge, half + edge, d); }
+    function tW(t, t0, t1, e) { return ssm(t0 - e, t0 + e, t) * (1 - ssm(t1 - e, t1 + e, t)); }
     var cache = {};
     root.traverse(function (m) {
       if (!m.isSkinnedMesh) return;
-      var g = m.geometry, pos = g.attributes.position, si = g.attributes.skinIndex, sw = g.attributes.skinWeight;
-      var ids = new Uint8Array(pos.count), v = new T.Vector3();
+      var g = m.geometry, pos = g.attributes.position, nor = g.attributes.normal, si = g.attributes.skinIndex, sw = g.attributes.skinWeight;
+      var n = pos.count, W = {}; MUSCLES.forEach(function (k) { W[k] = new Float32Array(n); });
+      if (/eye|head/i.test(m.name) && !/body|layer/i.test(m.name)) { cache[m.name] = W; return; }
       var bones = m.skeleton.bones.map(function (b) { return boneKey(b.name); });
-      for (var i = 0; i < pos.count; i++) {
+      var v = new T.Vector3(), nv = new T.Vector3(), nm = new T.Matrix3().getNormalMatrix(m.matrixWorld);
+      for (var i = 0; i < n; i++) {
         v.fromBufferAttribute(pos, i).applyMatrix4(m.matrixWorld);
-        var best = 0, bw = -1;
-        for (var k = 0; k < 4; k++) { var w = [sw.getX(i), sw.getY(i), sw.getZ(i), sw.getW(i)][k]; if (w > bw) { bw = w; best = [si.getX(i), si.getY(i), si.getZ(i), si.getW(i)][k]; } }
-        var bn = bones[best] || '', id = 0, side = bn.indexOf('Left') === 0 ? 'Left' : 'Right';
-        var dz;
-        if (/^Spine2$/.test(bn)) { var sp2 = bp('Spine2'); dz = v.z - sp2.z; id = dz > 4 ? (v.y < 168 ? 1 : 4) : (v.y > sp2.y + 6 ? 4 : 3); }
-        else if (/^Spine1$/.test(bn)) { dz = v.z - bp('Spine1').z; id = dz > 3 ? 2 : (Math.abs(v.x) > 8 ? 3 : 5); }
-        else if (/^Spine$/.test(bn)) { dz = v.z - bp('Spine').z; id = dz > 3 ? 2 : 5; }
-        else if (/^Hips$/.test(bn)) { dz = v.z - bp('Hips').z; id = dz < -3 ? 6 : (dz > 4 && v.y > bp('Hips').y - 6 ? 2 : 0); }
-        else if (/^Neck$/.test(bn)) { id = v.z < bp('Neck').z ? 4 : 0; }
-        else if (/Shoulder$/.test(bn)) { id = Math.abs(v.x) < 15 && v.y > bp(side + 'Shoulder').y - 3 ? 4 : 7; }
-        else if (/Arm$/.test(bn) && !/ForeArm/.test(bn)) {
-          var a1 = along(v, bp(side + 'Arm'), bp(side + 'ForeArm'));
-          id = a1.t < 0.3 ? 7 : (v.z > a1.c.z ? 8 : 9);
+        nv.fromBufferAttribute(nor, i).applyMatrix3(nm).normalize();
+        // peso de piel por grupo de huesos
+        var grp = {};
+        [[si.getX(i), sw.getX(i)], [si.getY(i), sw.getY(i)], [si.getZ(i), sw.getZ(i)], [si.getW(i), sw.getW(i)]].forEach(function (p) {
+          var bn = (bones[p[0]] || '').replace(/^(Left|Right)/, ''); grp[bn] = (grp[bn] || 0) + p[1];
+        });
+        function gw() { var s = 0; for (var k = 0; k < arguments.length; k++) s += grp[arguments[k]] || 0; return s; }
+        var torso = gw('Hips', 'Spine', 'Spine1', 'Spine2', 'Neck', 'Neck_1', 'Shoulder');
+        var x = Math.abs(v.x), y = v.y, sg = v.x >= 0 ? 1 : -1, S = sg > 0 ? 'Left' : 'Right';
+        var front = ssm(0.05, 0.4, nv.z), back = ssm(-0.05, -0.4, nv.z);
+        var tm = ssm(0.25, 0.6, torso + gw('Arm') * 0.35);
+        // ---- tronco
+        // pectoral mayor: abanico del esternón al húmero
+        W.pecs[i] = tm * front * soft(ell(x, y, 10.2, 157.5, 10.4, 10.6), 0.14) * ssm(0.6, 1.8, x)
+          * (1 - ssm(166, 170, y - (x < 12 ? 0 : (x - 12) * 0.2)));
+        // recto abdominal + oblicuos
+        W.abs[i] = ssm(0.25, 0.6, torso) * Math.max(
+          front * soft(sup(x, y, 0, 135.5, 8.2, 12.0), 0.12),
+          ssm(-0.35, 0.1, nv.z) * soft(ell(x, y, 12.8, 133, 4.6, 11.5), 0.2) * 0.9);
+        // dorsal ancho: ala desde la axila hasta la zona lumbar
+        W.lats[i] = tm * ssm(0.1, -0.3, nv.z) * soft(ell(x, y, 12.5, 146, 8.6, 17.5, -0.38), 0.16) * ssm(2.5, 5, x);
+        // trapecio: rombo desde la nuca hasta media espalda y la parte alta de los hombros
+        var dyT = y > 168 ? (y - 168) / 13 : (168 - y) / 22;
+        W.traps[i] = ssm(0.3, 0.6, torso + gw('Neck', 'Head') * 0.5) * ssm(0.15, -0.15, nv.z + (y > 168 ? -0.25 : 0))
+          * soft(x / Math.max(1.5, 18 - Math.max(0, 168 - y) * 0.45) + dyT * 0.55, 0.14) * (1 - ssm(181, 185, y)) * ssm(138, 144, y);
+        // erectores de la columna
+        W.lowback[i] = ssm(0.3, 0.6, torso) * back * soft(sup(x, y, 3.8, 134, 4.2, 12.5), 0.16);
+        // glúteos
+        W.glutes[i] = ssm(0.3, 0.6, torso + gw('UpLeg')) * ssm(0.0, -0.35, nv.z) * soft(ell(x, y, 9.6, 109.5, 9.4, 11.5), 0.14);
+        // ---- brazo
+        var armW = gw('Arm'), sh = gw('Shoulder');
+        if (armW + sh > 0.15) {
+          var ua = limb(v, bp(S + 'Arm'), bp(S + 'ForeArm'), sg);
+          W.delts[i] = ssm(0.25, 0.55, armW + sh) * tW(ua.t, -0.2, 0.36, 0.08) * angW(ua.ang, 90, 125, 25);
+          W.biceps[i] = ssm(0.3, 0.6, armW) * tW(ua.t, 0.32, 0.86, 0.08) * angW(ua.ang, 15, 62, 22);
+          W.triceps[i] = ssm(0.3, 0.6, armW) * tW(ua.t, 0.26, 0.9, 0.08) * angW(ua.ang, 185, 78, 24);
         }
-        else if (/ForeArm$/.test(bn)) { var a2 = along(v, bp(side + 'ForeArm'), bp(side + 'Hand')); id = a2.t < 0.75 ? 10 : 0; }
-        else if (/UpLeg$/.test(bn)) {
-          var a3 = along(v, bp(side + 'UpLeg'), bp(side + 'Leg'));
-          if (v.z > a3.c.z + 1) id = a3.t < 0.95 ? 11 : 0;
-          else id = (a3.t < 0.18 && v.z < a3.c.z - 3) ? 6 : (a3.t < 0.9 ? 12 : 0);
+        var faW = gw('ForeArm');
+        if (faW > 0.15) {
+          var fa = limb(v, bp(S + 'ForeArm'), bp(S + 'Hand'), sg);
+          W.forearms[i] = ssm(0.3, 0.6, faW) * tW(fa.t, 0.04, 0.66, 0.1);
         }
-        else if (/Leg$/.test(bn)) { var a4 = along(v, bp(side + 'Leg'), bp(side + 'Foot')); id = (v.z < a4.c.z && a4.t < 0.65) ? 13 : 0; }
-        ids[i] = id;
+        // ---- pierna
+        var thW = gw('UpLeg');
+        if (thW > 0.15) {
+          var th = limb(v, bp(S + 'UpLeg'), bp(S + 'Leg'), sg);
+          W.quads[i] = ssm(0.3, 0.6, thW) * tW(th.t, 0.1, 0.93, 0.08) * angW(th.ang, 25, 82, 22);
+          W.hams[i] = ssm(0.3, 0.6, thW) * tW(th.t, 0.2, 0.88, 0.08) * angW(th.ang, 185, 62, 22);
+        }
+        var shW = gw('Leg');
+        if (shW > 0.15) {
+          var sk = limb(v, bp(S + 'Leg'), bp(S + 'Foot'), sg);
+          W.calves[i] = ssm(0.3, 0.6, shW) * tW(sk.t, 0.06, 0.58, 0.08) * angW(sk.ang, 180, 82, 22);
+        }
       }
-      cache[m.name] = ids;
+      // suavizado: promedio con vecinos (2 pasadas) para bordes limpios
+      var idx = g.index ? g.index.array : null;
+      if (idx) {
+        var nb = []; for (var a = 0; a < n; a++) nb.push([]);
+        for (var f = 0; f < idx.length; f += 3) { var A = idx[f], B = idx[f + 1], Cc = idx[f + 2]; nb[A].push(B, Cc); nb[B].push(A, Cc); nb[Cc].push(A, B); }
+        MUSCLES.forEach(function (k) {
+          for (var pass = 0; pass < 4; pass++) {
+            var src = W[k], dst = new Float32Array(n);
+            for (var q = 0; q < n; q++) { var s = src[q] * 2, c = 2, L = nb[q]; for (var r = 0; r < L.length; r++) { s += src[L[r]]; c++; } dst[q] = s / c; }
+            W[k] = dst;
+          }
+        });
+      }
+      cache[m.name] = W;
     });
     return cache;
   }
+  // Tonifica el modelo: abulta el vientre de cada músculo y guarda la concavidad (separaciones musculares)
+  var TONE = { pecs: 1.5, delts: 1.5, biceps: 1.2, triceps: 1.0, forearms: 0.7, quads: 1.4, hams: 0.9, calves: 1.2, glutes: 0.9, lats: 1.1, traps: 0.9, abs: 0.5, lowback: 0.5 };
+  function toneModel(root, cache) {
+    root.traverse(function (m) {
+      if (!m.isSkinnedMesh || !cache[m.name]) return;
+      var g = m.geometry, P = g.attributes.position, N = g.attributes.normal, n = P.count, W = cache[m.name];
+      var eyes = /eye|head/i.test(m.name) && !/body|layer/i.test(m.name);
+      var cav = new Float32Array(n);
+      if (!eyes) {
+        for (var i = 0; i < n; i++) {
+          var d = 0;
+          for (var k in TONE) if (W[k]) { var w = W[k][i]; d += TONE[k] * w * w * (3 - 2 * w); }
+          d = Math.min(d, 2.0);
+          if (d > 0.001) P.setXYZ(i, P.getX(i) + N.getX(i) * d, P.getY(i) + N.getY(i) * d, P.getZ(i) + N.getZ(i) * d);
+        }
+        P.needsUpdate = true; g.computeVertexNormals(); N = g.attributes.normal;
+        // concavidad: >0 en surcos (sombra), <0 en relieves (brillo)
+        var cnt = new Float32Array(n), idx = g.index ? g.index.array : null;
+        if (idx) {
+          var add = function (a, b) {
+            var dx = P.getX(b) - P.getX(a), dy = P.getY(b) - P.getY(a), dz = P.getZ(b) - P.getZ(a), L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+            cav[a] += (dx * N.getX(a) + dy * N.getY(a) + dz * N.getZ(a)) / L; cnt[a]++;
+          };
+          for (var f = 0; f < idx.length; f += 3) { var A = idx[f], B = idx[f + 1], C = idx[f + 2]; add(A, B); add(A, C); add(B, A); add(B, C); add(C, A); add(C, B); }
+          for (var q = 0; q < n; q++) cav[q] = cnt[q] ? cav[q] / cnt[q] : 0;
+          var nb = []; for (var a2 = 0; a2 < n; a2++) nb.push([]);
+          for (var f2 = 0; f2 < idx.length; f2 += 3) { var x0 = idx[f2], x1 = idx[f2 + 1], x2 = idx[f2 + 2]; nb[x0].push(x1, x2); nb[x1].push(x0, x2); nb[x2].push(x0, x1); }
+          for (var pass = 0; pass < 2; pass++) { var o = new Float32Array(n); for (var r = 0; r < n; r++) { var sm = cav[r] * 2, c = 2, L2 = nb[r]; for (var z = 0; z < L2.length; z++) { sm += cav[L2[z]]; c++; } o[r] = sm / c; } cav = o; }
+          for (var t = 0; t < n; t++) cav[t] = clamp(cav[t] * 9, -1, 1);
+        }
+      }
+      g.setAttribute('cav', new T.BufferAttribute(cav, 1));
+    });
+  }
   function setModel(scene) {
     MODEL = scene;
-    MODEL.traverse(function (o) { if (o.isSkinnedMesh) o.frustumCulled = false; });
+    MODEL.traverse(function (o) {
+      if (!o.isSkinnedMesh) return;
+      o.frustumCulled = false;
+      var g = o.geometry, idx = g.index, P = g.attributes.position, N = g.attributes.normal;
+      if (!idx || !N) return;
+      var A = new T.Vector3(), B = new T.Vector3(), C = new T.Vector3(), fn = new T.Vector3(), vn = new T.Vector3(), e1 = new T.Vector3(), e2 = new T.Vector3();
+      var arr = idx.array, flipped = 0;
+      for (var f = 0; f < arr.length; f += 3) {
+        A.fromBufferAttribute(P, arr[f]); B.fromBufferAttribute(P, arr[f + 1]); C.fromBufferAttribute(P, arr[f + 2]);
+        fn.crossVectors(e1.subVectors(B, A), e2.subVectors(C, A));
+        vn.set(0, 0, 0);
+        for (var k = 0; k < 3; k++) vn.x += N.getX(arr[f + k]), vn.y += N.getY(arr[f + k]), vn.z += N.getZ(arr[f + k]);
+        if (fn.dot(vn) < 0) { var t = arr[f + 1]; arr[f + 1] = arr[f + 2]; arr[f + 2] = t; flipped++; }
+      }
+      idx.needsUpdate = true;
+    });
     MUSCLE_CACHE = classifyMuscles(MODEL);
+    toneModel(MODEL, MUSCLE_CACHE);
   }
 
   var _q1 = new T.Quaternion(), _q2 = new T.Quaternion(), _m1 = new T.Matrix4();
@@ -5264,6 +5393,31 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   }
   function perp(v, axis) { return v.clone().sub(axis.clone().multiplyScalar(v.dot(axis))); }
 
+  // Material de piel con músculos pintados: contorno limpio y un degradado suave dentro del músculo
+  function muscleMaterial(baseHex) {
+    var mat = new T.MeshStandardMaterial({ color: baseHex, roughness: 0.6, metalness: 0, side: T.DoubleSide });
+    mat.extensions = { derivatives: true };
+    mat.onBeforeCompile = function (sh) {
+      sh.vertexShader = 'attribute vec2 mw;\nattribute float cav;\nvarying vec2 vMw;\nvarying float vCav;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vMw = mw; vCav = cav;');
+      sh.fragmentShader = 'varying vec2 vMw;\nvarying float vCav;\n' +sh.fragmentShader.replace('#include <color_fragment>', [
+        '#include <color_fragment>',
+        ' float TH = 0.36;',
+        ' float ap = fwidth(vMw.x) * 0.9 + 0.004, as = fwidth(vMw.y) * 0.9 + 0.004;',
+        ' float pa = smoothstep(TH - ap, TH + ap, vMw.x);',
+        ' float sa = smoothstep(TH - as, TH + as, vMw.y);',
+        ' vec3 pc = mix(vec3(0.60, 0.04, 0.05), vec3(0.84, 0.12, 0.11), smoothstep(TH, 0.95, vMw.x));',
+        ' vec3 sc = mix(vec3(0.86, 0.36, 0.05), vec3(0.98, 0.56, 0.16), smoothstep(TH, 0.95, vMw.y));',
+        ' vec3 skin = diffuseColor.rgb;',
+        ' vec3 colM = mix(skin, sc, sa);',
+        ' colM = mix(colM, pc, pa);',
+        ' colM *= 1.0 - 0.5 * max(vCav, 0.0) + 0.06 * max(-vCav, 0.0);',
+        ' diffuseColor.rgb = colM;'
+      ].join('\n'));
+    };
+    mat.customProgramCacheKey = function () { return 'forjaMuscle'; };
+    return mat;
+  }
+
   function makeModelBody(scene, active) {
     var inst = T.SkeletonUtils.clone(MODEL);
     var wrap = new T.Group(); wrap.rotation.y = Math.PI / 2; wrap.scale.setScalar(MODEL_SCALE); wrap.add(inst); scene.add(wrap);
@@ -5271,15 +5425,38 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     inst.traverse(function (o) { if (o.isBone) bones[boneKey(o.name)] = o; if (o.isSkinnedMesh) meshes.push(o); });
     // Colores por vértice: piel neutra; músculos activos en rojo / naranja
     var base = new T.Color(0xe7e8ec), red = new T.Color(0xd8262d), orange = new T.Color(0xee8a2e);
-    var pid = active.p.map(function (m) { return MUSCLE_IDS[m]; }), sid = active.s.map(function (m) { return MUSCLE_IDS[m]; });
+    var dbg = global.FORJA3D_DEBUG_MUSCLES, palette = {};
+    if (dbg) MUSCLES.forEach(function (k, i) { palette[k] = new T.Color().setHSL(i / MUSCLES.length, 0.75, 0.5); });
     meshes.forEach(function (m) {
       var eyes = /eye|head/i.test(m.name) && !/body|layer/i.test(m.name);
       var g = m.geometry.clone(); m.geometry = g;
-      var ids = MUSCLE_CACHE[m.name] || new Uint8Array(g.attributes.position.count);
-      var col = new Float32Array(ids.length * 3);
-      for (var i = 0; i < ids.length; i++) {
-        var c = pid.indexOf(ids[i]) >= 0 && ids[i] ? red : (sid.indexOf(ids[i]) >= 0 && ids[i] ? orange : base);
-        if (eyes) c = new T.Color(0xc9ccd3);
+      var n = g.attributes.position.count, W = MUSCLE_CACHE[m.name] || {};
+      if (!dbg) {
+        // pesos por vértice (principal, secundario); el borde nítido se recorta en el sombreador
+        var mw = new Float32Array(n * 2);
+        if (!eyes) for (var q = 0; q < n; q++) {
+          var a = 0, b = 0;
+          active.p.forEach(function (k) { if (W[k]) a = Math.max(a, W[k][q]); });
+          active.s.forEach(function (k) { if (W[k]) b = Math.max(b, W[k][q]); });
+          mw[q * 2] = a; mw[q * 2 + 1] = b;
+        }
+        g.setAttribute('mw', new T.BufferAttribute(mw, 2));
+        m.material = muscleMaterial(eyes ? 0xc9ccd3 : 0xe9eaee);
+        m.castShadow = true; m.receiveShadow = true; m.frustumCulled = false;
+        return;
+      }
+      var col = new Float32Array(n * 3), c = new T.Color();
+      for (var i = 0; i < n; i++) {
+        c.copy(eyes ? new T.Color(0xc9ccd3) : base);
+        if (!eyes) {
+          if (dbg) { MUSCLES.forEach(function (k) { if (W[k]) c.lerp(palette[k], W[k][i]); }); }
+          else {
+            var ws = 0, wp = 0;
+            active.s.forEach(function (k) { if (W[k]) ws = Math.max(ws, W[k][i]); });
+            active.p.forEach(function (k) { if (W[k]) wp = Math.max(wp, W[k][i]); });
+            c.lerp(orange, ws * 0.95); c.lerp(red, wp * 0.97);
+          }
+        }
         col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
       }
       g.setAttribute('color', new T.BufferAttribute(col, 3));
@@ -5322,6 +5499,21 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       setWorldQuat(b, R.multiply(rest[name].q.clone()));
     }
     function rot(name, R) { var b = bones[name]; if (b) setWorldQuat(b, R.clone().multiply(rest[name].q.clone())); }
+    // como aim(), pero con la dirección de reposo dada (para la última falange, que no tiene hueso hijo)
+    function aimD(name, d0, d1, s0, s1) {
+      var b = bones[name]; if (!b) return;
+      setWorldQuat(b, frameQuat(d1, s1).multiply(frameQuat(d0, s0).invert()).multiply(rest[name].q.clone()));
+    }
+    // falanges: dirección y largo en reposo (la 3ª se prolonga desde la 2ª)
+    var fingerSeg = {};
+    ['Left', 'Right'].forEach(function (S) {
+      ['Index', 'Middle', 'Ring', 'Pinky'].forEach(function (F) {
+        var p1 = rest[S + 'Hand' + F + '1'], p2 = rest[S + 'Hand' + F + '2'], p3 = rest[S + 'Hand' + F + '3'];
+        if (!p1 || !p2 || !p3) return;
+        var a = p2.p.clone().sub(p1.p), b = p3.p.clone().sub(p2.p);
+        fingerSeg[S + F] = { 1: { d0: a.clone().normalize(), L: a.length() }, 2: { d0: b.clone().normalize(), L: b.length() }, 3: { d0: b.clone().normalize(), L: b.length() * 0.75 } };
+      });
+    });
     function worldPos(name) { return new T.Vector3().setFromMatrixPosition(bones[name].matrixWorld); }
 
     function pose(j) {
@@ -5343,29 +5535,103 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
         var fdir = hand.clone().sub(el).normalize(), udir = el.clone().sub(a0).normalize();
         var wrist = el.clone().add(fdir.clone().multiplyScalar(FAW));
         // brazo: el plano de flexión del codo
-        var bend = perp(fdir, udir), bend0 = perp(rp(S + 'Hand').clone().sub(rp(S + 'ForeArm')).normalize(), rp(S + 'ForeArm').clone().sub(rp(S + 'Arm')).normalize());
-        if (bend.length() < 0.25) { bend = perp(j.palm[k], udir); bend0 = perp(palm0[S], rp(S + 'ForeArm').clone().sub(rp(S + 'Arm')).normalize()); }
+        // giro del húmero: el pliegue del codo mira hacia donde se dobla el antebrazo;
+        // con el brazo estirado mira hacia delante (como en la anatomía real), nunca sigue a la palma
+        var udir0 = rp(S + 'ForeArm').clone().sub(rp(S + 'Arm')).normalize();
+        var bend0 = perp(fwd0.clone().add(up0.clone().multiplyScalar(0.35)), udir0).normalize();
+        var dflt = perp(j.fwd.clone().add(j.up.clone().multiplyScalar(0.35)), udir);
+        if (dflt.lengthSq() < 1e-4) dflt = perp(j.up, udir);
+        dflt.normalize();
+        var bendRaw = perp(fdir, udir), bw = ssm(0.12, 0.4, bendRaw.length());
+        var bend = bw > 0 ? dflt.clone().multiplyScalar(1 - bw).add(bendRaw.normalize().multiplyScalar(bw)).normalize() : dflt;
         aim(S + 'Arm', S + 'ForeArm', udir, bend0, bend);
-        aim(S + 'ForeArm', S + 'Hand', fdir, palm0[S], j.palm[k]);
-        aim(S + 'Hand', S + 'HandMiddle1', j.handDir[k], palm0[S], j.palm[k]);
-        // dedos: puño al agarrar, abiertos con la mano plana
         var fist = j.handMode[k] !== 'flat';
         var knuckle = j.handDir[k].clone().cross(j.palm[k]).normalize();
+        // la muñeca sigue al antebrazo (sin quiebres hacia atrás): la mano se limita a ±35° respecto al antebrazo
+        var hd = j.handDir[k].clone();
+        if (hd.angleTo(fdir) > rad(35)) { var ax = fdir.clone().cross(hd); if (ax.lengthSq() > 1e-8) hd = fdir.clone().applyAxisAngle(ax.normalize(), rad(35)); }
+        var palmN = j.palm[k];
+        function poseBase(fd) {
+          aim(S + 'ForeArm', S + 'Hand', fd, palm0[S], palmN);
+          aim(S + 'Hand', S + 'HandMiddle1', hd, palm0[S], palmN);
+        }
+        poseBase(fdir);
+        // el agarre queda en la palma, en la base de los dedos: se corrige la dirección del antebrazo
+        if (fist) {
+          for (var it = 0; it < 4; it++) {
+            var pp = worldPos(S + 'Hand').lerp(worldPos(S + 'HandMiddle1'), 0.86).add(palmN.clone().multiplyScalar(GRIP_R + 0.011));
+            var err = hand.clone().sub(pp);
+            if (err.length() < 0.003) break;
+            fdir = worldPos(S + 'Hand').add(err).sub(el).normalize();
+            poseBase(fdir);
+          }
+        }
+        // dedos con contacto: cada falange se cierra hasta tocar el agarre (no atraviesa la barra ni a los otros dedos)
+        var gAx = knuckle.clone();
+        function hitsGrip(a, b) {
+          for (var s = 0; s <= 4; s++) {
+            var p = a.clone().lerp(b, s / 4).sub(hand);
+            if (p.sub(gAx.clone().multiplyScalar(p.dot(gAx))).length() < GRIP_R + FING_R) return true;
+          }
+          return false;
+        }
         ['Index', 'Middle', 'Ring', 'Pinky'].forEach(function (F) {
-          var curl = 0;
-          [1, 2, 3].forEach(function (i, n) {
-            curl += fist ? [35, 80, 70][n] : [4, 4, 4][n];
-            var dirF = j.handDir[k].clone().applyAxisAngle(knuckle, -rad(curl));
-            var nrm = j.palm[k].clone().applyAxisAngle(knuckle, -rad(curl));
-            aim(S + 'Hand' + F + i, S + 'Hand' + F + (i + 1), dirF, palm0[S], nrm);
+          var cum = 0;
+          for (var i = 1; i <= 3; i++) {
+            var name = S + 'Hand' + F + i, seg = fingerSeg[S + F][i];
+            if (!bones[name] || !seg) continue;
+            var setA = function (a) {
+              var dirF = hd.clone().applyAxisAngle(knuckle, rad(cum + a)), nrm = palmN.clone().applyAxisAngle(knuckle, rad(cum + a));
+              aimD(name, seg.d0, dirF, palm0[S], nrm);
+              var p0 = worldPos(name);
+              return [p0, p0.clone().add(dirF.multiplyScalar(seg.L))];
+            };
+            var maxA = fist ? [80, 100, 75][i - 1] : 0, a = maxA;
+            if (fist) {
+              var free = 0, hit = -1;
+              for (var t = 10; t <= maxA + 0.1; t += 10) { var sg = setA(Math.min(t, maxA)); if (hitsGrip(sg[0], sg[1])) { hit = Math.min(t, maxA); break; } free = Math.min(t, maxA); }
+              if (hit >= 0) { for (var r = 0; r < 3; r++) { var mid = (free + hit) / 2, sm = setA(mid); if (hitsGrip(sm[0], sm[1])) hit = mid; else free = mid; } a = free; }
+            }
+            setA(a); cum += a;
+          }
+        });
+        // pulgar: rodea el agarre desde el otro lado y se detiene al tocarlo
+        var Rhand = frameQuat(hd, palmN).multiply(frameQuat(rp(S + 'HandMiddle1').clone().sub(rp(S + 'Hand')).normalize(), palm0[S]).invert());
+        function setThumb(a) {
+          var pts = [];
+          ['Thumb1', 'Thumb2', 'Thumb3'].forEach(function (t, n) {
+            var extra = new T.Quaternion().setFromAxisAngle(hd, (S === 'Left' ? -1 : 1) * rad(a * [0.6, 1.1, 1.5][n]));
+            rot(S + 'Hand' + t, extra.multiply(Rhand));
           });
-        });
-        // pulgar acompaña a la mano y se cierra un poco en el puño
-        var Rhand = frameQuat(j.handDir[k], j.palm[k]).multiply(frameQuat(rp(S + 'HandMiddle1').clone().sub(rp(S + 'Hand')).normalize(), palm0[S]).invert());
-        ['Thumb1', 'Thumb2', 'Thumb3'].forEach(function (t, n) {
-          var extra = new T.Quaternion().setFromAxisAngle(j.handDir[k], (S === 'Left' ? 1 : -1) * rad(fist ? 18 * (n + 1) : 0));
-          rot(S + 'Hand' + t, extra.multiply(Rhand));
-        });
+          var t1 = worldPos(S + 'HandThumb1'), t2 = worldPos(S + 'HandThumb2'), t3 = worldPos(S + 'HandThumb3');
+          var tip = t3.clone().add(t3.clone().sub(t2).multiplyScalar(0.75));
+          return [[t2, t3], [t3, tip]];
+        }
+        if (bones[S + 'HandThumb3']) {
+          setThumb(0);
+          if (!fist && bones[S + 'HandIndex1'] && bones[S + 'HandPinky1']) {
+            // mano plana apoyada: el pulgar descansa sobre la superficie, hacia delante y al costado
+            var rad1 = worldPos(S + 'HandIndex1').sub(worldPos(S + 'HandPinky1')); rad1.sub(palmN.clone().multiplyScalar(rad1.dot(palmN))).normalize();
+            var tdir = hd.clone().multiplyScalar(0.55).add(rad1.clone().multiplyScalar(0.8)).add(palmN.clone().multiplyScalar(-0.12)).normalize();
+            var tdir2 = hd.clone().multiplyScalar(0.8).add(rad1.clone().multiplyScalar(0.5)).add(palmN.clone().multiplyScalar(-0.1)).normalize();
+            var trf = rest[S + 'HandThumb3'].p.clone().sub(rest[S + 'HandThumb2'].p).normalize();
+            aim(S + 'HandThumb1', S + 'HandThumb2', tdir, palm0[S], palmN);
+            aim(S + 'HandThumb2', S + 'HandThumb3', tdir2, palm0[S], palmN);
+            aimD(S + 'HandThumb3', trf, tdir2, palm0[S], palmN);
+          }
+          if (fist && bones[S + 'HandIndex2']) {
+            // agarre de fuerza: el pulgar rodea el agarre por el lado contrario y se apoya sobre el índice
+            var e1 = palmN.clone().negate(), e2 = hd.clone();
+            var Cc = hand.clone().add(gAx.clone().multiplyScalar(worldPos(S + 'HandIndex1').sub(hand).dot(gAx)));
+            var R2 = GRIP_R + FING_R * 1.15;
+            function onC(a, b) { return Cc.clone().add(e1.clone().multiplyScalar(a).add(e2.clone().multiplyScalar(b)).normalize().multiplyScalar(R2)); }
+            var P2 = onC(0.35, -1), P3 = onC(-0.7, -0.6), Ptip = onC(-1, 0.35);
+            var tr = rest[S + 'HandThumb3'].p.clone().sub(rest[S + 'HandThumb2'].p).normalize();
+            aim(S + 'HandThumb1', S + 'HandThumb2', P2.clone().sub(worldPos(S + 'HandThumb1')), palm0[S], palmN);
+            aim(S + 'HandThumb2', S + 'HandThumb3', P3.clone().sub(worldPos(S + 'HandThumb2')), palm0[S], palmN);
+            aimD(S + 'HandThumb3', tr, Ptip.clone().sub(worldPos(S + 'HandThumb3')), palm0[S], palmN);
+          }
+        }
         // piernas: la rodilla mira hacia la punta del pie
         var ul = worldPos(S + 'UpLeg'), kn = j.knee[k], an = j.ank[k], fd = j.footDir[k], fu = j.footUp[k];
         var foot0 = rp(S + 'ToeBase').clone().sub(rp(S + 'Foot')); foot0.y = 0; foot0.normalize();
@@ -5470,7 +5736,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     if (sc.indexOf('hyperBench') >= 0) {
       // cojín bajo la parte delantera de los muslos y rodillo detrás de los tobillos
       var th = jR.knee.R.clone().sub(jR.hipJ.R).normalize(), tf = boneFront(jR.hipJ.R, jR.knee.R, jR.fwd);
-      var hpad = jR.hipJ.R.clone().add(th.clone().multiplyScalar(0.27)).add(tf.clone().multiplyScalar(0.11)); hpad.z = 0;
+      var hpad = jR.hipJ.R.clone().add(th.clone().multiplyScalar(0.31)).add(tf.clone().multiplyScalar(0.11)); hpad.z = 0;
       padAlong(hpad, th, 0.22, 0.07, 0.42);
       var sv = jR.ank.R.clone().sub(jR.knee.R).normalize(), sb = boneFront(jR.knee.R, jR.ank.R, jR.fwd).multiplyScalar(-1);
       var fp = jR.ank.R.clone().add(sv.clone().multiplyScalar(-0.06)).add(sb.clone().multiplyScalar(0.07)); fp.z = 0;
@@ -5505,7 +5771,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     }
     if (sc.indexOf('legCurl') >= 0) {
       var cy = jR.hip.y - 0.11 - 0.04;
-      solid(box(G, 1.25, 0.08, 0.38, M.pad, 0.15, cy, 0)); legs4(-0.35, 0.65, -0.12, 0.12, cy - 0.04);
+      solid(box(G, 1.08, 0.08, 0.38, M.pad, 0.065, cy, 0)); legs4(-0.35, 0.5, -0.12, 0.12, cy - 0.04);
       [-1, 1].forEach(function (sg) { cylX(G, 0.018, 0.14, M.metal, 0.5, cy - 0.06, sg * 0.25); });
       eqp.roller = cylZ(G, 0.05, 0.42, M.pad, 0, 0, 0);
       eqp.lever = box(G, 0.04, 0.44, 0.04, M.frame, 0, 0, 0.3);
@@ -5527,7 +5793,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       box(G, 1.7, 0.06, 0.32, M.frame, 0.12, 0.2, 0);
       solid(box(G, 0.44, 0.08, 0.38, M.pad, jR.hip.x, jR.hip.y - SEAT - 0.04, 0));
       box(G, 0.06, 0.18, 0.06, M.frame, jR.hip.x, 0.29, 0);
-      [-1, 1].forEach(function (sg) { var fpl = box(G, 0.05, 0.3, 0.16, M.frameLight, jR.ank.R.x + 0.07, 0.38, sg * 0.14); fpl.rotation.z = rad(-18); });
+      [-1, 1].forEach(function (sg) { var fpl = box(G, 0.05, 0.3, 0.16, M.frameLight, jR.ank.R.x + 0.1, 0.38, sg * 0.14); fpl.rotation.z = rad(-18); });
       box(G, 0.08, 0.5, 0.2, M.frame, 0.88, 0.45, 0);
     }
     if (sc.indexOf('seatedCalf') >= 0) {
@@ -5577,11 +5843,11 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       eqp.crank = new T.Group(); G.add(eqp.crank);
     }
     if (sc.indexOf('rower') >= 0) {
-      box(G, 2.2, 0.05, 0.16, M.frame, 0.05, 0.3, 0); box(G, 0.08, 0.28, 0.4, M.frame, -0.95, 0.14, 0);
+      box(G, 2.2, 0.05, 0.16, M.frame, 0.05, 0.15, 0); box(G, 0.08, 0.14, 0.4, M.frame, -0.95, 0.07, 0);
       box(G, 0.12, 0.62, 0.44, M.frame, 1.05, 0.31, 0);
       var fw = cylZ(G, 0.25, 0.14, M.plate, 1.08, 0.66, 0); fw.geometry = new T.CylinderGeometry(0.25, 0.25, 0.14, 40);
       [-1, 1].forEach(function (sg) { var fpl = box(G, 0.04, 0.3, 0.14, M.frameLight, 0.74, 0.42, sg * 0.12); fpl.rotation.z = rad(-28); });
-      eqp.seat = box(G, 0.3, 0.06, 0.3, M.pad, 0, 0.36 - SEAT + 0.02, 0);
+      eqp.seat = box(G, 0.22, 0.06, 0.3, M.pad, 0, 0.36 - SEAT - 0.05, 0);
     }
 
     // Pilas y torres
@@ -5638,6 +5904,18 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       scene.add(rope);
     }
 
+    // Colisiones precalculadas con el modelo real (cojines ajustados y desvío de las manos con pesas)
+    var held = dbs.slice(); if (kb) held.push(kb);
+    var meshList = []; scene.traverse(function (o) { if (o.isMesh && !o.isSkinnedMesh) meshList.push(o); });
+    var bake = MODEL && !global.FORJA3D_NO_BAKE ? BAKED[key + ':' + eq] : null;
+    if (bake && bake.pads) bake.pads.forEach(function (p) { var m = meshList[p[0]]; if (m) m.position.add(V(p[1], p[2], p[3])); });
+    var hoff = bake && bake.h ? bake.h : null;
+    function hoffAt(ph) {
+      var n = hoff.length, x = clamp(ph, 0, 1) * (n - 1), i0 = Math.floor(x), i1 = Math.min(n - 1, i0 + 1), t = x - i0, a = hoff[i0], b = hoff[i1];
+      function at(o) { return [0, 1, 2].map(function (c) { return (a[o + c] * (1 - t) + b[o + c] * t) / 1000; }); }
+      return { L: at(0), R: at(3) };
+    }
+
     // Cámara
     var camera = new T.PerspectiveCamera(30, 1, 0.1, 50);
     var cam = d.cam || {};
@@ -5660,7 +5938,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
     function handFrame(j, k) { var dir = j.handDir[k], n = j.palm[k]; return { dir: dir, n: n, k: dir.clone().cross(n).normalize() }; }
     function orient(mesh, pos, axis) { mesh.position.copy(pos); mesh.quaternion.setFromUnitVectors(V(0, 0, 1), axis.clone().normalize()); }
 
-    var state = { j: null, solids: solids };
+    var state = { j: null, solids: solids, held: held, meshList: meshList };
     function update(phase) {
       var pr = poseAt(d, phase), f = pr.f, u = pr.u;
       var A = f.arms || {};
@@ -5677,6 +5955,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
         f = Object.assign({}, f, { arms: { ik: [bp.x, bp.y], gw: gw2, pole: pole, palm: 'pro' } });
         f._bar = bp;
       }
+      if (hoff) f = Object.assign({}, f, { _hOff: hoffAt(phase) });
       var j = solve(f);
       state.j = j;
       if (model) model.pose(j); else poseBody(body, j);
@@ -5712,7 +5991,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       if (eqp.roller) {
         var rp;
         if (sc.indexOf('legExt') >= 0) rp = j.ank.R.clone().add(j.knee.R.clone().sub(j.ank.R).normalize().multiplyScalar(0.06)).add(boneFront(j.knee.R, j.ank.R, j.fwd).multiplyScalar(0.07));
-        else rp = j.ank.R.clone().add(j.knee.R.clone().sub(j.ank.R).normalize().multiplyScalar(0.08)).add(boneFront(j.knee.R, j.ank.R, j.fwd).multiplyScalar(-0.075));
+        else rp = j.ank.R.clone().add(j.knee.R.clone().sub(j.ank.R).normalize().multiplyScalar(0.08)).add(boneFront(j.knee.R, j.ank.R, j.fwd).multiplyScalar(-0.097));
         eqp.roller.position.set(rp.x, rp.y, 0);
         segment(eqp.lever, V(j.knee.R.x, j.knee.R.y, 0.3), V(rp.x, rp.y, 0.3));
       }
@@ -5730,7 +6009,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
         eqp.sled.quaternion.setFromUnitVectors(V(1, 0, 0), nrm);
       }
       if (eqp.beltMarks) eqp.beltMarks.forEach(function (bmk, i) { var x = ((i / 8 - phase) % 1 + 1) % 1; bmk.position.x = 0.78 - x * 1.6; });
-      if (eqp.seat) eqp.seat.position.set(j.hip.x, 0.36 - SEAT + 0.02, 0);
+      if (eqp.seat) eqp.seat.position.set(j.hip.x, 0.36 - SEAT - 0.05, 0);
       if (eqp.crank && f.pedals) {
         while (eqp.crank.children.length) eqp.crank.remove(eqp.crank.children[0]);
         var c0 = V(f.pedals[2][0], f.pedals[2][1], 0);
@@ -5776,7 +6055,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
       }
     }
     update(d.keys ? (d.thumb || 0.5) : 0.42);
-    return { scene: scene, camera: camera, update: update, label: '', state: state, def: d };
+    return { scene: scene, camera: camera, update: update, label: '', state: state, def: d, _setHOff: function (a) { hoff = a; } };
   }
 
   // ---------------------------------------------------------------------------
@@ -5829,7 +6108,7 @@ figcaption{padding:8px 4px 4px;font-weight:600;font-size:14px}
   global.FORJA3D = { createStage: createStage, mount: mount, makeRenderer: makeRenderer, loadModel: loadModel, setModel: setModel,
     patterns: Object.keys(P).filter(function (k) { return k !== 'lateral'; }), periodFor: periodFor,
     label: function () { return ''; },
-    _test: { P: P, solve: solve, poseAt: poseAt, mixVal: mixVal, C: { ANK: ANK, REACH: REACH, SPINE: SPINE, UA: UA, FA: FA, TH: TH, SH: SH } } };
+    _test: { mc: function () { return MUSCLE_CACHE; }, P: P, solve: solve, poseAt: poseAt, mixVal: mixVal, C: { ANK: ANK, REACH: REACH, SPINE: SPINE, UA: UA, FA: FA, TH: TH, SH: SH } } };
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>
 <script>
