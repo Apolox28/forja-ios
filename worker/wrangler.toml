@@ -1,0 +1,16 @@
+name = "forja-coach"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[vars]
+GEMINI_MODEL = "gemini-flash-lite-latest"
+FALLBACK_MODEL = "@cf/google/gemma-4-26b-a4b-it,@cf/meta/llama-3.2-3b-instruct"
+DAILY_LIMIT = "40"
+
+[ai]
+binding = "AI"
+
+[[kv_namespaces]]
+binding = "RATE"
+id = "e3d6b3e1a48840f6b99320d559493ae3"
