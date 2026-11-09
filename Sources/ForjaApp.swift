@@ -3,12 +3,22 @@ import SwiftUI
 @main
 struct ForjaApp: App {
     @StateObject var store = Store()
+    @AppStorage("themeAccent") var accent: String = AccentChoice.forja.rawValue
+    @AppStorage("themeBackground") var background: String = BackgroundChoice.system.rawValue
+
+    init() {
+        AppTheme.applyUIKitAppearance()
+    }
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(store)
                 .tint(.brand)
+                .preferredColorScheme(AppTheme.background.scheme)
+                // Al cambiar el tema se reconstruye la interfaz con los nuevos colores.
+                .id(accent + "-" + background)
+                .onChange(of: background) { _ in AppTheme.applyUIKitAppearance() }
         }
     }
 }

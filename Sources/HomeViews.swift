@@ -108,30 +108,23 @@ struct WorkoutRow: View {
     @EnvironmentObject var store: Store
     let workout: Workout
 
-    var summary: String {
-        workout.exercises.map { "\($0.sets.count)× \(store.exerciseName($0.exerciseID))" }.joined(separator: " · ")
-    }
-
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(workout.name).font(.headline)
+        VStack(alignment: .leading, spacing: 5) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(workout.name)
+                    .font(.headline)
+                    .lineLimit(1)
                 Spacer()
-                Text(Fmt.shortDate(workout.start)).font(.caption).foregroundColor(.secondary)
+                Text(Fmt.shortDate(workout.start))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
-            HStack(spacing: 14) {
+            HStack(spacing: 16) {
                 Label(Fmt.duration(workout.duration), systemImage: "clock")
                 Label("\(Fmt.int(workout.volume)) \(store.unit)", systemImage: "scalemass")
-                Label("\(workout.setCount)", systemImage: "list.number")
-                if workout.exercises.contains(where: { store.isPR($0, in: workout) }) {
-                    Label("PR", systemImage: "trophy.fill").foregroundColor(.yellow)
-                }
             }
-            .font(.caption)
+            .font(.subheadline)
             .foregroundColor(.secondary)
-            Text(summary)
-                .font(.caption)
-                .lineLimit(2)
         }
         .padding(.vertical, 4)
     }
@@ -274,6 +267,26 @@ struct WorkoutDetailView: View {
             }
             ForEach(w.exercises) { e in
                 Section(header: exerciseHeader(e, in: w)) {
+                    if let ex = store.exercise(e.exerciseID) {
+                        NavigationLink(destination: ExerciseDetailView(exerciseID: ex.id)) {
+                            HStack(spacing: 12) {
+                                ExerciseThumbnail(exercise: ex, size: 52)
+                                VStack(alignment: .leading, spacing: 3) {
+                                    Text("Técnica, historial y animación")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(.primary)
+                                    HStack(spacing: 10) {
+                                        Label(e.restSeconds == 0 ? "Sin descanso" : "Descanso \(Fmt.clock(TimeInterval(e.restSeconds)))",
+                                              systemImage: "timer")
+                                        Label("\(e.sets.count) series", systemImage: "list.number")
+                                    }
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                }
+                            }
+                            .padding(.vertical, 2)
+                        }
+                    }
                     if !e.notes.isEmpty {
                         Text(e.notes).font(.caption).foregroundColor(.secondary)
                     }

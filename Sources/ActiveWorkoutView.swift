@@ -222,12 +222,11 @@ struct ExerciseSection: View {
                 }
             }
             Spacer()
+            RestTimeButton(seconds: entry.restSeconds) { s in
+                entry.restSeconds = s
+                store.rememberRest(s, for: entry.exerciseID)
+            }
             Menu {
-                Menu("Descanso: \(Fmt.rest(entry.restSeconds))") {
-                    ForEach([0, 30, 45, 60, 90, 120, 150, 180, 240, 300], id: \.self) { s in
-                        Button(Fmt.rest(s)) { entry.restSeconds = s }
-                    }
-                }
                 if !others.isEmpty {
                     Menu("Superserie con…") {
                         ForEach(others) { o in
@@ -244,13 +243,10 @@ struct ExerciseSection: View {
                     Label("Quitar ejercicio", systemImage: "trash")
                 }
             } label: {
-                HStack(spacing: 4) {
-                    Image(systemName: "timer")
-                    Text(Fmt.rest(entry.restSeconds))
-                    Image(systemName: "ellipsis.circle")
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
+                Image(systemName: "ellipsis.circle")
+                    .font(.title3)
+                    .foregroundColor(.secondary)
+                    .padding(.leading, 6)
             }
         }
         .textCase(nil)

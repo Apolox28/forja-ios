@@ -183,7 +183,29 @@ final class Store: ObservableObject {
         let count = setCount ?? max(1, previousSets(for: exerciseID).count)
         return WorkoutExercise(exerciseID: exerciseID,
                                sets: (0..<count).map { _ in WorkoutSet() },
-                               restSeconds: data.settings.defaultRest)
+                               restSeconds: restFor(exerciseID))
+    }
+
+    // MARK: - Descanso recordado por ejercicio
+
+    private static let restKey = "restByExercise"
+
+    /// Descanso que el usuario eligió la última vez para este ejercicio (o el general).
+    func restFor(_ exerciseID: UUID) -> Int {
+        let dict = UserDefaults.standard.dictionary(forKey: Store.restKey) as? [String: Int] ?? [:]
+        return dict[exerciseID.uuidString] ?? data.settings.defaultRest
+    }
+
+    func rememberRest(_ seconds: Int, for exerciseID: UUID) {
+        var dict = UserDefaults.standard.dictionary(forKey: Store.restKey) as? [String: Int] ?? [:]
+        dict[exerciseID.uuidString] = seconds
+        UserDefaults.standard.set(dict, forKey: Store.restKey)
+        objectWillChange.send()
+    }
+
+    func hasRememberedRest(_ exerciseID: UUID) -> Bool {
+        let dict = UserDefaults.standard.dictionary(forKey: Store.restKey) as? [String: Int] ?? [:]
+        return dict[exerciseID.uuidString] != nil
     }
 
     /// Series de la última vez que se hizo este ejercicio.
@@ -235,6 +257,8 @@ final class Store: ObservableObject {
         w.exercises = template.map { ex in
             var copy = ex
             copy.id = UUID()
+            // Si el usuario fijó un descanso para este ejercicio, se usa ese.
+            if hasRememberedRest(ex.exerciseID) { copy.restSeconds = restFor(ex.exerciseID) }
             copy.sets = ex.sets.map { s in
                 var n = s
                 n.id = UUID()

@@ -70,6 +70,8 @@ struct ProfileView: View {
                     .padding(.vertical, 6)
                 }
 
+                AppearanceSection()
+
                 Section(header: Text("Ajustes")) {
                     Picker("Unidad de peso", selection: $store.data.settings.unit) {
                         ForEach(WeightUnit.allCases) { u in Text(u.rawValue).tag(u) }

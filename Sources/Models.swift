@@ -332,5 +332,6 @@ enum Fmt {
 }
 
 extension Color {
-    static let brand = Color(red: 0.98, green: 0.42, blue: 0.18)
+    /// Color principal de la app (elegido en Perfil → Apariencia).
+    static var brand: Color { AppTheme.accent.color }
 }
