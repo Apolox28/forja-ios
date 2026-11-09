@@ -23,8 +23,8 @@ struct RootView: View {
                 .tabItem { Label("Inicio", systemImage: "house.fill") }
             TrainView()
                 .tabItem { Label("Entrenar", systemImage: "flame.fill") }
-            ExercisesView()
-                .tabItem { Label("Ejercicios", systemImage: "list.bullet.rectangle") }
+            CoachView()
+                .tabItem { Label("Coach", systemImage: "sparkles") }
             ProgressTabView()
                 .tabItem { Label("Progreso", systemImage: "chart.bar.fill") }
             ProfileView()

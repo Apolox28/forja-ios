@@ -12,6 +12,7 @@ struct TrainView: View {
     @EnvironmentObject var store: Store
     @State var editorItem: RoutineEditorItem? = nil
     @State var showTemplates = false
+    @State var showLibrary = false
     @State var collapsed: Set<String> = []
 
     var folders: [String] {
@@ -74,6 +75,21 @@ struct TrainView: View {
             }
             .listStyle(.insetGrouped)
             .navigationTitle("Entrenar")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showLibrary = true
+                    } label: {
+                        Label("Ejercicios", systemImage: "books.vertical")
+                    }
+                }
+            }
+            .background(
+                Color.clear.sheet(isPresented: $showLibrary) {
+                    ExercisesView()
+                        .environmentObject(store)
+                }
+            )
             .sheet(item: $editorItem) { item in
                 RoutineEditorView(routine: item.routine, isNew: item.isNew)
                     .environmentObject(store)

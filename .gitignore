@@ -4,3 +4,5 @@ Payload/
 *.ipa
 Support/Info.plist
 .DS_Store
+worker/.wrangler/
+worker/node_modules/
