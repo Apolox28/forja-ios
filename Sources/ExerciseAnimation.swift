@@ -13,6 +13,14 @@ struct ExerciseAnimationView: UIViewRepresentable {
     }
     static let three: String = resource("three.min")
     static let engine: String = resource("forja3d")
+    static let gltfLoader: String = resource("GLTFLoader")
+    static let skeletonUtils: String = resource("SkeletonUtils")
+    /// Modelo humano (GLB) codificado en base64 para cargarlo dentro de la vista web sin red.
+    static let modelBase64: String = {
+        guard let url = Bundle.main.url(forResource: "body", withExtension: "glb"),
+              let data = try? Data(contentsOf: url) else { return "" }
+        return data.base64EncodedString()
+    }()
 
     var patternKey: String { ExerciseSeed.pattern(for: exercise).rawValue }
     var equipmentKey: String { ExerciseSeed.animationEquipment(exercise.equipment) }
@@ -75,11 +83,14 @@ struct ExerciseAnimationView: UIViewRepresentable {
         </style>
         </head><body><div id="w"><canvas id="c"></canvas><div id="l"></div></div>
         <script>\(ExerciseAnimationView.three)</script>
+        <script>\(ExerciseAnimationView.gltfLoader)</script>
+        <script>\(ExerciseAnimationView.skeletonUtils)</script>
         <script>\(ExerciseAnimationView.engine)</script>
         <script>
-        var st = FORJA3D.mount(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', { muscle: '\(muscleKey)', period: 3200 });
-        var l = document.getElementById('l');
-        if (st && st.label) { l.textContent = st.label; } else { l.remove(); }
+        document.getElementById('l').remove();
+        function start() { FORJA3D.mount(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', { muscle: '\(muscleKey)' }); }
+        var data = '\(ExerciseAnimationView.modelBase64)';
+        if (data.length > 0) { FORJA3D.loadModel(data, function () { start(); }); } else { start(); }
         </script>
         </body></html>
         """

@@ -21,8 +21,8 @@ targets:
         CFBundleLocalizations:
           - es
           - en
-        CFBundleShortVersionString: "1.4"
-        CFBundleVersion: "9"
+        CFBundleShortVersionString: "1.5"
+        CFBundleVersion: "10"
         UILaunchScreen: {}
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
@@ -44,8 +44,8 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.forja.app
-        MARKETING_VERSION: "1.4"
-        CURRENT_PROJECT_VERSION: "9"
+        MARKETING_VERSION: "1.5"
+        CURRENT_PROJECT_VERSION: "10"
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
