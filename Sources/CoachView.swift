@@ -8,6 +8,8 @@ struct CoachMessage: Identifiable, Codable, Equatable {
     var role: String   // "user" o "model"
     var text: String
     var date = Date()
+    var exerciseName: String? = nil
+    var offline: Bool? = nil
 }
 
 struct CoachRoutineProposal: Identifiable, Equatable {
@@ -58,7 +60,7 @@ final class CoachModel: ObservableObject {
         persist()
     }
 
-    func send(_ text: String, context: String) async {
+    func send(_ text: String, context: String, library: [Exercise]) async {
         let question = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !question.isEmpty, !sending else { return }
         errorText = nil
@@ -74,7 +76,7 @@ final class CoachModel: ObservableObject {
         req.setValue("forja-ios", forHTTPHeaderField: "X-Forja-App")
         req.setValue(CoachConfig.deviceID, forHTTPHeaderField: "X-Forja-Device")
         let payload: [String: Any] = [
-            "messages": messages.suffix(16).map { ["role": $0.role, "text": $0.text] },
+            "messages": messages.filter { $0.offline != true }.suffix(16).map { ["role": $0.role, "text": $0.text] },
             "context": context,
         ]
         req.httpBody = try? JSONSerialization.data(withJSONObject: payload)
@@ -90,8 +92,78 @@ final class CoachModel: ObservableObject {
                 errorText = (json["message"] as? String) ?? "El Coach no ha podido responder. Inténtalo de nuevo."
             }
         } catch {
-            errorText = "Sin conexión. Revisa tu internet e inténtalo otra vez."
+            // Sin internet: respuesta con la biblioteca guardada en el iPhone.
+            messages.append(CoachModel.offlineAnswer(to: question, library: library))
+            persist()
         }
+    }
+
+    // MARK: Modo sin conexión
+
+    static func normalize(_ s: String) -> String {
+        s.folding(options: [.diacriticInsensitive, .caseInsensitive], locale: Locale(identifier: "es_ES")).lowercased()
+    }
+
+    /// Busca el ejercicio de la biblioteca al que se refiere la pregunta.
+    static func findExercise(in question: String, library: [Exercise]) -> Exercise? {
+        let q = normalize(question)
+        let stop: Set<String> = ["con", "en", "de", "del", "la", "el", "los", "las", "al", "para", "sobre", "una", "por", "agarre"]
+        var best: Exercise? = nil
+        var bestScore = 0
+        for (index, ex) in library.enumerated() {
+            let n = normalize(ex.name)
+            var score = 0
+            if q.contains(n) {
+                score = 10_000 + n.count
+            } else {
+                let words = n.split(separator: " ").map(String.init).filter { $0.count >= 4 && !stop.contains($0) }
+                guard let first = words.first else { continue }
+                let hits = words.filter { q.contains($0) }.count
+                if hits == words.count {
+                    score = 5_000 + hits * 100
+                } else if hits >= 2 {
+                    score = 3_000 + hits * 100
+                } else if q.contains(first) {
+                    // Solo la palabra principal («sentadilla», «remo»…): el primero de la biblioteca es el básico.
+                    score = 1_000 - min(index, 999)
+                }
+            }
+            if score > bestScore { bestScore = score; best = ex }
+        }
+        return best
+    }
+
+    static func offlineAnswer(to question: String, library: [Exercise]) -> CoachMessage {
+        let q = normalize(question)
+        let header = "📴 **Sin conexión.** Te respondo con la guía guardada en tu iPhone; cuando vuelva internet tendrás al Coach completo.\n\n"
+
+        if let ex = findExercise(in: question, library: library) {
+            let guide = ExerciseSeed.guide(for: ex)
+            var text = header + "**\(ex.name)** · \(ex.muscle.rawValue) · \(ex.equipment.rawValue)\n\n"
+            if !guide.steps.isEmpty {
+                text += "**Cómo hacerlo**\n"
+                for (i, step) in guide.steps.enumerated() { text += "\(i + 1). \(step)\n" }
+            }
+            if !guide.tips.isEmpty {
+                text += "\n**Consejos**\n"
+                for tip in guide.tips { text += "• \(tip)\n" }
+            }
+            return CoachMessage(role: "model", text: text.trimmingCharacters(in: .whitespacesAndNewlines),
+                                exerciseName: ex.name, offline: true)
+        }
+
+        let topics: [([String], String)] = [
+            (["descans", "pausa", "recuper"], "**Descanso entre series (guía general)**\n• Fuerza (1–5 reps): 2–5 minutos.\n• Hipertrofia (6–12 reps): 1–2 minutos y medio.\n• Resistencia o aislamiento (12+ reps): 30–90 segundos.\nPuedes ajustar el temporizador de cada ejercicio en su menú ⋯ durante el entrenamiento."),
+            (["calent", "entrar en calor"], "**Calentamiento**\n1. 5 minutos de cardio suave.\n2. Movilidad de las articulaciones que vas a usar.\n3. 2–4 series de aproximación del primer ejercicio, subiendo el peso poco a poco.\nTienes la calculadora en Perfil → Series de calentamiento."),
+            (["rutina", "plan", "programa", "dias"], "**Rutinas sin conexión**\nEn **Entrenar → Explorar programas predefinidos** tienes planes listos (cuerpo completo, torso/pierna, empuje/tirón/pierna y en casa). Con internet, pídeme uno a tu medida y lo guardo en tus rutinas."),
+            (["estanc", "progres", "subir peso"], "**Para progresar**\n• Sube peso cuando completes todas las series con buena técnica.\n• Si te estancas, prueba más repeticiones antes de subir peso, o baja un 10 % y vuelve a subir.\n• Duerme bien y come suficiente proteína.\n• Revisa tus récords en la ficha de cada ejercicio."),
+        ]
+        for (keys, answer) in topics where keys.contains(where: { q.contains($0) }) {
+            return CoachMessage(role: "model", text: header + answer, offline: true)
+        }
+        return CoachMessage(role: "model",
+                            text: header + "Sin internet puedo explicarte **cualquier ejercicio de tu biblioteca**: escribe su nombre (por ejemplo «peso muerto» o «jalón al pecho»). También puedo darte pautas de **descanso**, **calentamiento** y **progresión**.",
+                            offline: true)
     }
 
     // MARK: Rutinas propuestas por el Coach
@@ -203,6 +275,7 @@ struct CoachView: View {
     @State var input = ""
     @State var savedMessage: String? = nil
     @State var confirmReset = false
+    @State var infoExercise: Exercise? = nil
 
     let suggestions = [
         "¿Cómo mejoro mi press de banca?",
@@ -223,7 +296,9 @@ struct CoachView: View {
                                 welcome
                             }
                             ForEach(model.messages) { m in
-                                CoachBubble(message: m) { p in
+                                CoachBubble(message: m, onShowExercise: { name in
+                                    infoExercise = store.data.exercises.first { $0.name == name }
+                                }) { p in
                                     let n = store.saveCoachRoutine(p)
                                     savedMessage = n > 0
                                         ? "Rutina «\(p.name)» guardada con \(n) ejercicios en Entrenar → carpeta Coach."
@@ -284,6 +359,10 @@ struct CoachView: View {
             .confirmationDialog("¿Empezar una conversación nueva?", isPresented: $confirmReset, titleVisibility: .visible) {
                 Button("Nueva conversación", role: .destructive) { model.reset() }
                 Button("Cancelar", role: .cancel) {}
+            }
+            .sheet(item: $infoExercise) { ex in
+                ExerciseInfoSheet(exercise: ex)
+                    .environmentObject(store)
             }
             .alert("Coach", isPresented: Binding(get: { savedMessage != nil }, set: { if !$0 { savedMessage = nil } })) {
                 Button("OK", role: .cancel) {}
@@ -363,12 +442,14 @@ struct CoachView: View {
         input = ""
         hideKeyboard()
         let context = store.coachContext()
-        Task { await model.send(q, context: context) }
+        let library = store.data.exercises
+        Task { await model.send(q, context: context, library: library) }
     }
 }
 
 struct CoachBubble: View {
     let message: CoachMessage
+    var onShowExercise: (String) -> Void = { _ in }
     let onSaveRoutine: (CoachRoutineProposal) -> Void
 
     var isUser: Bool { message.role == "user" }
@@ -394,6 +475,19 @@ struct CoachBubble: View {
                             .fill(isUser ? Color.brand : Color(.secondarySystemBackground))
                     )
                 if !isUser { Spacer(minLength: 24) }
+            }
+            if !isUser, let name = message.exerciseName {
+                Button {
+                    onShowExercise(name)
+                } label: {
+                    Label("Ver animación e instrucciones", systemImage: "play.rectangle.fill")
+                        .font(.subheadline.bold())
+                        .foregroundColor(.brand)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Capsule().stroke(Color.brand, lineWidth: 1.5))
+                }
+                .buttonStyle(.plain)
             }
             if !isUser {
                 ForEach(CoachModel.proposals(in: message.text)) { p in
