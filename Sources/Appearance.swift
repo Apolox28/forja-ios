@@ -39,6 +39,8 @@ enum AccentChoice: String, CaseIterable, Identifiable {
 
 enum BackgroundChoice: String, CaseIterable, Identifiable {
     case system, light, dark, black
+    case midnight, slate, forest, ocean, wine, plum
+    case sand, lavender, mint, blush
 
     var id: String { rawValue }
 
@@ -48,23 +50,75 @@ enum BackgroundChoice: String, CaseIterable, Identifiable {
         case .light: return "Claro"
         case .dark: return "Oscuro"
         case .black: return "Negro"
-        }
-    }
-
-    var icon: String {
-        switch self {
-        case .system: return "circle.lefthalf.filled"
-        case .light: return "sun.max.fill"
-        case .dark: return "moon.fill"
-        case .black: return "moon.stars.fill"
+        case .midnight: return "Medianoche"
+        case .slate: return "Pizarra"
+        case .forest: return "Bosque"
+        case .ocean: return "Océano"
+        case .wine: return "Vino"
+        case .plum: return "Ciruela"
+        case .sand: return "Arena"
+        case .lavender: return "Lavanda"
+        case .mint: return "Menta"
+        case .blush: return "Rosa palo"
         }
     }
 
     var scheme: ColorScheme? {
         switch self {
         case .system: return nil
-        case .light: return .light
-        case .dark, .black: return .dark
+        case .light, .sand, .lavender, .mint, .blush: return .light
+        default: return .dark
+        }
+    }
+
+    private static func rgb(_ hex: Int) -> UIColor {
+        UIColor(red: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255,
+                blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+    }
+
+    /// Fondo de las pantallas (nil = el de iOS).
+    var background: UIColor? {
+        switch self {
+        case .system, .light, .dark: return nil
+        case .black: return .black
+        case .midnight: return Self.rgb(0x0B1426)
+        case .slate: return Self.rgb(0x1C2230)
+        case .forest: return Self.rgb(0x0E1F17)
+        case .ocean: return Self.rgb(0x062228)
+        case .wine: return Self.rgb(0x220A10)
+        case .plum: return Self.rgb(0x1E0F26)
+        case .sand: return Self.rgb(0xF3ECDF)
+        case .lavender: return Self.rgb(0xECE8F8)
+        case .mint: return Self.rgb(0xE3F3EC)
+        case .blush: return Self.rgb(0xF8E8EE)
+        }
+    }
+
+    /// Fondo de las tarjetas y filas.
+    var card: UIColor? {
+        switch self {
+        case .system, .light, .dark: return nil
+        case .black: return Self.rgb(0x141414)
+        case .midnight: return Self.rgb(0x16223A)
+        case .slate: return Self.rgb(0x282F40)
+        case .forest: return Self.rgb(0x18302A)
+        case .ocean: return Self.rgb(0x0E343B)
+        case .wine: return Self.rgb(0x37141D)
+        case .plum: return Self.rgb(0x2F1A3B)
+        case .sand: return Self.rgb(0xFFFBF4)
+        case .lavender: return Self.rgb(0xFAF8FF)
+        case .mint: return Self.rgb(0xF7FFFB)
+        case .blush: return Self.rgb(0xFFF8FA)
+        }
+    }
+
+    /// Colores de la muestra en el selector.
+    var swatch: (Color, Color) {
+        switch self {
+        case .system: return (Color(white: 0.92), Color(white: 0.12))
+        case .light: return (Color(white: 0.95), .white)
+        case .dark: return (Color(white: 0.0), Color(white: 0.17))
+        default: return (Color(background ?? .black), Color(card ?? .darkGray))
         }
     }
 }
@@ -78,80 +132,124 @@ enum AppTheme {
         BackgroundChoice(rawValue: UserDefaults.standard.string(forKey: "themeBackground") ?? "") ?? .system
     }
 
-    /// Fondo negro puro (pantallas OLED): se aplica a las listas de toda la app.
+    /// Fondo para pantallas que no son listas (por ejemplo, el Coach).
+    static var screenBackground: Color {
+        if let bg = background.background { return Color(bg) }
+        return Color(.systemBackground)
+    }
+
+    /// Aplica el fondo elegido a listas, barras de navegación y barra de pestañas.
     static func applyUIKitAppearance() {
-        let black = background == .black
-        UITableView.appearance().backgroundColor = black ? .black : nil
-        UICollectionView.appearance().backgroundColor = black ? .black : nil
-        UITableViewCell.appearance().backgroundColor = black ? UIColor(white: 0.08, alpha: 1) : nil
-        UITabBar.appearance().backgroundColor = black ? .black : nil
-        UINavigationBar.appearance().backgroundColor = black ? .black : nil
+        let bg = background.background
+        let card = background.card
+        UITableView.appearance().backgroundColor = bg
+        UICollectionView.appearance().backgroundColor = bg
+        UITableViewCell.appearance().backgroundColor = card
+
+        let nav = UINavigationBarAppearance()
+        let tab = UITabBarAppearance()
+        if let bg = bg {
+            nav.configureWithOpaqueBackground()
+            nav.backgroundColor = bg
+            nav.shadowColor = .clear
+            tab.configureWithOpaqueBackground()
+            tab.backgroundColor = bg
+        } else {
+            nav.configureWithDefaultBackground()
+            tab.configureWithDefaultBackground()
+        }
+        UINavigationBar.appearance().standardAppearance = nav
+        UINavigationBar.appearance().compactAppearance = nav
+        UINavigationBar.appearance().scrollEdgeAppearance = nav
+        UITabBar.appearance().standardAppearance = tab
+        UITabBar.appearance().scrollEdgeAppearance = tab
     }
 }
 
-// MARK: - Sección en Perfil
+// MARK: - Selector de apariencia
 
 struct AppearanceSection: View {
     @AppStorage("themeAccent") var accent: String = AccentChoice.forja.rawValue
     @AppStorage("themeBackground") var background: String = BackgroundChoice.system.rawValue
 
-    let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 5)
+    let colorColumns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 5)
+    let bgColumns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 4)
 
     var body: some View {
-        Section(header: Text("Apariencia"),
-                footer: Text("El color principal se usa en botones, gráficas y detalles. «Negro» ahorra batería en pantallas OLED.")) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Color principal").font(.subheadline.weight(.semibold))
-                LazyVGrid(columns: columns, spacing: 12) {
-                    ForEach(AccentChoice.allCases) { c in
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.2)) { accent = c.rawValue }
-                        } label: {
-                            ZStack {
-                                Circle().fill(c.color)
-                                if accent == c.rawValue {
-                                    Image(systemName: "checkmark")
-                                        .font(.system(size: 15, weight: .bold))
-                                        .foregroundColor(.white)
-                                }
+        Section(header: Text("Color principal"),
+                footer: Text("Se usa en botones, gráficas y detalles de toda la app.")) {
+            LazyVGrid(columns: colorColumns, spacing: 12) {
+                ForEach(AccentChoice.allCases) { c in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) { accent = c.rawValue }
+                    } label: {
+                        ZStack {
+                            Circle().fill(c.color)
+                            if accent == c.rawValue {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 15, weight: .bold))
+                                    .foregroundColor(.white)
                             }
-                            .frame(width: 40, height: 40)
-                            .overlay(Circle().stroke(Color.primary.opacity(accent == c.rawValue ? 0.35 : 0), lineWidth: 3).padding(-4))
                         }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(c.name)
+                        .frame(width: 40, height: 40)
+                        .overlay(Circle().stroke(Color.primary.opacity(accent == c.rawValue ? 0.35 : 0), lineWidth: 3).padding(-4))
                     }
-                }
-                Text(AccentChoice(rawValue: accent)?.name ?? "")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            .padding(.vertical, 6)
-
-            VStack(alignment: .leading, spacing: 10) {
-                Text("Fondo").font(.subheadline.weight(.semibold))
-                HStack(spacing: 8) {
-                    ForEach(BackgroundChoice.allCases) { b in
-                        Button {
-                            background = b.rawValue
-                        } label: {
-                            VStack(spacing: 6) {
-                                Image(systemName: b.icon).font(.title3)
-                                Text(b.name).font(.caption)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .foregroundColor(background == b.rawValue ? .white : .primary)
-                            .background(
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .fill(background == b.rawValue ? Color.brand : Color(.tertiarySystemFill))
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(c.name)
                 }
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 8)
+            Text(AccentChoice(rawValue: accent)?.name ?? "")
+                .font(.caption)
+                .foregroundColor(.secondary)
         }
+
+        Section(header: Text("Fondo"),
+                footer: Text("«Negro» ahorra batería en pantallas OLED. Los fondos oscuros y de color cambian toda la app.")) {
+            LazyVGrid(columns: bgColumns, spacing: 14) {
+                ForEach(BackgroundChoice.allCases) { b in
+                    Button {
+                        background = b.rawValue
+                    } label: {
+                        VStack(spacing: 6) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .fill(b.swatch.0)
+                                VStack(spacing: 4) {
+                                    RoundedRectangle(cornerRadius: 3).fill(b.swatch.1).frame(height: 9)
+                                    RoundedRectangle(cornerRadius: 3).fill(b.swatch.1).frame(height: 9)
+                                    RoundedRectangle(cornerRadius: 3).fill(Color.brand).frame(width: 22, height: 6)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .padding(8)
+                            }
+                            .frame(height: 64)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .stroke(background == b.rawValue ? Color.brand : Color.primary.opacity(0.12),
+                                            lineWidth: background == b.rawValue ? 3 : 1)
+                            )
+                            Text(b.name)
+                                .font(.caption2.weight(background == b.rawValue ? .bold : .regular))
+                                .foregroundColor(.primary)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.vertical, 8)
+        }
+    }
+}
+
+struct AppearanceView: View {
+    var body: some View {
+        Form {
+            AppearanceSection()
+        }
+        .navigationTitle("Apariencia")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

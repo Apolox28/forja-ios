@@ -337,6 +337,7 @@ struct CoachView: View {
                 }
                 inputBar
             }
+            .background(AppTheme.screenBackground.ignoresSafeArea())
             .navigationTitle("Coach")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
