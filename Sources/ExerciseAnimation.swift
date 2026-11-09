@@ -5,6 +5,8 @@ import WebKit
 /// Animación 3D en bucle del ejercicio (maniquí + equipamiento), dibujada con three.js y Resources/forja3d.js.
 struct ExerciseAnimationView: UIViewRepresentable {
     let exercise: Exercise
+    /// 1 = vista principal, 2 = otra perspectiva
+    var view: Int = 1
 
     static func resource(_ name: String) -> String {
         guard let url = Bundle.main.url(forResource: name, withExtension: "js"),
@@ -54,12 +56,12 @@ struct ExerciseAnimationView: UIViewRepresentable {
         web.scrollView.bounces = false
         web.isUserInteractionEnabled = false
         load(web)
-        context.coordinator.key = patternKey + equipmentKey
+        context.coordinator.key = patternKey + equipmentKey + "\(view)"
         return web
     }
 
     func updateUIView(_ web: WKWebView, context: Context) {
-        let key = patternKey + equipmentKey
+        let key = patternKey + equipmentKey + "\(view)"
         if context.coordinator.key != key {
             context.coordinator.key = key
             load(web)
@@ -88,7 +90,7 @@ struct ExerciseAnimationView: UIViewRepresentable {
         <script>\(ExerciseAnimationView.engine)</script>
         <script>
         document.getElementById('l').remove();
-        function start() { FORJA3D.mount(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', { muscle: '\(muscleKey)' }); }
+        function start() { FORJA3D.mount(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', { muscle: '\(muscleKey)', view: \(view) }); }
         var data = '\(ExerciseAnimationView.modelBase64)';
         if (data.length > 0) { FORJA3D.loadModel(data, function () { start(); }); } else { start(); }
         </script>
@@ -167,12 +169,19 @@ struct ExerciseInfoSheet: View {
 /// Secciones reutilizables: animación, músculos e instrucciones.
 struct ExerciseHowToSections: View {
     let exercise: Exercise
+    @State private var view = 1
 
     var guide: ExerciseGuide { ExerciseSeed.guide(for: exercise) }
 
     var body: some View {
         Section {
-            ExerciseAnimationView(exercise: exercise)
+            Picker("Perspectiva", selection: $view) {
+                Text("Vista principal").tag(1)
+                Text("Otro ángulo").tag(2)
+            }
+            .pickerStyle(.segmented)
+            .listRowBackground(Color.clear)
+            ExerciseAnimationView(exercise: exercise, view: view)
                 .aspectRatio(1, contentMode: .fit)
                 .frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)

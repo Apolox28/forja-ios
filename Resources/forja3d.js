@@ -151,6 +151,8 @@
       if (ank && !Lg.ball && ank.y < ANK) ank.y = ANK;
       if (ank) {
         var kp = Lg.pole ? V(Lg.pole[0], Lg.pole[1], (Lg.pole[2] || 0) * sg) : V(1, 0.15, sg * 0.18);
+        // punta del pie abierta: la rodilla sigue la dirección de los dedos
+        if (Lg.toe) kp.add(V(0, 0, sg * Math.tan(rad(Lg.toe)) * kp.length()));
         var rl = ik(hp, ank, TH, SH, kp);
         j.knee[k] = rl[0]; j.ank[k] = rl[1];
       } else {
@@ -176,6 +178,7 @@
         fUp = V(-footDir.y, footDir.x, 0);
         if (Lg.footFlip) fUp.multiplyScalar(-1);
       }
+      if (Lg.toe) { footDir = footDir.clone().applyAxisAngle(fUp, -sg * rad(Lg.toe)); }
       j.footDir[k] = footDir; j.footUp[k] = fUp;
       j.toe[k] = j.ank[k].clone().add(footDir.clone().multiplyScalar(0.17)).add(fUp.clone().multiplyScalar(-ANK + 0.02));
     });
@@ -210,7 +213,7 @@
     sh: [[0, 0.052], [0.22, 0.056], [0.75, 0.036], [1, 0.03]],
     neck: [[0, 0.062], [1, 0.052]]
   };
-  var MUSCLES = ['pecs', 'abs', 'lats', 'traps', 'trapsU', 'lowback', 'glutes', 'delts', 'biceps', 'triceps', 'forearms', 'quads', 'hams', 'calves'];
+  var MUSCLES = ['pecs', 'pecsU', 'abs', 'lats', 'traps', 'trapsU', 'lowback', 'glutes', 'gluteMed', 'delts', 'deltsF', 'deltsS', 'deltsR', 'biceps', 'triceps', 'forearms', 'quads', 'hipFlex', 'adductors', 'hams', 'calves', 'soleus'];
   var MUSCLE_MAP = { chest: 'pecs', back: 'lats', shoulders: 'delts', biceps: 'biceps', triceps: 'triceps', forearms: 'forearms',
     quads: 'quads', hamstrings: 'hams', glutes: 'glutes', calves: 'calves', core: 'abs' };
   var SKIN = 0xe7e8ec;
@@ -488,10 +491,10 @@
   function def(k, o) { P[k] = o; }
 
   // ---- Piernas ----
-  def('squat', { p: ['quads', 'glutes'], s: ['hams', 'lowback', 'abs'], load: 'back', scene: ['rack'], smith: true, cam: { az: 32 },
+  def('squat', { p: ['quads'], s: ['glutes', 'adductors', 'soleus'], load: 'back', scene: ['rack'], smith: true, cam: { az: 32 },
     A: { hip: STAND, torso: 4, legs: { ik: [0.02, ANK], fw: 0.16 }, arms: { bar: 'back' } },
     B: { hip: [-0.22, 0.52], torso: 40, head: -22, legs: { ik: [0.02, ANK], fw: 0.16 }, arms: { bar: 'back' } } });
-  def('frontSquat', { p: ['quads'], s: ['glutes', 'abs'], load: 'goblet', cam: { az: 35 },
+  def('frontSquat', { p: ['quads'], s: ['glutes', 'adductors', 'abs'], load: 'goblet', cam: { az: 35 },
     A: { hip: STAND, torso: 3, legs: { ik: [0.02, ANK], fw: 0.16 }, arms: { relC: [0.25, -0.03], gw: 0.045, pole: [0, -1, 0.5], palm: [0, 0.6, -1] } },
     B: { hip: [-0.18, 0.5], torso: 20, head: -12, legs: { ik: [0.02, ANK], fw: 0.16 }, arms: { relC: [0.25, -0.03], gw: 0.045, pole: [0, -1, 0.5], palm: [0, 0.6, -1] } } });
   // Bisagras: posturas calculadas por altura de barra (barra vertical pegada a las piernas)
@@ -507,9 +510,9 @@
     keys.push([1, poses[0]]);
     return keys;
   }
-  def('deadlift', { p: ['glutes', 'hams', 'lowback'], s: ['quads', 'traps', 'forearms', 'lats'], load: 'bar', cam: { az: 18 }, thumb: 0.05, keys: hingeKeys([[-0.34, 0.63, 75, 0.225], [-0.34, 0.76, 77, 0.33], [-0.33, 0.84, 74, 0.45], [-0.3, 0.9, 63, 0.58], [-0.27, 0.98, 56, 0.7], [-0.11, 0.98, 27, 0.82], [-0.02, 0.97, 2, 0.83]], 0.082) });
-  def('rdl', { p: ['hams', 'glutes'], s: ['lowback'], load: 'bar', cam: { az: 18 }, thumb: 0.45, keys: hingeKeys([[-0.02, 0.97, 2, 0.83], [-0.15, 0.9, 33, 0.7], [-0.23, 0.9, 56, 0.6], [-0.27, 0.9, 73, 0.5], [-0.27, 0.87, 79, 0.43]], 0.085) });
-  def('goodMorning', { p: ['hams', 'lowback'], s: ['glutes'], load: 'back', cam: { az: 20 },
+  def('deadlift', { p: ['glutes', 'hams', 'lowback'], s: ['quads', 'adductors', 'traps', 'forearms'], load: 'bar', cam: { az: 18 }, thumb: 0.05, keys: hingeKeys([[-0.34, 0.63, 75, 0.225], [-0.34, 0.76, 77, 0.33], [-0.33, 0.84, 74, 0.45], [-0.3, 0.9, 63, 0.58], [-0.27, 0.98, 56, 0.7], [-0.11, 0.98, 27, 0.82], [-0.02, 0.97, 2, 0.83]], 0.082) });
+  def('rdl', { p: ['hams'], s: ['glutes', 'adductors', 'lowback'], load: 'bar', cam: { az: 18 }, thumb: 0.45, keys: hingeKeys([[-0.02, 0.97, 2, 0.83], [-0.15, 0.9, 33, 0.7], [-0.23, 0.9, 56, 0.6], [-0.27, 0.9, 73, 0.5], [-0.27, 0.87, 79, 0.43]], 0.085) });
+  def('goodMorning', { p: ['hams'], s: ['glutes', 'adductors', 'lowback'], load: 'back', cam: { az: 20 },
     A: { hip: STAND, torso: 2, legs: { ik: [0.0, ANK], fw: 0.15 }, arms: { bar: 'back' } },
     B: { hip: [-0.19, 0.94], torso: 72, head: -28, legs: { ik: [0.0, ANK], fw: 0.15 }, arms: { bar: 'back' } } });
   // Zancada larga: pies juntos -> paso -> bajada -> subida -> vuelta. Mancuerna en la mano contraria.
@@ -519,10 +522,10 @@
     var lift = { hip: [0.08, 0.96], torso: 0, legsL: { ball: [0.13, 0.0], foot: 0 }, legsR: { ik: [0.38, 0.25] }, arms: hold };
     var plant = { hip: [0.33, 0.9], torso: 0, legsL: { ball: [0.13, 0.012], foot: 30 }, legsR: { ik: [0.78, ANK] }, arms: hold };
     var bottom = { hip: [0.35, 0.5], torso: 5, legsL: { ball: [0.13, 0.016], foot: 55 }, legsR: { ik: [0.78, ANK] }, arms: hold };
-    def('lunge', { p: ['quads', 'glutes'], s: ['hams'], load: 'handL', cam: { az: 28 }, thumb: 0.45,
+    def('lunge', { p: ['quads'], s: ['glutes', 'adductors', 'soleus'], load: 'handL', cam: { az: 28 }, thumb: 0.45,
       keys: [[0, stand], [0.08, stand], [0.2, lift], [0.32, plant], [0.48, bottom], [0.56, bottom], [0.72, plant], [0.84, lift], [0.94, stand], [1, stand]] });
   })();
-  def('legPress', { p: ['quads', 'glutes'], s: ['hams'], load: 'sled', scene: ['legPress'], cam: { dist: 1.0, az: 4 },
+  def('legPress', { p: ['quads'], s: ['glutes', 'adductors', 'soleus'], load: 'sled', scene: ['legPress'], cam: { dist: 1.0, az: 4 },
     A: { hip: [-0.32, 0.56], torso: -50, legs: { ik: [0.04, 0.88], fw: 0.15, foot: -135, pole: [-0.4, 1, 0.25] }, arms: { ik: [-0.22, 0.5], gw: 0.3, palm: 'neu' } },
     B: { hip: [-0.32, 0.56], torso: -50, legs: { ik: [0.3, 1.13], fw: 0.15, foot: -135, pole: [-0.4, 1, 0.25] }, arms: { ik: [-0.22, 0.5], gw: 0.3, palm: 'neu' } } });
   def('legExt', { p: ['quads'], load: 'machine', stack: true, scene: ['legExt'], machinePos: [-0.55, -0.62, 0], cam: { az: 35 },
@@ -531,10 +534,10 @@
   def('legCurl', { p: ['hams'], s: ['calves'], load: 'machine', stack: true, scene: ['legCurl'], machinePos: [0.95, -0.55, 0], cam: { az: 22 },
     A: { hip: [-0.05, 0.6], torso: 90, head: -10, legs: { th: -90, sh: -92, footRel: 25, footFlip: true }, arms: { ik: [0.5, 0.48], gw: 0.24, palm: 'pro' } },
     B: { hip: [-0.05, 0.6], torso: 90, head: -10, legs: { th: -94, sh: -228, footRel: 25, footFlip: true }, arms: { ik: [0.5, 0.48], gw: 0.24, palm: 'pro' } } });
-  def('calf', { p: ['calves'], load: 'hands', stack: true, scene: ['step'], cam: { az: 22 },
+  def('calf', { p: ['calves'], s: ['soleus'], load: 'hands', stack: true, scene: ['step'], cam: { az: 22 },
     A: { hip: [-0.07, 1.0], torso: 0, legs: { ball: [0.08, 0.105], foot: -22, fw: 0.11 }, arms: { rel: [0.02, HANG, 0.06], palm: 'neu' } },
     B: { hip: [0.02, 1.115], torso: 0, legs: { ball: [0.08, 0.105], foot: 38, fw: 0.11 }, arms: { rel: [0.02, HANG, 0.06], palm: 'neu' } } });
-  def('seatedCalf', { p: ['calves'], load: 'plates', scene: ['seatedCalf'], cam: { az: 30 },
+  def('seatedCalf', { p: ['soleus'], s: ['calves'], load: 'plates', scene: ['seatedCalf'], cam: { az: 30 },
     A: { hip: [-0.24, 0.6], torso: 2, legs: { ball: [0.3, 0.205], foot: -18, fw: 0.12, pole: [1, 0.6, 0] }, arms: { ik: [0.12, 0.72], gw: 0.24, palm: 'pro' } },
     B: { hip: [-0.24, 0.6], torso: 2, legs: { ball: [0.3, 0.205], foot: 30, fw: 0.12, pole: [1, 0.6, 0] }, arms: { ik: [0.12, 0.78], gw: 0.24, palm: 'pro' } } });
   def('hipThrust', { p: ['glutes'], s: ['hams', 'quads'], load: 'hip', stack: true, scene: ['thrustBench'], cam: { az: 28 },
@@ -545,60 +548,60 @@
     B: { hip: [0, 0.95], torso: 32, legsL: FEET, legsR: { th: -80, sh: -72 }, arms: { ik: [0.45, 1.12], gw: 0.2, palm: 'pro' } } });
 
   // ---- Pecho ----
-  def('bench', { p: ['pecs'], s: ['triceps', 'delts'], load: 'bar', scene: ['bench', 'benchRack'], smith: true, liftAt: 0, cam: { y: 0.72 },
+  def('bench', { p: ['pecs'], s: ['pecsU', 'deltsF', 'triceps'], load: 'bar', scene: ['bench', 'benchRack'], smith: true, liftAt: 0, cam: { y: 0.72 },
     A: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.55, ANK], fw: 0.24 }, arms: { ik: [-0.29, 1.0], gw: 0.42, palm: 'pro' } },
     B: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.55, ANK], fw: 0.24 }, arms: { ik: [-0.21, 0.71], gw: 0.42, palm: 'pro' } } });
-  def('incline', { p: ['pecs', 'delts'], s: ['triceps'], load: 'bar', scene: ['inclineBench'], smith: true, liftAt: 0,
+  def('incline', { p: ['pecsU'], s: ['pecs', 'deltsF', 'triceps'], load: 'bar', scene: ['inclineBench'], smith: true, liftAt: 0,
     A: { hip: [0.05, 0.56], torso: -52, legs: { ik: [0.52, ANK], fw: 0.22 }, arms: { ik: [-0.26, 1.25], gw: 0.4, palm: 'pro' } },
     B: { hip: [0.05, 0.56], torso: -52, legs: { ik: [0.52, ANK], fw: 0.22 }, arms: { ik: [-0.17, 0.92], gw: 0.4, palm: 'pro' } } });
-  def('fly', { p: ['pecs'], s: ['delts'], load: 'hands', scene: ['bench'], liftAt: 0, cam: { y: 0.72, az: 50 },
+  def('fly', { p: ['pecs'], s: ['pecsU', 'deltsF'], load: 'hands', scene: ['bench'], liftAt: 0, cam: { y: 0.72, az: 50 },
     A: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.55, ANK], fw: 0.24 }, arms: { ik: [-0.3, 0.98, 0.12], pole: [0.4, -0.6, 0.5], palm: [0, 0, -1] } },
     B: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.55, ANK], fw: 0.24 }, arms: { ik: [-0.3, 0.66, 0.54], pole: [0.4, -0.6, 0.5], palm: [0, 1, -0.3] } } });
-  def('pullover', { p: ['lats', 'pecs'], s: ['triceps'], load: 'single', scene: ['bench'], liftAt: 0, cam: { y: 0.72 },
+  def('pullover', { p: ['lats'], s: ['pecs', 'triceps'], load: 'single', scene: ['bench'], liftAt: 0, cam: { y: 0.72 },
     A: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.55, ANK], fw: 0.24 }, arms: { ua: 178, fa: 182, palm: [1, 0, 0] } },
     B: { hip: [0.1, 0.56], torso: -90, legs: { ik: [0.55, ANK], fw: 0.24 }, arms: { ua: 262, fa: 268, palm: [0, 1, 0] } } });
   // Press de pecho: palancas que salen desde abajo; agarres a la altura del pecho
-  def('chestPress', { p: ['pecs'], s: ['triceps', 'delts'], load: 'machine', stack: true, scene: ['chestPress'], machinePos: [-0.72, -0.5, 0], cam: { az: 38 },
+  def('chestPress', { p: ['pecs'], s: ['pecsU', 'deltsF', 'triceps'], load: 'machine', stack: true, scene: ['chestPress'], machinePos: [-0.72, -0.5, 0], cam: { az: 38 },
     A: { hip: [-0.1, 0.56], torso: -8, legs: { ik: [0.36, ANK], fw: 0.16 }, arms: { ik: [0.05, 0.88], gw: 0.27, pole: [-1, -0.5, 0.45], palm: [0, 0, -1] } },
     B: { hip: [-0.1, 0.56], torso: -8, legs: { ik: [0.36, ANK], fw: 0.16 }, arms: { ik: [0.31, 0.9], gw: 0.24, pole: [-1, -0.5, 0.45], palm: [0, 0, -1] } } });
   // Cruce de poleas: cada mano con su agarre (unilateral); los brazos siempre por delante del cuerpo
-  def('cableFly', { p: ['pecs'], s: ['delts'], load: 'twinCable', stack: true, cam: { az: 55, dist: 1.1 },
+  def('cableFly', { p: ['pecs'], s: ['pecsU'], load: 'twinCable', stack: true, cam: { az: 55, dist: 1.1 },
     A: { hip: [0, 0.96], torso: 14, legsL: { ik: [-0.18, ANK] }, legsR: { ik: [0.22, ANK] }, arms: { ik: [0.1, 1.4, 0.6], pole: [-1, 0.35, 0.55], palm: [0.4, -0.1, -1] } },
     B: { hip: [0, 0.96], torso: 14, legsL: { ik: [-0.18, ANK] }, legsR: { ik: [0.22, ANK] }, arms: { ik: [0.47, 1.08, 0.07], pole: [-0.6, 0.1, 0.9], palm: [0, 0, -1] } } });
-  def('dip', { p: ['triceps', 'pecs'], s: ['delts'], load: 'none', scene: ['dipStation'], liftAt: 0,
+  def('dip', { p: ['pecs'], s: ['triceps', 'deltsF', 'pecsU'], load: 'none', scene: ['dipStation'], liftAt: 0,
     A: { hip: [-0.02, 1.38], torso: 6, legs: { rel: [-0.26, -0.7], pole: [1, 0, 0] }, arms: { ik: [0.0, 1.26], gw: 0.25, pole: [-1, 0, 0.2], palm: 'neu' } },
     B: { hip: [-0.07, 1.06], torso: 22, legs: { rel: [-0.26, -0.7], pole: [1, 0, 0] }, arms: { ik: [0.0, 1.26], gw: 0.25, pole: [-1, 0, 0.2], palm: 'neu' } } });
   // Flexiones: cuerpo recto (piernas alineadas con el tronco), codos hacia atrás
-  def('pushup', { p: ['pecs', 'triceps'], s: ['delts', 'abs'], load: 'none', liftAt: 0, cam: { y: 0.4, az: 30 },
-    A: { hip: [-0.08, 0.425], torso: 68, legs: { ik: [-0.92, 0.17], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ik: [0.33, 0.06], gw: 0.29, pole: [-1, 0.3, 0.45], hand: 'flat', flatDir: [1, 0, 0.15] } },
-    B: { hip: [-0.03, 0.27], torso: 81, legs: { ik: [-0.92, 0.17], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ik: [0.33, 0.06], gw: 0.29, pole: [-1, 0.3, 0.45], hand: 'flat', flatDir: [1, 0, 0.15] } } });
+  def('pushup', { p: ['pecs'], s: ['pecsU', 'deltsF', 'triceps', 'abs'], load: 'none', liftAt: 0, cam: { y: 0.4, az: 30 },
+    A: { hip: [-0.08, 0.425], torso: 68, legs: { ik: [-0.92, 0.207], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ik: [0.33, 0.06], gw: 0.29, pole: [-1, 0.3, 0.45], hand: 'flat', flatDir: [1, 0, 0.15] } },
+    B: { hip: [-0.03, 0.27], torso: 81, legs: { ik: [-0.92, 0.207], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ik: [0.33, 0.06], gw: 0.29, pole: [-1, 0.3, 0.45], hand: 'flat', flatDir: [1, 0, 0.15] } } });
 
   // ---- Espalda ----
-  def('row', { p: ['lats', 'traps'], s: ['biceps', 'delts', 'lowback'], load: 'bar',
+  def('row', { p: ['lats', 'traps'], s: ['deltsR', 'biceps', 'lowback'], load: 'bar',
     A: { hip: [-0.15, 0.87], torso: 64, head: -28, legs: FEET, arms: { ik: [0.2, 0.55], gw: 0.27, pole: [-1, 0.5, 0.4], palm: 'pro' } },
     B: { hip: [-0.15, 0.87], torso: 64, head: -28, legs: FEET, arms: { ik: [0.09, 0.79], gw: 0.27, pole: [-1, 0.5, 0.4], palm: 'pro' } } });
-  def('dbRow', { p: ['lats'], s: ['biceps', 'traps'], load: 'handR', scene: ['rowBench'], cam: { az: 25 },
+  def('dbRow', { p: ['lats', 'traps'], s: ['deltsR', 'biceps'], load: 'handR', scene: ['rowBench'], cam: { az: 25 },
     A: { hip: [-0.1, 0.97], torso: 82, head: -20, legsL: { ik: [-0.52, 0.53], pole: [0, -1, 0] }, legsR: { ik: [0.0, ANK, 0.34] },
       armsL: { ik: [0.4, 0.5, 0.2], hand: 'flat', flatDir: [1, 0, 0] }, armsR: { ik: [0.31, 0.54, 0.24], pole: [-1, 0.6, 0.35], palm: 'neu' } },
     B: { hip: [-0.1, 0.97], torso: 82, head: -20, legsL: { ik: [-0.52, 0.53], pole: [0, -1, 0] }, legsR: { ik: [0.0, ANK, 0.34] },
       armsL: { ik: [0.4, 0.5, 0.2], hand: 'flat', flatDir: [1, 0, 0] }, armsR: { ik: [0.07, 0.9, 0.25], pole: [-1, 0.6, 0.35], palm: 'neu' } } });
   // Jalón: visto por detrás, polea delante; la barra baja hasta la parte alta del pecho
-  def('pulldown', { p: ['lats'], s: ['biceps', 'traps'], load: 'pulldown', stack: true, scene: ['pulldown'], cam: { az: -128, el: 14 },
+  def('pulldown', { p: ['lats'], s: ['biceps', 'deltsR', 'traps'], load: 'pulldown', stack: true, scene: ['pulldown'], cam: { az: -128, el: 14 },
     A: { hip: [0, 0.57], torso: -8, legs: { ik: [0.42, ANK], fw: 0.16 }, arms: { relC: [0.12, 0.44], gw: 0.42, pole: [0, -1, 0.6], palm: 'pro' } },
     B: { hip: [0, 0.57], torso: -20, head: 10, legs: { ik: [0.42, ANK], fw: 0.16 }, arms: { relC: [0.2, 0.03], gw: 0.42, pole: [0, -1, 0.6], palm: 'pro' } } });
   // Dominadas: la barra llega a la altura de las clavículas
-  def('pullup', { p: ['lats'], s: ['biceps', 'forearms'], load: 'none', scene: ['pullFrame'], cam: { az: -140, el: 10 },
+  def('pullup', { p: ['lats'], s: ['biceps', 'deltsR', 'traps', 'forearms'], load: 'none', scene: ['pullFrame'], cam: { az: -140, el: 10 },
     A: { hip: [-0.03, 1.32], torso: 0, legs: { rel: [-0.2, -0.8], fw: 0.06 }, arms: { ik: [0.0, 2.22], gw: 0.4, pole: [0.2, -1, 0.7], palm: 'pro' } },
     B: { hip: [-0.07, 1.78], torso: -10, head: 8, legs: { rel: [-0.2, -0.8], fw: 0.06 }, arms: { ik: [0.0, 2.22], gw: 0.4, pole: [0.2, -1, 0.7], palm: 'pro' } } });
   // Remo sentado: codos por fuera del cuerpo, el agarre llega al abdomen
-  def('seatedRow', { p: ['lats', 'traps'], s: ['biceps'], load: 'seatedRow', stack: true, scene: ['seatedRow'], cam: { az: 28 },
+  def('seatedRow', { p: ['lats', 'traps'], s: ['deltsR', 'biceps', 'lowback'], load: 'seatedRow', stack: true, scene: ['seatedRow'], cam: { az: 28 },
     A: { hip: [-0.38, 0.45], torso: 16, legs: { ik: [0.3, 0.33], fw: 0.14, foot: -72, pole: [0.2, 1, 0.2] }, arms: { ik: [0.2, 0.8], gw: 0.06, pole: [-1, -0.4, 0.8], palm: 'neu' } },
     B: { hip: [-0.38, 0.45], torso: -4, legs: { ik: [0.3, 0.33], fw: 0.14, foot: -72, pole: [0.2, 1, 0.2] }, arms: { ik: [-0.22, 0.76], gw: 0.07, pole: [-1, -0.4, 0.8], palm: 'neu' } } });
   // Face pull: los codos quedan por debajo de las manos (rotación externa)
-  def('facePull', { p: ['delts', 'traps'], s: ['biceps'], load: 'facePull', stack: true, scene: ['towerFront'], cam: { az: 6 },
+  def('facePull', { p: ['deltsR'], s: ['deltsS', 'traps', 'biceps'], load: 'facePull', stack: true, scene: ['towerFront'], cam: { az: 6 },
     A: { hip: [-0.05, 0.96], torso: -3, legsL: { ik: [-0.2, ANK] }, legsR: { ik: [0.12, ANK] }, arms: { ik: [0.4, 1.47], gw: 0.08, pole: [-0.5, -0.8, 0.6], palm: 'neu' } },
     B: { hip: [-0.05, 0.96], torso: -3, legsL: { ik: [-0.2, ANK] }, legsR: { ik: [0.12, ANK] }, arms: { ik: [0.06, 1.52], gw: 0.27, pole: [-0.5, -0.8, 0.6], palm: 'neu' } } });
-  def('hyperext', { p: ['lowback', 'glutes'], s: ['hams'], load: 'none', scene: ['hyperBench'], cam: { az: 12 },
+  def('hyperext', { p: ['lowback'], s: ['glutes', 'hams'], load: 'none', scene: ['hyperBench'], cam: { az: 12 },
     A: { hip: [0, 0.98], torso: 132, legs: { ik: [-0.58, 0.38], fw: 0.1 }, arms: { relC: [0.15, -0.07], gw: -0.07, pole: [0, -1, 0.5], palm: 'neu' } },
     B: { hip: [0, 0.98], torso: 48, legs: { ik: [-0.58, 0.38], fw: 0.1 }, arms: { relC: [0.15, -0.07], gw: -0.07, pole: [0, -1, 0.5], palm: 'neu' } } });
   def('shrug', { p: ['trapsU'], s: ['traps', 'forearms'], load: 'handsFront', stack: true, cam: { az: 55 },
@@ -606,17 +609,17 @@
     B: { hip: STAND, torso: 0, legs: FEET, arms: { rel: [0.05, HANG, 0.06], palm: 'pro' }, shr: 0.055 } });
 
   // ---- Hombros ----
-  def('ohp', { p: ['delts'], s: ['triceps', 'traps'], load: 'bar', stack: true,
+  def('ohp', { p: ['deltsF'], s: ['deltsS', 'triceps', 'pecsU', 'traps'], load: 'bar', stack: true,
     A: { hip: STAND, torso: 0, legs: FEET, arms: { ik: [0.1, 1.42], gw: 0.27, pole: [0.4, -1, 0.5], palm: 'pro' } },
     B: { hip: STAND, torso: -2, legs: FEET, arms: { ik: [0.0, 1.88], gw: 0.27, pole: [0.4, -1, 0.5], palm: 'pro' } } });
-  def('lateralRaise', { p: ['delts'], s: ['traps'], load: 'hands', stack: true, cam: { az: 70 },
+  def('lateralRaise', { p: ['deltsS'], s: ['deltsF', 'traps'], load: 'hands', stack: true, cam: { az: 70 },
     A: { hip: STAND, torso: 0, legs: FEET, arms: { ua: 8, fa: 12, plane: 'f', palm: [0, 0, -1] } },
     B: { hip: STAND, torso: 0, legs: FEET, arms: { ua: 85, fa: 92, plane: 'f', palm: [0, -1, -0.15] } } });
-  def('frontRaise', { p: ['delts'], s: ['traps'], load: 'hands', stack: true, cam: { az: 28 },
+  def('frontRaise', { p: ['deltsF'], s: ['pecsU', 'deltsS'], load: 'hands', stack: true, cam: { az: 28 },
     A: { hip: STAND, torso: 0, legs: FEET, arms: { ua: 4, fa: 9, palm: 'pro' } },
     B: { hip: STAND, torso: 0, legs: FEET, arms: { ua: 88, fa: 94, palm: 'pro' } } });
   P.lateral = P.frontRaise;
-  def('uprightRow', { p: ['delts', 'traps'], s: ['biceps'], load: 'handsFront', stack: true, cam: { az: 62 },
+  def('uprightRow', { p: ['deltsS'], s: ['deltsF', 'traps', 'trapsU', 'biceps'], load: 'handsFront', stack: true, cam: { az: 62 },
     A: { hip: STAND, torso: 0, legs: FEET, arms: { rel: [0.08, HANG, -0.03], pole: [-0.2, 0.6, 1.4], palm: 'pro' } },
     B: { hip: STAND, torso: 0, legs: FEET, arms: { rel: [0.15, -0.07, -0.025], pole: [-0.5, 0.75, 1.5], palm: 'pro' } } });
 
@@ -645,22 +648,22 @@
       armsL: { ik: [0.4, 0.5, 0.2], hand: 'flat', flatDir: [1, 0, 0] }, armsR: { rel: [-0.53, -0.07, 0.07], pole: [0, 1, 0.3], palm: 'neu' } } });
 
   // ---- Core ----
-  def('plank', { p: ['abs'], s: ['delts', 'glutes'], load: 'none', scene: ['mat'], cam: { y: 0.3 },
-    A: { hip: [-0.3, 0.26], torso: 82, head: -10, legs: { ik: [-1.17, 0.17], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ua: 0, fa: 90, palm: [0, -1, -0.5] } },
-    B: { hip: [-0.3, 0.272], torso: 82, head: -10, legs: { ik: [-1.17, 0.17], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ua: 0, fa: 90, palm: [0, -1, -0.5] } } });
+  def('plank', { p: ['abs'], s: ['deltsF', 'glutes', 'quads'], load: 'none', scene: ['mat'], cam: { y: 0.3 },
+    A: { hip: [-0.3, 0.2], torso: 82, head: -10, legs: { ik: [-1.17, 0.207], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ua: 0, fa: 90, palm: [0, -1, -0.5] } },
+    B: { hip: [-0.3, 0.208], torso: 82, head: -10, legs: { ik: [-1.17, 0.207], fw: 0.1, foot: 65, pole: [0, -1, 0] }, arms: { ua: 0, fa: 90, palm: [0, -1, -0.5] } } });
   def('crunch', { p: ['abs'], load: 'none', stack: true, scene: ['mat'], cam: { y: 0.35, az: 35 },
-    A: { hip: [0, 0.12], torso: -90, legs: { ik: [0.5, ANK], fw: 0.15 }, arms: { temple: 1, pole: [0.3, 0.2, 1], palm: [0, 0, -1] } },
-    B: { hip: [0, 0.12], torso: -64, head: 12, legs: { ik: [0.5, ANK], fw: 0.15 }, arms: { temple: 1, pole: [0.3, 0.2, 1], palm: [0, 0, -1] } } });
+    A: { hip: [0, 0.133], torso: -90, legs: { ik: [0.5, ANK], fw: 0.15 }, arms: { temple: 1, pole: [0.3, 0.2, 1], palm: [0, 0, -1] } },
+    B: { hip: [0, 0.133], torso: -64, head: 12, legs: { ik: [0.5, ANK], fw: 0.15 }, arms: { temple: 1, pole: [0.3, 0.2, 1], palm: [0, 0, -1] } } });
   // Elevación de piernas: los pies mantienen la misma posición respecto a la pierna
-  def('legRaise', { p: ['abs'], load: 'none', scene: ['mat'], cam: { y: 0.4 },
-    A: { hip: [0, 0.12], torso: -90, legs: { th: 86, sh: 87, footRel: 25 }, arms: { ua: 88, fa: 88, palm: [0, -1, 0] } },
-    B: { hip: [0, 0.12], torso: -90, legs: { th: 178, sh: 180, footRel: 25 }, arms: { ua: 88, fa: 88, palm: [0, -1, 0] } } });
-  def('hangLeg', { p: ['abs'], s: ['forearms'], load: 'none', scene: ['pullFrame'],
+  def('legRaise', { p: ['hipFlex', 'abs'], s: ['quads'], load: 'none', scene: ['mat'], cam: { y: 0.4 },
+    A: { hip: [0, 0.145], torso: -90, legs: { th: 86, sh: 87, footRel: 25 }, arms: { ua: 88, fa: 88, palm: [0, -1, 0] } },
+    B: { hip: [0, 0.145], torso: -90, legs: { th: 178, sh: 180, footRel: 25 }, arms: { ua: 88, fa: 88, palm: [0, -1, 0] } } });
+  def('hangLeg', { p: ['hipFlex', 'abs'], s: ['forearms'], load: 'none', scene: ['pullFrame'],
     A: { hip: [-0.02, 1.32], torso: 0, legs: { th: 4, sh: 0, footRel: 20 }, arms: { ik: [0.0, 2.22], gw: 0.4, straight: 1, palm: 'pro' } },
     B: { hip: [0.0, 1.32], torso: -6, legs: { th: 92, sh: 92, footRel: 20 }, arms: { ik: [0.0, 2.22], gw: 0.4, straight: 1, palm: 'pro' } } });
 
   // ---- Frontales / cuerpo completo ----
-  def('abduction', { p: ['glutes'], load: 'ankleSide', stack: true, scene: ['towerSide'], cam: { az: 70 },
+  def('abduction', { p: ['gluteMed'], s: ['glutes'], load: 'ankleSide', stack: true, scene: ['towerSide'], cam: { az: 70 },
     A: { hip: STAND, torso: 0, legsL: FEET, legsR: { th: 2, sh: 2, plane: 'f' }, armsL: { ik: [0.0, 1.12, 0.6], palm: 'neu' }, armsR: { rel: [0.03, HANG, 0.06], palm: 'neu' } },
     B: { hip: [0, 0.97], torso: -2, legsL: FEET, legsR: { th: 50, sh: 50, plane: 'f' }, armsL: { ik: [0.0, 1.12, 0.6], palm: 'neu' }, armsR: { rel: [0.03, HANG, 0.06], palm: 'neu' } } });
   (function () {
@@ -679,7 +682,14 @@
   def('walk', { p: ['forearms', 'traps'], s: ['quads', 'calves'], load: 'hands', cyclic: 'walk', cam: { az: 30 } });
   def('bike', { p: ['quads', 'calves'], s: ['hams', 'glutes'], load: 'none', cyclic: 'bike', scene: ['bike'] });
   def('rowErg', { p: ['lats', 'quads'], s: ['hams', 'biceps', 'lowback'], load: 'none', cyclic: 'rowErg', scene: ['rower'], cam: { az: 22 } });
+  // ---- técnica: pies abiertos ~15° con las rodillas siguiendo la punta del pie (sentadilla, prensa, hip thrust)
+  function toeOut(k, deg) { ['A', 'B'].forEach(function (f) { var L = P[k] && P[k][f] && P[k][f].legs; if (L) P[k][f].legs = Object.assign({}, L, { toe: deg }); }); }
   def('jumpRope', { p: ['calves'], s: ['delts', 'forearms'], load: 'rope', cyclic: 'jumpRope', cam: { az: 62 } });
+  toeOut('squat', 15); toeOut('frontSquat', 15); toeOut('legPress', 12); toeOut('hipThrust', 10);
+  // segunda perspectiva elegida a mano donde la máquina tapa la vista automática
+  function cam2(k, az2, el2) { if (P[k]) P[k].cam = Object.assign({}, P[k].cam, { az2: az2, el2: el2 }); }
+  cam2('legPress', -48, 26); cam2('calf', 72, 10); cam2('seatedCalf', 75, 14); cam2('chestPress', 100, 12); cam2('pulldown', 2, 12);
+  cam2('pushup', 90, 8); cam2('plank', -32, 12); cam2('legRaise', -42, 20);
 
   var BELT = 0.14;
   // Marcha: en el apoyo el pie va hacia atrás pegado al suelo; en el vuelo se levanta y avanza
@@ -687,8 +697,39 @@
     var c = Math.cos(w), s = Math.sin(w);
     return [stride * c + 0.02, base + (s < 0 ? lift * Math.pow(-s, 1.3) : 0)];
   }
+  // Zancada de carrera (ciclo de una pierna): [fase, muslo (° desde la vertical, + delante), flexión de rodilla, pie (+ punta abajo)]
+  // apoyo 0–0,38 (contacto bajo la cadera, amortiguación ~40°, despegue con la punta); vuelo; balanceo con el talón hacia el glúteo
+  var RUN_KEYS = [[0, 17, 12, -4], [0.12, 6, 38, 0], [0.26, -12, 30, 12], [0.38, -20, 22, 38], [0.52, -10, 85, 30],
+    [0.68, 18, 105, 18], [0.84, 40, 72, 6], [0.94, 30, 28, -4], [1, 17, 12, -4]];
+  function runLeg(p) {
+    p = ((p % 1) + 1) % 1;
+    var n = RUN_KEYS.length, i = 0;
+    while (i < n - 2 && p > RUN_KEYS[i + 1][0]) i++;
+    var k0 = RUN_KEYS[(i - 1 + n - 1) % (n - 1)], k1 = RUN_KEYS[i], k2 = RUN_KEYS[i + 1], k3 = RUN_KEYS[(i + 2) % (n - 1)];
+    var t = (p - k1[0]) / (k2[0] - k1[0]);
+    var out = [1, 2, 3].map(function (c) { return crVal(k0[c], k1[c], k2[c], k3[c], t); });
+    return { th: out[0], knee: out[1], foot: out[2], stance: p <= 0.38, p: p };
+  }
+  function runPose(ph) {
+    var R = runLeg(ph), L = runLeg(ph + 0.5);
+    // altura del tobillo sobre la cinta: al despegar, el pie gira sobre el metatarso y el talón se eleva
+    function vlen(g) { return TH * Math.cos(rad(g.th)) + SH * Math.cos(rad(g.th - g.knee)) + 0.14 * Math.sin(rad(Math.max(0, g.foot))); }
+    var base = BELT + ANK, hy;
+    if (R.stance) hy = base + vlen(R);
+    else if (L.stance) hy = base + vlen(L);
+    else {
+      // fase de vuelo: entre el despegue de una pierna y el contacto de la otra
+      var fr = R.p > 0.38 && R.p < 0.5 ? R : L, nx = fr === R ? L : R;
+      var s = (fr.p - 0.38) / 0.12, a = base + vlen(runLeg(fr.p - (fr.p - 0.38))), b = base + vlen(runLeg(nx.p + (1 - nx.p)));
+      hy = lerp(a, b, s) + 0.022 * Math.sin(Math.PI * s);
+    }
+    function legOf(g) { return { th: g.th, sh: g.th - g.knee, fw: 0.09, foot: g.foot }; }
+    function armOf(g) { var ua = clamp(-0.9 * (g.th - 10), -32, 34); return { ua: ua, fa: ua + 86 + Math.max(0, ua) * 0.35, palm: 'neu' }; }
+    return { hip: [0, hy], torso: 8, head: -6, legsR: legOf(R), legsL: legOf(L), armsR: armOf(R), armsL: armOf(L) };
+  }
   function cyclicPose(kind, ph) {
     var w = ph * Math.PI * 2;
+    if (kind === 'run') return runPose(ph);
     if (kind === 'run' || kind === 'walk') {
       var run = kind === 'run', base = (run ? BELT : 0) + ANK;
       var R = gaitAnkle(w, run ? 0.34 : 0.24, run ? 0.24 : 0.09, base), L = gaitAnkle(w + Math.PI, run ? 0.34 : 0.24, run ? 0.24 : 0.09, base);
@@ -778,7 +819,7 @@
   //  Modelo humano (Mixamo): esqueleto movido por la cinemática + músculos en la piel
   // ---------------------------------------------------------------------------
   var MODEL = null, MODEL_SCALE = 0.97 / 116.5, MUSCLE_CACHE = null;
-  var BAKED = {"bench:barbell":{"pads":[[2,0,-0.0291,0]],"h":[[0,3,0,0,3,0],[0,9,0,0,9,0],[0,17,0,0,17,0],[0,27,0,0,27,0],[0,34,0,0,34,0],[0,39,0,0,39,0],[0,41,0,0,41,0],[0,43,0,0,43,0],[0,43,0,0,43,0],[0,43,0,0,43,0],[0,43,0,0,43,0],[0,41,0,0,41,0],[0,37,0,0,37,0],[0,32,0,0,32,0],[0,24,0,0,24,0],[0,15,0,0,15,0],[0,7,0,0,7,0],[0,3,0,0,3,0],[0,1,0,0,1,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"bench:dumbbell":{"pads":[[2,0,-0.0291,0]]},"incline:barbell":{"pads":[[3,0,-0.0284,0]],"h":[[0,0,0,0,0,0],[1,1,0,1,1,0],[3,4,0,3,4,0],[7,9,0,7,9,0],[12,15,0,12,15,0],[15,20,0,15,20,0],[17,22,0,17,22,0],[18,23,0,18,23,0],[18,23,0,18,23,0],[18,23,0,18,23,0],[18,22,0,18,22,0],[17,21,0,17,21,0],[14,18,0,14,18,0],[10,13,0,10,13,0],[6,7,0,6,7,0],[2,3,0,2,3,0],[1,1,0,1,1,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"incline:dumbbell":{"pads":[[3,0,-0.0284,0]]},"bench:machine":{"pads":[[2,0,-0.0291,0]]},"incline:machine":{"pads":[[3,0,-0.0284,0]]},"chestPress:machine":{"pads":[[2,0,-0.0166,0],[5,0,0.0129,0]]},"chestPress:cable":{"pads":[[2,0,-0.0166,0],[5,0,0.0129,0]]},"fly:dumbbell":{"pads":[[2,0,-0.0291,0]]},"pullover:dumbbell":{"pads":[[2,0,-0.0291,0]]},"deadlift:dumbbell":{"h":[[17,-3,-32,18,-3,34],[17,-3,-33,18,-3,35],[17,-3,-33,18,-3,35],[17,-1,-34,18,-1,36],[16,4,-42,17,4,43],[16,8,-58,16,8,58],[17,11,-74,17,11,74],[19,12,-83,19,12,82],[21,12,-85,20,13,84],[21,12,-85,21,13,84],[21,12,-85,21,13,84],[21,12,-82,21,12,82],[20,11,-75,20,11,75],[17,9,-60,17,9,60],[16,6,-44,16,6,45],[16,2,-35,17,2,36],[17,-1,-32,18,-1,34],[17,-3,-33,18,-3,35],[17,-3,-33,18,-3,35],[17,-3,-32,17,-3,34],[17,-3,-32,17,-3,34]]},"pullup:none":{"b":[[-98,-9],[-109,-10],[-117,-11],[-118,-12],[-118,-12],[-116,-12],[-108,-11],[-92,-10],[-77,-9],[-76,-9],[-92,-11],[-110,-12],[-122,-13],[-127,-13],[-128,-13],[-125,-13],[-114,-12],[-91,-9],[-63,-6],[-36,-3],[-20,-2]]},"pullup:machine":{"b":[[-98,-9],[-109,-10],[-117,-11],[-118,-12],[-118,-12],[-116,-12],[-108,-11],[-92,-10],[-77,-9],[-76,-9],[-92,-11],[-110,-12],[-122,-13],[-127,-13],[-128,-13],[-125,-13],[-114,-12],[-91,-9],[-63,-6],[-36,-3],[-20,-2]]},"dbRow:dumbbell":{"pads":[[2,0,-0.0099,0]],"h":[[0,0,0,3,0,1],[0,0,0,10,1,4],[0,0,0,20,2,8],[0,0,0,30,4,13],[0,0,0,35,4,15],[0,0,0,36,4,15],[0,0,0,36,4,15],[0,0,0,36,4,15],[0,0,0,35,3,15],[0,0,0,35,3,15],[0,0,0,35,4,16],[0,0,0,36,4,16],[0,0,0,35,4,16],[0,0,0,33,4,15],[0,0,0,28,3,12],[0,0,0,20,2,9],[0,0,0,11,1,5],[0,0,0,4,1,2],[0,0,0,1,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"row:dumbbell":{"h":[[12,5,-29,12,5,30],[13,6,-34,14,6,34],[15,7,-37,15,7,38],[15,8,-38,15,8,38],[15,8,-38,15,8,38],[15,8,-37,15,8,38],[14,8,-36,14,8,36],[13,8,-35,13,8,34],[13,8,-33,12,8,32],[13,8,-33,12,8,33],[13,8,-34,13,8,34],[14,8,-36,14,8,36],[15,8,-37,15,8,37],[15,8,-38,15,8,38],[15,7,-38,15,8,38],[15,7,-37,15,7,38],[15,6,-36,15,6,37],[13,5,-33,14,6,34],[11,4,-27,13,5,30],[10,3,-23,12,5,28],[9,3,-21,12,5,27]]},"seatedRow:cable":{"pads":[[4,0.0397,0,0],[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"seatedRow:machine":{"pads":[[4,0.0397,0,0],[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"pulldown:cable":{"pads":[[2,0,-0.0272,0],[4,0,-0.0333,0],[5,0,0.0235,0],[12,0,-0.009,0]],"h":[[94,24,0,94,24,0],[104,26,0,104,26,0],[110,28,0,110,28,0],[111,29,0,111,29,0],[111,28,0,111,28,0],[108,28,0,108,28,0],[100,26,0,100,26,0],[86,23,0,86,23,0],[73,20,0,73,20,0],[73,20,0,73,20,0],[87,24,0,87,24,0],[101,27,0,101,27,0],[108,29,0,108,29,0],[111,29,0,111,29,0],[112,29,0,112,29,0],[111,29,0,111,29,0],[107,28,0,107,28,0],[96,24,0,96,24,0],[79,19,0,79,19,0],[58,13,0,58,13,0],[40,9,0,40,9,0]]},"pulldown:machine":{"pads":[[2,0,-0.0272,0],[4,0,-0.0333,0],[5,0,0.0235,0],[12,0,-0.009,0]],"h":[[94,24,0,94,24,0],[104,26,0,104,26,0],[110,28,0,110,28,0],[111,29,0,111,29,0],[111,28,0,111,28,0],[108,28,0,108,28,0],[100,26,0,100,26,0],[86,23,0,86,23,0],[73,20,0,73,20,0],[73,20,0,73,20,0],[87,24,0,87,24,0],[101,27,0,101,27,0],[108,29,0,108,29,0],[111,29,0,111,29,0],[112,29,0,112,29,0],[111,29,0,111,29,0],[107,28,0,107,28,0],[96,24,0,96,24,0],[79,19,0,79,19,0],[58,13,0,58,13,0],[40,9,0,40,9,0]]},"hyperext:none":{"pads":[[2,0,0.0597,0]]},"shrug:barbell":{"h":[[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[132,0,0,132,0,0],[130,0,0,130,0,0],[128,0,0,128,0,0],[128,0,0,128,0,0],[127,0,0,127,0,0],[126,0,0,126,0,0],[126,0,0,126,0,0],[126,0,0,126,0,0],[127,0,0,127,0,0],[128,0,0,128,0,0],[131,0,0,131,0,0],[133,0,0,133,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0]]},"shrug:dumbbell":{"h":[[12,13,-93,12,13,94],[12,13,-93,12,13,94],[13,13,-93,12,13,94],[13,13,-92,12,12,93],[13,13,-91,12,12,91],[12,12,-88,12,12,89],[12,12,-87,11,12,87],[11,12,-86,11,11,86],[11,11,-85,10,11,85],[11,11,-85,10,11,85],[11,11,-85,11,11,85],[12,12,-86,12,11,86],[12,12,-88,12,12,88],[12,12,-91,12,12,91],[12,13,-92,12,12,93],[12,13,-93,12,13,93],[12,13,-93,12,13,93],[12,13,-93,12,13,93],[12,13,-92,12,14,92],[12,13,-92,12,14,92],[12,13,-92,12,14,91]]},"ohp:barbell":{"h":[[139,3,0,139,3,0],[149,3,0,149,3,0],[157,3,0,157,3,0],[158,3,0,158,3,0],[158,3,0,158,3,0],[157,3,0,157,3,0],[149,3,0,149,3,0],[129,3,0,129,3,0],[108,2,0,108,2,0],[107,2,0,107,2,0],[127,3,0,127,3,0],[145,3,0,145,3,0],[153,3,0,153,3,0],[155,3,0,155,3,0],[155,3,0,155,3,0],[154,3,0,154,3,0],[149,3,0,149,3,0],[137,3,0,137,3,0],[119,2,0,119,2,0],[98,1,0,98,1,0],[82,1,0,82,1,0]]},"ohp:dumbbell":{"h":[[5,3,-19,5,3,19],[5,3,-19,5,3,19],[5,4,-19,4,3,19],[4,3,-16,4,3,15],[3,2,-10,3,2,9],[1,1,-4,1,1,4],[0,0,-1,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1,0,0,1],[2,1,-5,1,1,5],[3,2,-12,3,2,12],[5,3,-17,4,3,17],[5,4,-19,5,4,19],[5,4,-19,5,3,19],[5,3,-19,5,3,19],[5,2,-19,5,2,19],[4,2,-19,5,2,19]]},"lateral:dumbbell":{"h":[[-12,16,-151,36,13,153],[-12,16,-151,36,13,153],[-12,16,-151,36,12,152],[-11,15,-150,36,12,149],[-10,14,-145,35,10,139],[-8,12,-133,34,8,123],[-6,9,-114,30,5,103],[-5,4,-90,24,2,81],[-6,0,-63,17,0,59],[-10,-1,-50,6,-1,49],[-15,0,-63,-10,-2,63],[-21,4,-90,-20,-1,91],[-25,8,-116,-23,3,118],[-27,12,-136,-25,7,138],[-28,14,-146,-27,10,149],[-29,16,-150,-28,12,153],[-29,17,-150,-29,13,153],[-29,17,-150,-30,14,153],[-29,17,-151,-31,14,153],[-29,17,-151,-31,15,152],[-28,17,-151,-31,15,152]]},"lateral:barbell":{"h":[[103,0,0,103,0,0],[102,0,0,102,0,0],[98,0,0,98,0,0],[90,0,0,90,0,0],[79,0,0,79,0,0],[65,0,0,65,0,0],[50,0,0,50,0,0],[35,0,0,35,0,0],[23,0,0,23,0,0],[21,0,0,21,0,0],[28,0,0,28,0,0],[40,0,0,40,0,0],[53,0,0,53,0,0],[68,0,0,68,0,0],[81,0,0,81,0,0],[91,0,0,91,0,0],[99,0,0,99,0,0],[103,0,0,103,0,0],[104,0,0,104,0,0],[104,0,0,104,0,0],[104,0,0,104,0,0]]},"facePull:machine":{"h":[[1,0,0,1,0,0],[6,0,0,6,0,0],[15,1,0,15,1,0],[31,2,0,31,2,0],[47,2,0,47,2,0],[59,3,0,59,3,0],[63,3,0,63,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[63,3,0,63,3,0],[62,3,0,62,3,0],[55,3,0,55,3,0],[43,2,0,43,2,0],[27,1,0,27,1,0],[12,1,0,12,1,0],[4,0,0,4,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"facePull:cable":{"h":[[1,0,0,1,0,0],[6,0,0,6,0,0],[15,1,0,15,1,0],[31,2,0,31,2,0],[47,2,0,47,2,0],[59,3,0,59,3,0],[63,3,0,63,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[63,3,0,63,3,0],[62,3,0,62,3,0],[55,3,0,55,3,0],[43,2,0,43,2,0],[27,1,0,27,1,0],[12,1,0,12,1,0],[4,0,0,4,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"uprightRow:barbell":{"h":[[78,0,0,78,0,0],[78,0,0,78,0,0],[78,0,0,78,0,0],[78,0,0,78,0,0],[79,0,0,79,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[79,0,0,79,0,0],[79,0,0,79,0,0],[80,0,0,80,0,0],[81,0,0,81,0,0],[81,0,0,81,0,0],[81,0,0,81,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[79,0,0,79,0,0],[77,0,0,77,0,0],[75,0,0,75,0,0],[72,0,0,72,0,0]]},"curl:barbell":{"h":[[141,0,0,141,0,0],[140,0,0,140,0,0],[135,0,0,135,0,0],[127,0,0,127,0,0],[116,0,0,116,0,0],[102,0,0,102,0,0],[86,0,0,86,0,0],[70,0,0,70,0,0],[56,0,0,56,0,0],[53,0,0,53,0,0],[62,0,0,62,0,0],[76,0,0,76,0,0],[90,0,0,90,0,0],[104,0,0,104,0,0],[117,0,0,117,0,0],[128,0,0,128,0,0],[136,0,0,136,0,0],[140,0,0,140,0,0],[141,0,0,141,0,0],[141,0,0,141,0,0],[141,0,0,141,0,0]]},"curl:dumbbell":{"h":[[33,18,-151,25,16,152],[33,18,-151,25,16,152],[33,18,-151,26,16,152],[33,17,-150,25,16,151],[32,16,-144,25,15,146],[30,16,-133,23,15,135],[26,15,-115,21,15,117],[22,15,-92,20,15,94],[20,15,-70,19,15,71],[19,15,-56,19,15,58],[19,15,-56,19,15,64],[19,15,-71,19,15,80],[21,15,-95,19,15,97],[25,15,-121,18,15,116],[30,17,-140,15,15,136],[33,18,-150,14,16,151],[35,19,-152,22,17,155],[36,20,-152,32,18,155],[37,20,-152,36,18,155],[38,20,-153,36,18,155],[38,20,-154,36,18,155]]},"preacherCurl:dumbbell":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0328,0]]},"preacherCurl:barbell":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0328,0]],"h":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[1,0,0,1,0,0],[3,0,0,3,0,0],[6,0,0,6,0,0],[8,0,0,8,0,0],[9,0,0,9,0,0],[9,0,0,9,0,0],[9,0,0,9,0,0],[8,0,0,8,0,0],[6,0,0,6,0,0],[3,0,0,3,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"preacherCurl:machine":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0328,0]]},"pushdown:cable":{"h":[[3,-1,0,3,-1,0],[7,-1,0,7,-1,0],[14,-2,0,14,-2,0],[23,-4,0,23,-4,0],[31,-5,0,31,-5,0],[37,-7,0,37,-7,0],[40,-7,0,40,-7,0],[41,-7,0,41,-7,0],[41,-7,0,41,-7,0],[40,-7,0,40,-7,0],[39,-7,0,39,-7,0],[37,-7,0,37,-7,0],[34,-6,0,34,-6,0],[28,-5,0,28,-5,0],[19,-3,0,19,-3,0],[11,-2,0,11,-2,0],[5,-1,0,5,-1,0],[2,0,0,2,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"skullCrusher:barbell":{"pads":[[2,0,-0.0291,0]],"h":[[-25,0,0,-25,0,0],[-40,0,0,-40,0,0],[-62,0,0,-62,0,0],[-85,0,0,-85,0,0],[-103,0,0,-103,0,0],[-113,0,0,-113,0,0],[-116,0,0,-116,0,0],[-117,0,0,-117,0,0],[-117,0,0,-117,0,0],[-117,0,0,-117,0,0],[-117,0,0,-117,0,0],[-115,0,0,-115,0,0],[-110,0,0,-110,0,0],[-99,0,0,-99,0,0],[-82,0,0,-82,0,0],[-60,0,0,-60,0,0],[-37,0,0,-37,0,0],[-19,0,0,-19,0,0],[-8,0,0,-8,0,0],[-3,0,0,-3,0,0],[-1,0,0,-1,0,0]]},"skullCrusher:dumbbell":{"pads":[[2,0,-0.0291,0]],"h":[[0,0,0,0,0,0],[0,0,-1,0,0,1],[0,2,-5,0,2,5],[-1,4,-15,-1,4,15],[-1,5,-25,-1,5,25],[-1,6,-31,-1,6,31],[-1,5,-33,-1,5,32],[-1,4,-33,-1,4,32],[-1,3,-33,-1,3,32],[-1,3,-33,-1,3,32],[-1,4,-33,-1,4,32],[-1,5,-32,-1,5,32],[-1,5,-30,-1,5,30],[-1,4,-24,-1,4,23],[-1,3,-13,-1,3,13],[0,1,-4,0,1,4],[0,0,-1,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"ohExt:dumbbell":{"h":[[-112,232,1,-112,232,1],[-123,234,1,-123,234,1],[-135,234,-1,-135,234,-1],[-146,234,-2,-146,234,-2],[-155,232,-3,-155,232,-3],[-159,223,-3,-159,223,-3],[-160,199,-4,-160,199,-4],[-160,162,-4,-160,162,-4],[-160,130,-4,-160,130,-4],[-160,128,-4,-160,128,-4],[-160,156,-4,-160,156,-4],[-160,194,-4,-160,194,-4],[-159,220,-4,-159,220,-4],[-156,231,-3,-156,231,-3],[-148,233,-2,-148,233,-2],[-137,234,1,-137,234,1],[-126,234,2,-126,234,2],[-113,234,2,-113,234,2],[-98,233,2,-98,233,2],[-82,234,2,-82,234,2],[-69,234,2,-69,234,2]]},"kickback:dumbbell":{"pads":[[2,0,-0.0099,0]],"h":[[0,0,0,91,41,33],[0,0,0,91,51,33],[0,0,0,91,59,34],[0,0,0,91,61,34],[0,0,0,88,62,34],[0,0,0,73,61,33],[0,0,0,36,59,32],[0,0,0,-5,53,28],[0,0,0,-23,46,25],[0,0,0,-24,47,28],[0,0,0,-11,55,35],[0,0,0,28,62,40],[0,0,0,69,64,42],[0,0,0,91,64,43],[0,0,0,99,64,43],[0,0,0,100,61,44],[0,0,0,99,54,43],[0,0,0,97,42,41],[0,0,0,92,27,37],[0,0,0,87,14,31],[0,0,0,84,6,25]]},"kickback:cable":{"pads":[[2,0,-0.0099,0]]},"pushdown:machine":{"h":[[3,-1,0,3,-1,0],[7,-1,0,7,-1,0],[14,-2,0,14,-2,0],[23,-4,0,23,-4,0],[31,-5,0,31,-5,0],[37,-7,0,37,-7,0],[40,-7,0,40,-7,0],[41,-7,0,41,-7,0],[41,-7,0,41,-7,0],[40,-7,0,40,-7,0],[39,-7,0,39,-7,0],[37,-7,0,37,-7,0],[34,-6,0,34,-6,0],[28,-5,0,28,-5,0],[19,-3,0,19,-3,0],[11,-2,0,11,-2,0],[5,-1,0,5,-1,0],[2,0,0,2,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"walk:dumbbell":{"h":[[-190,33,-18,-163,-1,46],[-188,33,-22,-163,6,46],[-184,32,-29,-163,13,46],[-179,31,-35,-163,19,46],[-172,28,-40,-162,23,45],[-164,22,-43,-162,26,44],[-159,9,-45,-165,29,41],[-160,-5,-46,-172,30,39],[-162,-10,-47,-178,31,37],[-162,-10,-47,-181,32,34],[-163,-10,-47,-182,32,29],[-163,-3,-47,-182,32,26],[-163,9,-47,-182,32,28],[-163,18,-46,-179,30,34],[-162,23,-46,-174,27,38],[-161,26,-44,-166,23,41],[-163,27,-41,-161,12,43],[-166,29,-39,-161,-3,45],[-167,29,-37,-162,-9,47],[-168,29,-35,-163,-9,47],[-168,29,-33,-163,-9,47]]},"frontSquat:dumbbell":{"h":[[22,-25,1,22,-25,1],[23,-25,1,23,-25,1],[26,-25,1,26,-25,1],[30,-25,1,30,-25,1],[35,-25,1,35,-25,1],[39,-25,1,39,-25,1],[43,-25,1,43,-25,1],[44,-23,1,44,-23,1],[44,-19,2,44,-19,2],[44,-19,2,44,-19,2],[44,-23,2,44,-23,2],[43,-26,2,43,-26,2],[40,-26,2,40,-26,2],[35,-26,2,35,-26,2],[31,-26,1,31,-26,1],[27,-26,1,27,-26,1],[24,-26,1,24,-26,1],[22,-26,0,22,-26,0],[21,-25,0,21,-25,0],[20,-25,0,20,-25,0],[20,-25,0,20,-25,0]]},"squat:machine":{"pads":[[51,0,-0.015,0]]},"lunge:dumbbell":{"h":[[-73,-3,-37,0,0,0],[-78,-3,-37,0,0,0],[-85,-3,-39,0,0,0],[-91,-3,-40,0,0,0],[-95,-3,-41,0,0,0],[-99,-3,-41,0,0,0],[-106,-3,-42,0,0,0],[-114,-1,-43,0,0,0],[-120,3,-44,0,0,0],[-123,5,-45,0,0,0],[-124,5,-45,0,0,0],[-124,5,-45,0,0,0],[-122,4,-44,0,0,0],[-117,2,-43,0,0,0],[-111,-1,-42,0,0,0],[-104,-3,-42,0,0,0],[-98,-3,-42,0,0,0],[-94,-3,-41,0,0,0],[-90,-3,-40,0,0,0],[-84,-3,-39,0,0,0],[-79,-3,-38,0,0,0]]},"legPress:machine":{"pads":[[3,0,0.0058,0]]},"legExt:machine":{"pads":[[2,0,-0.0187,0],[5,0,0.0137,0]]},"rdl:dumbbell":{"h":[[22,15,-83,22,14,83],[22,15,-83,23,14,83],[23,15,-83,23,14,83],[23,15,-80,23,14,80],[22,14,-74,22,13,74],[21,13,-65,21,12,66],[20,11,-57,20,11,58],[19,9,-49,19,9,49],[18,6,-42,18,7,43],[18,4,-38,18,5,39],[18,5,-37,18,5,39],[18,7,-42,18,7,43],[19,10,-50,19,10,51],[20,12,-58,21,12,60],[21,13,-66,22,14,69],[22,14,-74,23,14,76],[22,15,-80,23,15,80],[22,15,-83,23,15,83],[22,15,-84,23,15,84],[20,15,-84,21,15,85],[18,15,-84,18,14,85]]},"legCurl:machine":{"pads":[[2,0,-0.0625,0]]},"legCurl:dumbbell":{"pads":[[2,0,-0.0625,0]]},"legCurl:none":{"pads":[[2,0,-0.0625,0]]},"hipThrust:dumbbell":{"h":[[12,91,-54,12,91,-54],[12,90,-54,12,90,-54],[12,89,-54,12,89,-54],[12,86,-54,12,86,-54],[12,82,-54,12,82,-54],[12,76,-53,12,76,-53],[12,69,-50,12,69,-50],[12,58,-45,12,58,-45],[12,49,-38,12,49,-38],[12,48,-35,12,48,-35],[12,55,-39,12,55,-39],[12,64,-46,12,64,-46],[12,72,-50,12,72,-50],[12,78,-53,12,78,-53],[12,82,-55,12,82,-55],[12,85,-56,12,85,-56],[12,86,-56,12,86,-56],[12,86,-56,12,86,-56],[11,86,-56,11,86,-56],[10,86,-56,10,86,-56],[8,86,-55,8,86,-55]]},"calf:machine":{"pads":[[2,0,-0.0254,0]]},"calf:dumbbell":{"pads":[[2,0,-0.0254,0]],"h":[[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-53,-3,28],[-53,-3,-27,-53,-3,27],[-51,-2,-27,-52,-3,27],[-50,-2,-26,-51,-2,26],[-51,-2,-26,-51,-2,26],[-52,-2,-27,-52,-2,27],[-53,-3,-27,-53,-3,27],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-3,-28,-54,-3,28],[-54,-2,-28,-54,-3,28],[-54,-2,-28,-54,-3,28],[-53,-2,-28,-53,-3,28],[-53,-2,-28,-53,-2,28]]},"calf:none":{"pads":[[2,0,-0.0254,0]]},"crunch:none":{"pads":[[2,0,-0.01,0]]},"crunch:cable":{"pads":[[2,0,-0.01,0]]},"crunch:machine":{"pads":[[2,0,-0.01,0],[5,-0.035,0,0]]},"legRaise:none":{"pads":[[2,0,-0.01,0]]},"bike:machine":{"pads":[[3,-0.0529,-0.0152,0],[5,0,-0.055,0]]},"bike:none":{"pads":[[3,-0.0529,-0.0152,0],[5,0,-0.055,0]]},"rowErg:machine":{"pads":[[6,0.0309,-0.0164,0],[7,0.0309,-0.0164,0]]},"crunch:kettlebell":{"pads":[[2,0,-0.01,0]],"h":[[-18,-26,0,-18,-26,0],[-22,-26,0,-22,-26,0],[-28,-26,0,-28,-26,0],[-32,-25,0,-32,-25,0],[-35,-24,0,-35,-24,0],[-36,-21,0,-36,-21,0],[-36,-17,0,-36,-17,0],[-36,-12,0,-36,-12,0],[-36,-10,0,-36,-10,0],[-36,-10,0,-36,-10,0],[-36,-12,0,-36,-12,0],[-36,-16,0,-36,-16,0],[-36,-20,0,-36,-20,0],[-35,-23,0,-35,-23,0],[-32,-25,0,-32,-25,0],[-29,-26,0,-29,-26,0],[-24,-26,0,-24,-26,0],[-19,-26,0,-19,-26,0],[-15,-26,0,-15,-26,0],[-13,-26,0,-13,-26,0],[-12,-26,0,-12,-26,0]]},"bench:none":{"pads":[[2,0,-0.0291,0]]},"incline:none":{"pads":[[3,0,-0.0284,0]]},"fly:none":{"pads":[[2,0,-0.0291,0]]},"pulldown:none":{"pads":[[2,0,-0.0272,0],[4,0,-0.0333,0],[5,0,0.0235,0],[12,0,-0.009,0]],"h":[[94,24,0,94,24,0],[104,26,0,104,26,0],[110,28,0,110,28,0],[111,29,0,111,29,0],[111,28,0,111,28,0],[108,28,0,108,28,0],[100,26,0,100,26,0],[86,23,0,86,23,0],[73,20,0,73,20,0],[73,20,0,73,20,0],[87,24,0,87,24,0],[101,27,0,101,27,0],[108,29,0,108,29,0],[111,29,0,111,29,0],[112,29,0,112,29,0],[111,29,0,111,29,0],[107,28,0,107,28,0],[96,24,0,96,24,0],[79,19,0,79,19,0],[58,13,0,58,13,0],[40,9,0,40,9,0]]},"seatedRow:none":{"pads":[[4,0.0397,0,0],[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"pushdown:none":{"h":[[3,-1,0,3,-1,0],[7,-1,0,7,-1,0],[14,-2,0,14,-2,0],[23,-4,0,23,-4,0],[31,-5,0,31,-5,0],[37,-7,0,37,-7,0],[40,-7,0,40,-7,0],[41,-7,0,41,-7,0],[41,-7,0,41,-7,0],[40,-7,0,40,-7,0],[39,-7,0,39,-7,0],[37,-7,0,37,-7,0],[34,-6,0,34,-6,0],[28,-5,0,28,-5,0],[19,-3,0,19,-3,0],[11,-2,0,11,-2,0],[5,-1,0,5,-1,0],[2,0,0,2,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"legExt:none":{"pads":[[2,0,-0.0187,0],[5,0,0.0137,0]]},"chestPress:none":{"pads":[[2,0,-0.0166,0],[5,0,0.0129,0]]},"legPress:none":{"pads":[[3,0,0.0058,0]]},"facePull:none":{"h":[[1,0,0,1,0,0],[6,0,0,6,0,0],[15,1,0,15,1,0],[31,2,0,31,2,0],[47,2,0,47,2,0],[59,3,0,59,3,0],[63,3,0,63,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[63,3,0,63,3,0],[62,3,0,62,3,0],[55,3,0,55,3,0],[43,2,0,43,2,0],[27,1,0,27,1,0],[12,1,0,12,1,0],[4,0,0,4,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"kickback:none":{"pads":[[2,0,-0.0099,0]]},"preacherCurl:none":{"pads":[[2,0,0.045,0],[3,0.0548,0,0],[4,0,-0.0328,0]]},"skullCrusher:none":{"pads":[[2,0,-0.0291,0]]},"rowErg:none":{"pads":[[6,0.0309,-0.0164,0],[7,0.0309,-0.0164,0]]},"pullover:none":{"pads":[[2,0,-0.0291,0]]},"dbRow:none":{"pads":[[2,0,-0.0099,0]]}}; // se rellena con colisiones precalculadas (ver más abajo)
+  var BAKED = {"bench:barbell":{"pads":[[2,0,-0.0382,0]],"h":[[0,3,0,0,3,0],[0,9,0,0,9,0],[0,17,0,0,17,0],[0,27,0,0,27,0],[0,34,0,0,34,0],[0,39,0,0,39,0],[0,41,0,0,41,0],[0,43,0,0,43,0],[0,43,0,0,43,0],[0,43,0,0,43,0],[0,43,0,0,43,0],[0,41,0,0,41,0],[0,37,0,0,37,0],[0,32,0,0,32,0],[0,24,0,0,24,0],[0,15,0,0,15,0],[0,7,0,0,7,0],[0,3,0,0,3,0],[0,1,0,0,1,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"bench:dumbbell":{"pads":[[2,0,-0.0382,0]]},"incline:barbell":{"pads":[[3,0,-0.0427,0]],"h":[[0,0,0,0,0,0],[1,1,0,1,1,0],[3,4,0,3,4,0],[7,9,0,7,9,0],[12,15,0,12,15,0],[15,20,0,15,20,0],[17,22,0,17,22,0],[18,23,0,18,23,0],[18,23,0,18,23,0],[18,23,0,18,23,0],[18,22,0,18,22,0],[17,21,0,17,21,0],[14,18,0,14,18,0],[10,13,0,10,13,0],[6,7,0,6,7,0],[2,3,0,2,3,0],[1,1,0,1,1,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"incline:dumbbell":{"pads":[[3,0,-0.0427,0]]},"bench:machine":{"pads":[[2,0,-0.0382,0]]},"incline:machine":{"pads":[[3,0,-0.0427,0]]},"chestPress:machine":{"pads":[[2,0,-0.0251,0],[5,0,0.0129,0]]},"chestPress:cable":{"pads":[[2,0,-0.0251,0],[5,0,0.0129,0]]},"fly:dumbbell":{"pads":[[2,0,-0.0382,0]]},"pullover:dumbbell":{"pads":[[2,0,-0.0382,0]]},"deadlift:dumbbell":{"h":[[17,-3,-32,18,-3,34],[17,-3,-33,18,-3,35],[17,-3,-33,18,-3,35],[17,-1,-34,18,-1,36],[16,4,-42,17,4,43],[16,8,-58,16,8,58],[17,11,-74,17,11,74],[19,12,-83,19,12,83],[21,13,-85,21,13,85],[21,13,-85,21,13,85],[21,13,-85,21,13,85],[21,12,-83,21,12,83],[20,11,-75,20,11,75],[17,9,-60,17,9,60],[16,6,-44,16,6,45],[16,2,-35,17,2,36],[17,-1,-32,18,-1,34],[17,-3,-33,18,-3,35],[17,-3,-33,18,-3,35],[17,-3,-32,17,-3,34],[17,-3,-32,17,-3,34]]},"pullup:none":{"b":[[-98,-9],[-109,-10],[-117,-11],[-118,-12],[-118,-12],[-116,-12],[-108,-11],[-92,-10],[-77,-9],[-76,-9],[-92,-11],[-110,-12],[-122,-13],[-127,-13],[-128,-13],[-125,-13],[-114,-12],[-91,-9],[-63,-6],[-36,-3],[-20,-2]]},"pullup:machine":{"b":[[-98,-9],[-109,-10],[-117,-11],[-118,-12],[-118,-12],[-116,-12],[-108,-11],[-92,-10],[-77,-9],[-76,-9],[-92,-11],[-110,-12],[-122,-13],[-127,-13],[-128,-13],[-125,-13],[-114,-12],[-91,-9],[-63,-6],[-36,-3],[-20,-2]]},"dbRow:dumbbell":{"pads":[[2,0,-0.0099,0]],"h":[[0,0,0,3,0,1],[0,0,0,10,1,4],[0,0,0,20,2,8],[0,0,0,30,4,13],[0,0,0,35,4,15],[0,0,0,36,4,15],[0,0,0,36,4,15],[0,0,0,36,4,15],[0,0,0,35,3,15],[0,0,0,35,3,15],[0,0,0,35,4,16],[0,0,0,36,4,16],[0,0,0,35,4,16],[0,0,0,33,4,15],[0,0,0,28,3,12],[0,0,0,20,2,9],[0,0,0,11,1,5],[0,0,0,4,1,2],[0,0,0,1,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"row:dumbbell":{"h":[[14,6,-33,14,6,33],[15,7,-36,16,6,36],[16,8,-38,17,7,39],[17,8,-39,17,8,39],[17,8,-39,17,8,39],[16,9,-38,16,8,39],[16,9,-38,15,8,37],[14,9,-36,14,9,34],[14,9,-34,13,9,32],[13,9,-35,13,8,33],[14,9,-36,14,8,35],[15,9,-37,15,8,37],[16,9,-38,16,8,39],[16,9,-39,16,8,39],[16,8,-39,16,8,39],[16,8,-39,16,8,39],[16,7,-38,16,7,38],[15,6,-35,15,6,35],[14,5,-31,14,5,31],[13,5,-29,13,5,29],[13,5,-28,13,5,28]]},"seatedRow:cable":{"pads":[[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"seatedRow:machine":{"pads":[[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"pulldown:cable":{"pads":[[2,0,-0.0321,0],[4,0,-0.0333,0],[5,0,0.0264,0],[12,0,-0.009,0]],"h":[[94,24,0,94,24,0],[104,26,0,104,26,0],[110,28,0,110,28,0],[111,29,0,111,29,0],[111,28,0,111,28,0],[108,28,0,108,28,0],[100,26,0,100,26,0],[86,23,0,86,23,0],[73,20,0,73,20,0],[73,20,0,73,20,0],[87,24,0,87,24,0],[101,27,0,101,27,0],[108,29,0,108,29,0],[111,29,0,111,29,0],[112,29,0,112,29,0],[111,29,0,111,29,0],[107,28,0,107,28,0],[96,24,0,96,24,0],[79,19,0,79,19,0],[58,13,0,58,13,0],[40,9,0,40,9,0]]},"pulldown:machine":{"pads":[[2,0,-0.0321,0],[4,0,-0.0333,0],[5,0,0.0264,0],[12,0,-0.009,0]],"h":[[94,24,0,94,24,0],[104,26,0,104,26,0],[110,28,0,110,28,0],[111,29,0,111,29,0],[111,28,0,111,28,0],[108,28,0,108,28,0],[100,26,0,100,26,0],[86,23,0,86,23,0],[73,20,0,73,20,0],[73,20,0,73,20,0],[87,24,0,87,24,0],[101,27,0,101,27,0],[108,29,0,108,29,0],[111,29,0,111,29,0],[112,29,0,112,29,0],[111,29,0,111,29,0],[107,28,0,107,28,0],[96,24,0,96,24,0],[79,19,0,79,19,0],[58,13,0,58,13,0],[40,9,0,40,9,0]]},"hyperext:none":{"pads":[[2,0,0.0597,0]]},"shrug:barbell":{"h":[[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[132,0,0,132,0,0],[130,0,0,130,0,0],[128,0,0,128,0,0],[128,0,0,128,0,0],[127,0,0,127,0,0],[126,0,0,126,0,0],[126,0,0,126,0,0],[126,0,0,126,0,0],[127,0,0,127,0,0],[128,0,0,128,0,0],[131,0,0,131,0,0],[133,0,0,133,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0],[134,0,0,134,0,0]]},"shrug:dumbbell":{"h":[[12,13,-93,12,13,94],[12,13,-93,12,13,94],[13,13,-93,12,13,94],[13,13,-92,12,12,93],[13,12,-91,12,12,91],[12,12,-88,12,12,89],[12,12,-87,11,12,87],[11,12,-86,11,11,86],[11,11,-85,10,11,85],[11,11,-85,10,11,85],[11,11,-85,11,11,85],[12,12,-86,12,11,86],[12,12,-88,12,12,88],[12,12,-91,12,12,91],[12,13,-92,12,12,93],[12,13,-93,12,13,93],[12,13,-93,12,13,93],[12,13,-93,12,13,93],[12,13,-92,12,14,92],[12,13,-92,12,14,92],[12,13,-92,12,14,91]]},"ohp:barbell":{"h":[[139,3,0,139,3,0],[149,3,0,149,3,0],[157,3,0,157,3,0],[158,3,0,158,3,0],[158,3,0,158,3,0],[157,3,0,157,3,0],[149,3,0,149,3,0],[129,3,0,129,3,0],[108,2,0,108,2,0],[107,2,0,107,2,0],[127,3,0,127,3,0],[145,3,0,145,3,0],[153,3,0,153,3,0],[155,3,0,155,3,0],[155,3,0,155,3,0],[154,3,0,154,3,0],[149,3,0,149,3,0],[137,3,0,137,3,0],[119,2,0,119,2,0],[98,1,0,98,1,0],[82,1,0,82,1,0]]},"ohp:dumbbell":{"h":[[5,3,-19,5,3,19],[5,3,-19,5,3,19],[5,4,-19,4,3,19],[4,3,-16,4,3,15],[3,2,-10,3,2,9],[1,1,-4,1,1,4],[0,0,-1,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,-1,0,0,1],[2,1,-5,1,1,5],[3,2,-12,3,2,12],[5,3,-17,4,3,17],[5,4,-19,5,4,19],[5,4,-19,5,3,19],[5,3,-19,5,3,19],[5,2,-19,5,2,19],[4,2,-19,5,2,19]]},"lateral:dumbbell":{"h":[[-12,16,-151,36,13,153],[-12,16,-151,36,13,153],[-12,16,-150,36,12,152],[-11,15,-149,36,12,149],[-9,14,-144,35,10,139],[-8,12,-133,34,8,123],[-6,8,-114,30,5,103],[-5,4,-90,24,2,81],[-6,0,-63,17,0,59],[-10,-1,-50,6,-1,49],[-15,0,-63,-10,-2,63],[-21,4,-90,-20,-1,91],[-25,8,-116,-23,3,118],[-27,12,-136,-25,7,138],[-28,14,-146,-27,10,149],[-29,16,-150,-28,12,153],[-29,17,-150,-29,13,153],[-29,17,-150,-30,14,153],[-29,17,-151,-31,14,153],[-29,17,-151,-31,15,152],[-28,17,-151,-31,15,152]]},"lateral:barbell":{"h":[[103,0,0,103,0,0],[102,0,0,102,0,0],[98,0,0,98,0,0],[90,0,0,90,0,0],[79,0,0,79,0,0],[65,0,0,65,0,0],[50,0,0,50,0,0],[35,0,0,35,0,0],[23,0,0,23,0,0],[21,0,0,21,0,0],[28,0,0,28,0,0],[40,0,0,40,0,0],[53,0,0,53,0,0],[68,0,0,68,0,0],[81,0,0,81,0,0],[91,0,0,91,0,0],[99,0,0,99,0,0],[103,0,0,103,0,0],[104,0,0,104,0,0],[104,0,0,104,0,0],[104,0,0,104,0,0]]},"facePull:machine":{"h":[[1,0,0,1,0,0],[6,0,0,6,0,0],[15,1,0,15,1,0],[31,2,0,31,2,0],[47,2,0,47,2,0],[59,3,0,59,3,0],[63,3,0,63,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[63,3,0,63,3,0],[62,3,0,62,3,0],[55,3,0,55,3,0],[43,2,0,43,2,0],[27,1,0,27,1,0],[12,1,0,12,1,0],[4,0,0,4,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"facePull:cable":{"h":[[1,0,0,1,0,0],[6,0,0,6,0,0],[15,1,0,15,1,0],[31,2,0,31,2,0],[47,2,0,47,2,0],[59,3,0,59,3,0],[63,3,0,63,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[63,3,0,63,3,0],[62,3,0,62,3,0],[55,3,0,55,3,0],[43,2,0,43,2,0],[27,1,0,27,1,0],[12,1,0,12,1,0],[4,0,0,4,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"uprightRow:barbell":{"h":[[78,0,0,78,0,0],[78,0,0,78,0,0],[78,0,0,78,0,0],[78,0,0,78,0,0],[79,0,0,79,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[79,0,0,79,0,0],[79,0,0,79,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[80,0,0,80,0,0],[79,0,0,79,0,0],[77,0,0,77,0,0],[75,0,0,75,0,0],[72,0,0,72,0,0]]},"curl:barbell":{"h":[[141,0,0,141,0,0],[140,0,0,140,0,0],[135,0,0,135,0,0],[127,0,0,127,0,0],[116,0,0,116,0,0],[102,0,0,102,0,0],[86,0,0,86,0,0],[70,0,0,70,0,0],[56,0,0,56,0,0],[53,0,0,53,0,0],[62,0,0,62,0,0],[76,0,0,76,0,0],[90,0,0,90,0,0],[104,0,0,104,0,0],[118,0,0,118,0,0],[128,0,0,128,0,0],[136,0,0,136,0,0],[140,0,0,140,0,0],[141,0,0,141,0,0],[141,0,0,141,0,0],[141,0,0,141,0,0]]},"curl:dumbbell":{"h":[[0,0,-154,0,0,154],[0,0,-154,0,0,154],[0,0,-154,0,0,154],[0,0,-153,0,0,153],[0,0,-150,0,0,149],[0,0,-139,0,0,139],[0,0,-122,0,0,121],[0,0,-101,0,0,100],[0,0,-83,0,0,84],[0,0,-74,0,0,76],[0,0,-73,0,0,76],[0,0,-80,0,0,86],[0,0,-96,0,0,103],[0,0,-118,0,0,125],[0,0,-141,0,0,145],[0,0,-156,0,0,154],[0,0,-160,0,0,156],[0,0,-158,0,0,156],[0,0,-154,0,0,155],[0,0,-151,0,0,153],[0,0,-150,0,0,152]]},"preacherCurl:dumbbell":{"pads":[[2,0,0.045,0],[3,0.0368,0,0],[4,0,-0.0294,0]]},"preacherCurl:barbell":{"pads":[[2,0,0.045,0],[3,0.0368,0,0],[4,0,-0.0294,0]],"h":[[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[1,0,0,1,0,0],[3,0,0,3,0,0],[6,0,0,6,0,0],[8,0,0,8,0,0],[9,0,0,9,0,0],[9,0,0,9,0,0],[9,0,0,9,0,0],[8,0,0,8,0,0],[6,0,0,6,0,0],[3,0,0,3,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"preacherCurl:machine":{"pads":[[2,0,0.045,0],[3,0.0368,0,0],[4,0,-0.0294,0]]},"pushdown:cable":{"h":[[0,0,0,0,0,0],[2,0,0,2,0,0],[5,-1,0,5,-1,0],[11,-2,0,11,-2,0],[20,-4,0,20,-4,0],[29,-5,0,29,-5,0],[34,-6,0,34,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[33,-6,0,33,-6,0],[26,-5,0,26,-5,0],[16,-3,0,16,-3,0],[7,-1,0,7,-1,0],[2,0,0,2,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"skullCrusher:barbell":{"pads":[[2,0,-0.0382,0]],"h":[[-25,0,0,-25,0,0],[-40,0,0,-40,0,0],[-62,0,0,-62,0,0],[-85,0,0,-85,0,0],[-103,0,0,-103,0,0],[-113,0,0,-113,0,0],[-116,0,0,-116,0,0],[-117,0,0,-117,0,0],[-117,0,0,-117,0,0],[-117,0,0,-117,0,0],[-117,0,0,-117,0,0],[-115,0,0,-115,0,0],[-110,0,0,-110,0,0],[-99,0,0,-99,0,0],[-82,0,0,-82,0,0],[-60,0,0,-60,0,0],[-37,0,0,-37,0,0],[-19,0,0,-19,0,0],[-8,0,0,-8,0,0],[-3,0,0,-3,0,0],[-1,0,0,-1,0,0]]},"skullCrusher:dumbbell":{"pads":[[2,0,-0.0382,0]],"h":[[0,0,0,0,0,0],[0,0,-1,0,0,1],[0,2,-5,0,2,5],[-1,4,-15,-1,4,15],[-1,5,-25,-1,5,25],[-1,6,-31,-1,6,31],[-1,5,-33,-1,5,32],[-1,4,-33,-1,4,32],[-1,3,-33,-1,3,32],[-1,3,-33,-1,3,32],[-1,4,-33,-1,4,32],[-1,5,-32,-1,5,32],[-1,5,-30,-1,5,30],[-1,4,-24,-1,4,23],[-1,3,-13,-1,3,13],[0,1,-4,0,1,4],[0,0,-1,0,0,1],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"ohExt:dumbbell":{"h":[[-112,232,1,-112,232,1],[-123,234,1,-123,234,1],[-135,234,-1,-135,234,-1],[-146,234,-2,-146,234,-2],[-155,232,-3,-155,232,-3],[-159,223,-3,-159,223,-3],[-160,199,-4,-160,199,-4],[-160,162,-4,-160,162,-4],[-160,130,-4,-160,130,-4],[-160,128,-4,-160,128,-4],[-160,156,-4,-160,156,-4],[-160,194,-4,-160,194,-4],[-159,220,-4,-159,220,-4],[-156,231,-3,-156,231,-3],[-148,233,-2,-148,233,-2],[-137,234,1,-137,234,1],[-126,234,2,-126,234,2],[-113,234,2,-113,234,2],[-98,233,2,-98,233,2],[-82,234,2,-82,234,2],[-69,234,2,-69,234,2]]},"kickback:dumbbell":{"pads":[[2,0,-0.0099,0]],"h":[[0,0,0,91,41,33],[0,0,0,91,51,33],[0,0,0,91,59,34],[0,0,0,91,61,34],[0,0,0,88,62,34],[0,0,0,73,61,33],[0,0,0,36,59,32],[0,0,0,-5,53,28],[0,0,0,-22,45,25],[0,0,0,-24,46,29],[0,0,0,-11,54,36],[0,0,0,28,61,40],[0,0,0,69,63,42],[0,0,0,91,63,43],[0,0,0,99,63,44],[0,0,0,100,61,44],[0,0,0,99,54,44],[0,0,0,97,41,42],[0,0,0,92,26,37],[0,0,0,87,14,31],[0,0,0,84,6,26]]},"kickback:cable":{"pads":[[2,0,-0.0099,0]]},"pushdown:machine":{"h":[[0,0,0,0,0,0],[2,0,0,2,0,0],[5,-1,0,5,-1,0],[11,-2,0,11,-2,0],[20,-4,0,20,-4,0],[29,-5,0,29,-5,0],[34,-6,0,34,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[33,-6,0,33,-6,0],[26,-5,0,26,-5,0],[16,-3,0,16,-3,0],[7,-1,0,7,-1,0],[2,0,0,2,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"walk:dumbbell":{"h":[[0,0,-95,0,0,76],[0,0,-98,0,0,80],[0,0,-100,0,0,85],[0,0,-101,0,0,90],[0,0,-101,0,0,92],[0,0,-101,0,0,92],[0,0,-101,0,0,92],[0,0,-101,0,0,91],[0,0,-100,0,0,88],[0,0,-97,0,0,88],[0,0,-89,0,0,93],[0,0,-84,0,0,98],[0,0,-86,0,0,100],[0,0,-90,0,0,101],[0,0,-92,0,0,101],[0,0,-92,0,0,101],[0,0,-92,0,0,101],[0,0,-91,0,0,101],[0,0,-88,0,0,100],[0,0,-83,0,0,97],[0,0,-81,0,0,92]]},"frontSquat:dumbbell":{"h":[[20,-24,0,20,-24,0],[20,-24,0,20,-24,0],[20,-25,0,20,-25,0],[20,-25,0,20,-25,0],[19,-26,0,19,-26,0],[18,-26,0,18,-26,0],[16,-27,0,16,-27,0],[15,-27,0,15,-27,0],[14,-27,0,14,-27,0],[14,-27,0,14,-27,0],[15,-27,0,15,-27,0],[16,-27,0,16,-27,0],[18,-27,0,18,-27,0],[19,-26,0,19,-26,0],[19,-26,0,19,-26,0],[20,-25,0,20,-25,0],[20,-25,0,20,-25,0],[20,-24,0,20,-24,0],[20,-23,0,20,-23,0],[20,-23,0,20,-23,0],[20,-23,0,20,-23,0]]},"squat:machine":{"pads":[[51,0,-0.015,0]]},"lunge:dumbbell":{"h":[[-82,-3,-38,0,0,0],[-90,-3,-40,0,0,0],[-99,-3,-42,0,0,0],[-106,-3,-43,0,0,0],[-111,-3,-44,0,0,0],[-117,-3,-44,0,0,0],[-124,-3,-44,0,0,0],[-132,-2,-44,0,0,0],[-139,-2,-44,0,0,0],[-143,-2,-43,0,0,0],[-144,-2,-43,0,0,0],[-143,-2,-43,0,0,0],[-142,-2,-44,0,0,0],[-137,-2,-44,0,0,0],[-129,-3,-44,0,0,0],[-121,-3,-44,0,0,0],[-115,-3,-44,0,0,0],[-110,-3,-44,0,0,0],[-104,-3,-43,0,0,0],[-96,-3,-41,0,0,0],[-89,-3,-39,0,0,0]]},"legPress:machine":{"pads":[[3,0,0.0058,0]]},"legExt:machine":{"pads":[[2,0,-0.0187,0],[5,0,0.0137,0]]},"rdl:dumbbell":{"h":[[24,17,-84,23,17,84],[24,17,-84,24,17,84],[25,17,-84,24,18,84],[25,17,-82,24,17,82],[24,17,-78,24,17,78],[23,15,-70,23,15,70],[21,13,-60,21,13,60],[19,10,-50,20,10,51],[18,7,-42,19,7,43],[18,4,-38,18,5,39],[18,5,-38,18,5,39],[18,7,-42,19,7,44],[19,10,-51,20,10,52],[21,13,-61,22,13,62],[23,16,-71,24,15,71],[24,17,-79,25,17,79],[24,17,-83,25,17,83],[24,17,-85,25,17,86],[24,17,-85,24,17,86],[22,17,-85,22,17,86],[19,16,-85,19,16,86]]},"legCurl:machine":{"pads":[[2,0,-0.0625,0]]},"legCurl:dumbbell":{"pads":[[2,0,-0.0625,0]]},"legCurl:none":{"pads":[[2,0,-0.0625,0]]},"hipThrust:dumbbell":{"h":[[34,123,11,34,123,11],[35,123,17,35,123,17],[35,121,20,35,121,20],[35,114,20,35,114,20],[34,105,20,34,105,20],[33,97,19,33,97,19],[31,87,18,31,87,18],[27,76,16,27,76,16],[23,67,13,23,67,13],[22,65,11,22,65,11],[25,72,12,25,72,12],[31,82,14,31,82,14],[36,91,15,36,91,15],[40,99,17,40,99,17],[44,108,20,44,108,20],[50,116,27,50,116,27],[60,123,44,60,123,44],[73,125,71,73,125,71],[85,123,98,85,123,98],[93,111,113,93,111,113],[95,95,117,95,95,117]]},"calf:machine":{"pads":[[2,0,-0.0254,0]]},"calf:dumbbell":{"pads":[[2,0,-0.0254,0]],"h":[[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-34,0,0,34],[0,0,-34,0,0,34],[0,0,-34,0,0,34],[0,0,-34,0,0,34],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-34,0,0,34],[0,0,-34,0,0,34],[0,0,-34,0,0,34],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-33,0,0,33],[0,0,-32,0,0,32],[0,0,-32,0,0,32]]},"calf:none":{"pads":[[2,0,-0.0254,0]]},"crunch:none":{"pads":[[2,0,-0.01,0]]},"crunch:cable":{"pads":[[2,0,-0.01,0]]},"crunch:machine":{"pads":[[2,0,-0.01,0],[5,-0.035,0,0]]},"legRaise:none":{"pads":[[2,0,-0.0083,0]]},"run:none":{"pads":[[3,0,-0.0074,0]]},"run:machine":{"pads":[[3,0,-0.0074,0]]},"bike:machine":{"pads":[[3,-0.0527,-0.0151,0],[5,0,-0.055,0]]},"bike:none":{"pads":[[3,-0.0527,-0.0151,0],[5,0,-0.055,0]]},"rowErg:machine":{"pads":[[6,0.0309,-0.0164,0],[7,0.0309,-0.0164,0]]},"crunch:kettlebell":{"pads":[[2,0,-0.01,0]],"h":[[-18,-26,0,-18,-26,0],[-22,-26,0,-22,-26,0],[-28,-26,0,-28,-26,0],[-32,-25,0,-32,-25,0],[-35,-24,0,-35,-24,0],[-36,-21,0,-36,-21,0],[-36,-17,0,-36,-17,0],[-36,-12,0,-36,-12,0],[-36,-10,0,-36,-10,0],[-36,-10,0,-36,-10,0],[-36,-12,0,-36,-12,0],[-36,-16,0,-36,-16,0],[-36,-20,0,-36,-20,0],[-35,-23,0,-35,-23,0],[-32,-25,0,-32,-25,0],[-29,-26,0,-29,-26,0],[-24,-26,0,-24,-26,0],[-19,-26,0,-19,-26,0],[-15,-26,0,-15,-26,0],[-13,-26,0,-13,-26,0],[-12,-26,0,-12,-26,0]]},"bench:none":{"pads":[[2,0,-0.0382,0]]},"incline:none":{"pads":[[3,0,-0.0427,0]]},"fly:none":{"pads":[[2,0,-0.0382,0]]},"pulldown:none":{"pads":[[2,0,-0.0321,0],[4,0,-0.0333,0],[5,0,0.0264,0],[12,0,-0.009,0]],"h":[[94,24,0,94,24,0],[104,26,0,104,26,0],[110,28,0,110,28,0],[111,29,0,111,29,0],[111,28,0,111,28,0],[108,28,0,108,28,0],[100,26,0,100,26,0],[86,23,0,86,23,0],[73,20,0,73,20,0],[73,20,0,73,20,0],[87,24,0,87,24,0],[101,27,0,101,27,0],[108,29,0,108,29,0],[111,29,0,111,29,0],[112,29,0,112,29,0],[111,29,0,111,29,0],[107,28,0,107,28,0],[96,24,0,96,24,0],[79,19,0,79,19,0],[58,13,0,58,13,0],[40,9,0,40,9,0]]},"seatedRow:none":{"pads":[[5,0.0315,-0.0102,0],[6,0.0321,-0.0104,0]]},"pushdown:none":{"h":[[0,0,0,0,0,0],[2,0,0,2,0,0],[5,-1,0,5,-1,0],[11,-2,0,11,-2,0],[20,-4,0,20,-4,0],[29,-5,0,29,-5,0],[34,-6,0,34,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[35,-6,0,35,-6,0],[33,-6,0,33,-6,0],[26,-5,0,26,-5,0],[16,-3,0,16,-3,0],[7,-1,0,7,-1,0],[2,0,0,2,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"legExt:none":{"pads":[[2,0,-0.0187,0],[5,0,0.0137,0]]},"chestPress:none":{"pads":[[2,0,-0.0251,0],[5,0,0.0129,0]]},"legPress:none":{"pads":[[3,0,0.0058,0]]},"facePull:none":{"h":[[1,0,0,1,0,0],[6,0,0,6,0,0],[15,1,0,15,1,0],[31,2,0,31,2,0],[47,2,0,47,2,0],[59,3,0,59,3,0],[63,3,0,63,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[64,3,0,64,3,0],[63,3,0,63,3,0],[62,3,0,62,3,0],[55,3,0,55,3,0],[43,2,0,43,2,0],[27,1,0,27,1,0],[12,1,0,12,1,0],[4,0,0,4,0,0],[1,0,0,1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0]]},"kickback:none":{"pads":[[2,0,-0.0099,0]]},"preacherCurl:none":{"pads":[[2,0,0.045,0],[3,0.0368,0,0],[4,0,-0.0294,0]]},"skullCrusher:none":{"pads":[[2,0,-0.0382,0]]},"rowErg:none":{"pads":[[6,0.0309,-0.0164,0],[7,0.0309,-0.0164,0]]},"pullover:none":{"pads":[[2,0,-0.0382,0]]},"dbRow:none":{"pads":[[2,0,-0.0099,0]]}}; // se rellena con colisiones precalculadas (ver más abajo)
   var GRIP_R = 0.016, FING_R = 0.0075; // radio del agarre y grosor de un dedo (m)
   var MUSCLE_IDS = { none: 0, pecs: 1, abs: 2, lats: 3, traps: 4, lowback: 5, glutes: 6, delts: 7, biceps: 8, triceps: 9, forearms: 10, quads: 11, hams: 12, calves: 13 };
   function boneKey(name) { return name.replace(/^mixamorig[:_]?/i, ''); }
@@ -848,6 +889,10 @@
           * soft(x / Math.max(1.5, 18 - Math.max(0, 168 - y) * 0.45) + dyT * 0.55, 0.14) * (1 - ssm(181, 185, y)) * ssm(138, 144, y);
         // erectores de la columna
         W.trapsU[i] = W.traps[i] * ssm(161, 166, y);
+        // pectoral superior (cabeza clavicular)
+        W.pecsU[i] = W.pecs[i] * ssm(159, 163, y - (x > 12 ? (x - 12) * 0.3 : 0));
+        // glúteo medio: cara lateral de la cadera, sobre el trocánter
+        W.gluteMed[i] = ssm(0.3, 0.6, torso + gw('UpLeg')) * ssm(0.05, 0.4, nv.x * sg) * ssm(0.3, -0.05, nv.z) * soft(ell(x, y, 13.8, 116, 5.2, 9.5, 0.25), 0.16);
         W.lowback[i] = ssm(0.3, 0.6, torso) * back * soft(sup(x, y, 3.8, 134, 4.2, 12.5), 0.16);
         // glúteos
         W.glutes[i] = ssm(0.3, 0.6, torso + gw('UpLeg')) * ssm(0.0, -0.35, nv.z) * soft(ell(x, y, 9.6, 109.5, 9.4, 11.5), 0.14);
@@ -858,6 +903,10 @@
           // deltoides: casquete que termina en punta en la inserción (V deltoidea)
           var dh = 130 * Math.pow(clamp(1 - (ua.t + 0.2) / 0.62, 0, 1), 0.7) + 8;
           W.delts[i] = ssm(0.25, 0.55, armW + sh) * tW(ua.t, -0.2, 0.43, 0.05) * angW(ua.ang, 90, dh, 16);
+          // tres cabezas del deltoides: anterior, lateral y posterior
+          W.deltsF[i] = W.delts[i] * angW(ua.ang, 32, 46, 12);
+          W.deltsS[i] = W.delts[i] * angW(ua.ang, 95, 38, 12);
+          W.deltsR[i] = W.delts[i] * angW(ua.ang, 160, 44, 12);
           W.biceps[i] = ssm(0.3, 0.6, armW) * tW(ua.t, 0.3, 0.9, 0.04) * angW(ua.ang, 12, 8 + 58 * spin(ua.t, 0.3, 0.9), 14);
           W.triceps[i] = ssm(0.3, 0.6, armW) * tW(ua.t, 0.22, 0.92, 0.04) * angW(ua.ang, 182, 10 + 74 * spin(ua.t, 0.22, 0.98, 0.45), 14);
         }
@@ -874,6 +923,9 @@
           var qd = tW(th.t, 0.08, 0.9, 0.04) * angW(th.ang, 28, 14 + 72 * spin(th.t, 0.02, 0.95, 0.5), 14);
           var vm = tW(th.t, 0.62, 0.93, 0.04) * angW(th.ang, -38, 34 * spin(th.t, 0.55, 0.97, 0.7), 12);
           W.quads[i] = ssm(0.3, 0.6, thW) * Math.max(qd, vm);
+          // aductores: cara interna del muslo; flexores de cadera: parte alta y delantera
+          W.adductors[i] = ssm(0.3, 0.6, thW) * tW(th.t, 0.04, 0.72, 0.04) * angW(th.ang, -100, 8 + 42 * spin(th.t, -0.05, 0.8, 0.5), 12);
+          W.hipFlex[i] = ssm(0.3, 0.6, thW) * tW(th.t, -0.05, 0.36, 0.05) * angW(th.ang, -5, 10 + 30 * spin(th.t, -0.15, 0.45, 0.5), 12);
           W.hams[i] = ssm(0.3, 0.6, thW) * tW(th.t, 0.18, 0.92, 0.04) * angW(th.ang, 182, 10 + 56 * spin(th.t, 0.15, 0.95, 0.5), 14);
         }
         var shW = gw('Leg');
@@ -883,6 +935,8 @@
           var gm = tW(sk.t, 0.04, 0.6, 0.04) * angW(sk.ang, 200, 8 + 62 * spin(sk.t, 0.0, 0.62, 0.6), 12);
           var gl = tW(sk.t, 0.04, 0.52, 0.04) * angW(sk.ang, 160, 8 + 56 * spin(sk.t, 0.0, 0.55, 0.6), 12);
           W.calves[i] = ssm(0.3, 0.6, shW) * Math.max(gm, gl);
+          // sóleo: bajo los gemelos y a los costados de la pantorrilla
+          W.soleus[i] = ssm(0.3, 0.6, shW) * tW(sk.t, 0.4, 0.84, 0.04) * angW(sk.ang, 180, 10 + 95 * spin(sk.t, 0.3, 0.9, 0.5), 12);
         }
       }
       // suavizado: promedio con vecinos (2 pasadas) para bordes limpios
@@ -1237,7 +1291,14 @@
         // piernas: la rodilla mira hacia la punta del pie
         var ul = worldPos(S + 'UpLeg'), kn = j.knee[k], an = j.ank[k], fd = j.footDir[k], fu = j.footUp[k];
         var foot0 = rp(S + 'ToeBase').clone().sub(rp(S + 'Foot')); foot0.y = 0; foot0.normalize();
-        aim(S + 'UpLeg', S + 'Leg', kn.clone().sub(ul), foot0, fd);
+        // giro del muslo: la rótula mira hacia el frente de la rodilla (plano real de flexión);
+        // con la pierna casi estirada se usa la dirección del pie
+        var thD = kn.clone().sub(ul).normalize(), shD = an.clone().sub(kn).normalize();
+        var pat = perp(shD, thD).negate(), pw = ssm(0.12, 0.35, pat.length());
+        var fdP = perp(fd, thD); if (fdP.lengthSq() < 1e-6) fdP = perp(j.fwd, thD);
+        fdP.normalize();
+        var patDir = pw > 0 ? fdP.clone().multiplyScalar(1 - pw).add(pat.normalize().multiplyScalar(pw)).normalize() : fdP;
+        aim(S + 'UpLeg', S + 'Leg', kn.clone().sub(ul), foot0, patDir);
         aim(S + 'Leg', S + 'Foot', an.clone().sub(worldPos(S + 'Leg')), foot0, fd);
         var tb0 = rp(S + 'ToeBase').clone().sub(rp(S + 'Foot'));
         var a = tb0.dot(foot0), bcomp = tb0.y;
@@ -1253,7 +1314,7 @@
   // ---------------------------------------------------------------------------
   //  Escena
   // ---------------------------------------------------------------------------
-  function createStage(key, eq, muscleOverride) {
+  function createStage(key, eq, muscleOverride, view) {
     var d = P[key] || P.curl;
     eq = eq || 'none';
     var M = mats();
@@ -1531,6 +1592,18 @@
     var camera = new T.PerspectiveCamera(30, 1, 0.1, 50);
     var cam = d.cam || {};
     var az = cam.az != null ? cam.az : 32, el = cam.el != null ? cam.el : 12;
+    // segunda perspectiva: la cámara gira ~100° alrededor del ejercicio para verlo desde el otro lado
+    if (view === 2) {
+      // otro ángulo que muestre el músculo principal: de espaldas para la cadena posterior, de frente para la anterior;
+      // si la vista principal ya es esa, se usa el perfil puro
+      var backM = ['lats', 'traps', 'trapsU', 'deltsR', 'lowback', 'glutes', 'gluteMed', 'hams', 'triceps', 'calves', 'soleus'];
+      var isBack = (d.p || []).some(function (m) { return backM.indexOf(m) >= 0; });
+      var cands = isBack ? [-125, 90, 0] : [90, -125, 0];
+      function adiff(a1, a2) { var x = Math.abs(((a1 - a2) % 360 + 540) % 360 - 180); return x; }
+      var az2 = cands[0]; for (var ci = 0; ci < cands.length; ci++) { if (adiff(cands[ci], az) >= 55) { az2 = cands[ci]; break; } }
+      var tA = Math.abs(((d.A || {}).torso) || 0), lying = tA > 60 && tA < 125;
+      az = cam.az2 != null ? cam.az2 : az2; el = cam.el2 != null ? cam.el2 : Math.max(lying ? 38 : 10, el);
+    }
     var samples = (d.keys || d.cyclic) ? [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9] : [0, 0.42];
     var js = samples.map(function (ph) { var pp = poseAt(d, ph).f; return solve(pp.arms && pp.arms.bar ? Object.assign({}, pp, { arms: { ua: 0, fa: 0 } }) : pp); });
     var pts = [];
@@ -1692,12 +1765,12 @@
   }
   function periodFor(key) {
     var d = P[key] || {};
-    if (d.cyclic) return key === 'run' ? 800 : (key === 'jumpRope' ? 600 : (key === 'bike' ? 1200 : (key === 'walk' ? 1200 : 2800)));
+    if (d.cyclic) return key === 'run' ? 720 : (key === 'jumpRope' ? 600 : (key === 'bike' ? 1200 : (key === 'walk' ? 1200 : 2800)));
     return d.keys ? 4200 : 3200;
   }
   function mount(canvas, key, eq, opts) {
     opts = opts || {};
-    var r = makeRenderer(canvas), st = createStage(key, eq, opts.muscle);
+    var r = makeRenderer(canvas), st = createStage(key, eq, opts.muscle, opts.view === 2 ? 2 : 1);
     var T0 = null, period = opts.period && !(P[key] || {}).cyclic && !(P[key] || {}).keys ? opts.period : periodFor(key);
     function size() {
       var w = canvas.clientWidth || 300, h = canvas.clientHeight || w;
