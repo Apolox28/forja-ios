@@ -7,7 +7,7 @@ extension MuscleGroup {
     /// Orden en el que se muestran los grupos.
     static let browseOrder: [MuscleGroup] = [.chest, .shoulders, .back, .lats, .upperBack, .lowerBack, .traps,
                                               .biceps, .triceps, .forearms, .core, .obliques,
-                                              .quads, .hamstrings, .glutes, .abductors, .adductors, .calves,
+                                              .quads, .hamstrings, .glutes, .adductors, .calves,
                                               .neck, .fullBody, .cardio]
 
     /// Músculos que incluye este grupo al explorar (Espalda reúne todas sus partes).
