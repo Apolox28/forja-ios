@@ -1355,8 +1355,8 @@
     var P4 = tg([0.08, 0.45], -72, 26, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -70 }, RB, lh(-0.36, 0.045, 0.4, 1), 10);
     var P4b = tg([0.0, 0.43], -70, 22, { ik: [0.02, 0.13, 0.3], fw: 0.14, foot: 20, pole: [0, -0.3, 1] }, RB, lh(-0.4, 0.045, 0.4, 1), 10);
     var P6 = tg([-0.1, 0.55], 0, 0, { ik: [-0.52, 0.11, 0.13], fw: 0.14, foot: 90, pole: [0.2, -1, 0] }, RB, lh(-0.1, 0.6, 0.28, 0));
-    var P6b = tg([0.14, 0.84], 6, 0, { ik: [-0.42, ANK + 0.04, 0.13], fw: 0.14, foot: 45, pole: [0.2, -1, 0] }, RB, lh(0.15, 0.68, 0.28, 0));
-    var P7 = tg([0.4, 0.97], 0, 0, { ik: [0.42, ANK, 0.13], fw: 0.14, foot: 0 }, { ik: [0.42, ANK, 0.13], fw: 0.14, foot: 0 }, lh(0.42, 0.8, 0.27, 0));
+    var P6b = tg([0.14, 0.84], 6, 0, { ik: [-0.42, ANK + 0.04, 0.13], fw: 0.14, foot: 45, pole: [0.2, -1, 0] }, RB, lh(0.15, 0.74, 0.25, 0));
+    var P7 = tg([0.4, 0.97], 0, 0, { ik: [0.42, ANK, 0.13], fw: 0.14, foot: 0 }, { ik: [0.42, ANK, 0.13], fw: 0.14, foot: 0 }, lh(0.42, 0.87, 0.24, 0));
     variant('turkishGetUp', 'swing', { load: 'kb', kbHand: ['R', 'rack'], scene: ['mat'], p: ['deltsF', 'abs', 'glutes'], s: ['obliques', 'deltsS', 'triceps', 'quads'], A: null, B: null, thumb: 0.32, period: 9000, cam: { az: 25, y: 0.6 },
       keys: [[0, P1], [0.06, P1], [0.14, P2], [0.22, P3], [0.3, P4], [0.37, P4b], [0.45, P6], [0.52, P6b], [0.58, P7], [0.64, P7], [0.7, P6b], [0.76, P6], [0.83, P4b], [0.88, P4], [0.93, P3], [0.97, P2], [1, P1]] });
   })();
@@ -2556,7 +2556,7 @@
         else dbs[0].position.copy(hm.clone().add(j.fwd.clone().multiplyScalar(0.035)));
       }
       if (kb && d.kbHand) { // pesa rusa en una mano: colgando ('hang') o apoyada en el dorso del antebrazo ('rack')
-        var kk = d.kbHand[0], kh = j.hand[kk], kd = d.kbHand[1] === 'rack' ? j.el[kk].clone().sub(kh).normalize().multiplyScalar(0.5).add(j.palm[kk].clone().multiplyScalar(-0.86)).normalize() : kh.clone().sub(j.sho[kk]).normalize();
+        var kk = d.kbHand[0], kh = j.hand[kk], kd = d.kbHand[1] === 'rack' ? j.el[kk].clone().sub(kh).normalize().multiplyScalar(0.12).add(j.palm[kk].clone().multiplyScalar(-1)).normalize() : kh.clone().sub(j.sho[kk]).normalize();
         kb.position.copy(kh); kb.quaternion.setFromUnitVectors(V(0, -1, 0), kd);
       } else if (kb) { kb.position.copy(hm); kb.quaternion.setFromUnitVectors(V(0, -1, 0), hm.clone().sub(j.shoC).normalize()); }
       if (handle) {
