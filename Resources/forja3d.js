@@ -2289,6 +2289,102 @@
     if (d.cyclic) return key === 'run' ? 720 : (key === 'jumpRope' ? 600 : (key === 'bike' ? 1200 : (key === 'walk' ? 1200 : 2800)));
     return d.keys ? 4200 : 3200;
   }
+  // ---------------------------------------------------------------------------
+  //  Mapa muscular estático: músculos trabajados en un entrenamiento (0 = nada, 1 = muy trabajado)
+  //  FORJA3D.bodyMap(canvas, intensities, { view: 'both' | 'front' | 'back', rotate: false })
+  //  intensities: { chest, back, shoulders, biceps, triceps, forearms, quads, hamstrings, glutes, calves, core, traps?, lats? }
+  // ---------------------------------------------------------------------------
+  var BODYMAP_REGIONS = {
+    chest: ['pecs', 'pecsU'], back: ['lats', 'traps', 'trapsU', 'lowback'], shoulders: ['delts'], biceps: ['biceps', 'brachiorad'],
+    triceps: ['triceps'], forearms: ['forearms', 'forearmFlex', 'forearmExt'], quads: ['quads', 'hipFlex', 'adductors'], hamstrings: ['hams'],
+    glutes: ['glutes', 'gluteMed'], calves: ['calves', 'soleus', 'tibialis'], core: ['abs', 'obliques'], traps: ['traps', 'trapsU'], lats: ['lats']
+  };
+  function bodyMapMaterial(baseHex) {
+    var mat = new T.MeshStandardMaterial({ color: baseHex, roughness: 0.6, metalness: 0, side: T.DoubleSide });
+    mat.extensions = { derivatives: true };
+    mat.onBeforeCompile = function (sh) {
+      sh.vertexShader = 'attribute vec2 mw;\nattribute float cav;\nvarying vec2 vMw;\nvarying float vCav;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vMw = mw; vCav = cav;');
+      sh.fragmentShader = 'varying vec2 vMw;\nvarying float vCav;\n' + sh.fragmentShader.replace('#include <color_fragment>', [
+        '#include <color_fragment>',
+        ' float TH = 0.36, aw = fwidth(vMw.x) * 0.9 + 0.004;',
+        ' float on = smoothstep(TH - aw, TH + aw, vMw.x) * step(0.01, vMw.y);',
+        ' vec3 heat = mix(vec3(0.98, 0.72, 0.42), vec3(0.72, 0.05, 0.06), smoothstep(0.0, 1.0, vMw.y));',
+        ' vec3 colM = mix(diffuseColor.rgb, heat, on);',
+        ' colM *= 1.0 - 0.5 * max(vCav, 0.0) + 0.06 * max(-vCav, 0.0);',
+        ' diffuseColor.rgb = colM;'
+      ].join('\n'));
+    };
+    mat.customProgramCacheKey = function () { return 'forjaBodyMap'; };
+    return mat;
+  }
+  function bodyMap(canvas, intensities, opts) {
+    opts = opts || {};
+    if (!MODEL) return null;
+    var view = opts.view || 'both', rotate = !!opts.rotate;
+    var r = makeRenderer(canvas), scene = new T.Scene();
+    scene.add(new T.HemisphereLight(0xffffff, 0x30343e, 0.85));
+    var k1 = new T.DirectionalLight(0xffffff, 1.1); k1.position.set(2.5, 4, 3); scene.add(k1);
+    var k2 = new T.DirectionalLight(0xffffff, 0.55); k2.position.set(-2.5, 3, -3); scene.add(k2);
+    // postura neutra de pie, brazos algo separados del cuerpo para ver brazos y tronco
+    var pose = solve({ hip: STAND, torso: 0, legs: { ik: [0.0, ANK], fw: 0.13 }, arms: { ua: 14, fa: 18, plane: 'f', palm: 'neu' } });
+    var figs = (view === 'both' && !rotate) ? [{ x: -0.42, yaw: 0 }, { x: 0.42, yaw: Math.PI }] : [{ x: 0, yaw: view === 'back' ? Math.PI : 0 }];
+    var bodies = figs.map(function (fg) {
+      var holder = new T.Group(); scene.add(holder);
+      var mb = makeModelBody(holder, { p: [], s: [] }); mb.pose(pose);
+      // la figura mira a la cámara (+z): el modelo mira hacia +x en la escena
+      holder.rotation.y = -Math.PI / 2 + fg.yaw; holder.position.x = fg.x;
+      var meshes = []; holder.traverse(function (o) { if (o.isSkinnedMesh) meshes.push(o); });
+      meshes.forEach(function (m) {
+        var eyes = /eye|head/i.test(m.name) && !/body|layer/i.test(m.name);
+        m.material = bodyMapMaterial(eyes ? 0xc9ccd3 : 0xe9eaee);
+      });
+      return { holder: holder, meshes: meshes };
+    });
+    function apply(intens) {
+      intens = intens || {};
+      bodies.forEach(function (b) {
+        b.meshes.forEach(function (m) {
+          var W = MUSCLE_CACHE[m.name] || {}, g = m.geometry, n = g.attributes.position.count;
+          var mw = g.attributes.mw ? g.attributes.mw : new T.BufferAttribute(new Float32Array(n * 2), 2);
+          for (var i = 0; i < n; i++) {
+            var shape = 0, val = 0;
+            Object.keys(intens).forEach(function (key) {
+              var v = clamp(+intens[key] || 0, 0, 1), regs = BODYMAP_REGIONS[key]; if (!regs || v <= 0) return;
+              regs.forEach(function (rg) { var w = W[rg] ? W[rg][i] : 0; if (w * (0.35 + v) > shape * (0.35 + val)) { shape = w; val = v; } });
+            });
+            mw.setXY(i, shape, val);
+          }
+          mw.needsUpdate = true; g.setAttribute('mw', mw);
+        });
+      });
+    }
+    apply(intensities);
+    var camera = new T.PerspectiveCamera(28, 1, 0.1, 30);
+    function size() {
+      var w = canvas.clientWidth || 300, h = canvas.clientHeight || w;
+      r.setPixelRatio(global.devicePixelRatio || 1); r.setSize(w, h, false);
+      camera.aspect = w / h; var span = figs.length > 1 ? 1.75 : 1.0;
+      var dist = Math.max(2.15 / (2 * Math.tan(rad(14))), span / camera.aspect / (2 * Math.tan(rad(14)))) * 1.06;
+      camera.position.set(0, 0.95, dist); camera.lookAt(0, 0.92, 0); camera.updateProjectionMatrix();
+    }
+    size();
+    var raf = null, t0 = null, alive = true;
+    function frame(ts) {
+      if (!alive) return;
+      if (t0 == null) t0 = ts;
+      if (rotate) bodies[0].holder.rotation.y = -Math.PI / 2 + ((ts - t0) / 9000) * Math.PI * 2;
+      if (canvas.clientWidth && Math.abs(canvas.width - canvas.clientWidth * (global.devicePixelRatio || 1)) > 2) size();
+      r.render(scene, camera);
+      raf = rotate ? requestAnimationFrame(frame) : null;
+    }
+    requestAnimationFrame(frame);
+    return {
+      update: function (intens) { apply(intens); if (!rotate) requestAnimationFrame(frame); },
+      resize: function () { size(); if (!rotate) requestAnimationFrame(frame); },
+      dispose: function () { alive = false; if (raf) cancelAnimationFrame(raf); r.dispose && r.dispose(); }
+    };
+  }
+
   function mount(canvas, key, eq, opts) {
     opts = opts || {};
     var r = makeRenderer(canvas), st = createStage(key, eq, opts.muscle, opts.view === 2 ? 2 : 1);
@@ -2321,7 +2417,7 @@
     new T.GLTFLoader().parse(buf, '', function (g) { setModel(g.scene); done && done(true); }, function () { done && done(false); });
   }
 
-  global.FORJA3D = { createStage: createStage, mount: mount, makeRenderer: makeRenderer, loadModel: loadModel, setModel: setModel,
+  global.FORJA3D = { createStage: createStage, mount: mount, bodyMap: bodyMap, makeRenderer: makeRenderer, loadModel: loadModel, setModel: setModel,
     patterns: Object.keys(P).filter(function (k) { return k !== 'lateral'; }), periodFor: periodFor,
     label: function () { return ''; },
     _test: { mc: function () { return MUSCLE_CACHE; }, P: P, solve: solve, poseAt: poseAt, mixVal: mixVal, C: { ANK: ANK, REACH: REACH, SPINE: SPINE, UA: UA, FA: FA, TH: TH, SH: SH } } };
