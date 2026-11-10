@@ -373,7 +373,6 @@ struct ExercisePickerView: View {
     @Environment(\.dismiss) var dismiss
     let onPick: ([UUID]) -> Void
     @State var search = ""
-    @State var muscle: MuscleGroup? = nil
     @State var equipment: Equipment? = nil
     @State var selected: [UUID] = []
     @State var showNew = false
@@ -382,98 +381,37 @@ struct ExercisePickerView: View {
         self.onPick = onPick
     }
 
-    var filtered: [Exercise] {
-        store.data.exercises
-            .filter { muscle == nil || $0.muscle == muscle }
-            .filter { equipment == nil || $0.equipment == equipment }
-            .filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
-            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
-    }
-
-    /// Ejercicios usados recientemente (para encontrarlos rápido).
-    var recent: [Exercise] {
-        var seen: [UUID] = []
-        for w in store.data.workouts.prefix(10) {
-            for e in w.exercises where !seen.contains(e.exerciseID) {
-                seen.append(e.exerciseID)
-            }
-        }
-        return seen.prefix(8).compactMap { store.exercise($0) }
-    }
-
     var body: some View {
         NavigationView {
-            List {
-                Section {
-                    Picker("Músculo", selection: $muscle) {
-                        Text("Todos").tag(MuscleGroup?.none)
-                        ForEach(MuscleGroup.allCases) { m in
-                            Text(m.rawValue).tag(MuscleGroup?.some(m))
-                        }
+            ExerciseBrowser(mode: .picker, selected: $selected, search: $search, equipment: $equipment, onDone: finish)
+                .searchable(text: $search, prompt: "Buscar ejercicio")
+                .navigationTitle("Añadir ejercicios")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancelar") { dismiss() }
                     }
-                    .pickerStyle(.menu)
-                    Picker("Equipamiento", selection: $equipment) {
-                        Text("Todo").tag(Equipment?.none)
-                        ForEach(Equipment.allCases) { e in
-                            Text(e.rawValue).tag(Equipment?.some(e))
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    Button {
-                        showNew = true
-                    } label: {
-                        Label("Crear ejercicio personalizado", systemImage: "plus.circle")
-                    }
-                }
-                if search.isEmpty && muscle == nil && equipment == nil && !recent.isEmpty {
-                    Section(header: Text("Recientes")) {
-                        ForEach(recent) { ex in
-                            pickRow(ex)
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button {
+                            showNew = true
+                        } label: {
+                            Label("Crear ejercicio", systemImage: "plus")
                         }
                     }
                 }
-                Section(header: Text("Todos (\(filtered.count))")) {
-                    ForEach(filtered) { ex in
-                        pickRow(ex)
+                .sheet(isPresented: $showNew) {
+                    NewExerciseView { ex in
+                        selected.append(ex.id)
                     }
+                    .environmentObject(store)
                 }
-            }
-            .listStyle(.insetGrouped)
-            .searchable(text: $search, prompt: "Buscar ejercicio")
-            .navigationTitle("Añadir ejercicios")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Añadir (\(selected.count))") {
-                        onPick(selected)
-                        dismiss()
-                    }
-                    .disabled(selected.isEmpty)
-                }
-            }
-            .sheet(isPresented: $showNew) {
-                NewExerciseView { ex in
-                    selected.append(ex.id)
-                }
-                .environmentObject(store)
-            }
         }
+        .navigationViewStyle(.stack)
     }
 
-    func pickRow(_ ex: Exercise) -> some View {
-        Button {
-            if let i = selected.firstIndex(of: ex.id) {
-                selected.remove(at: i)
-            } else {
-                selected.append(ex.id)
-            }
-        } label: {
-            ExerciseRow(exercise: ex, selected: selected.contains(ex.id))
-        }
-        .buttonStyle(.plain)
+    func finish() {
+        onPick(selected)
+        dismiss()
     }
 }
 

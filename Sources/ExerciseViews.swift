@@ -4,46 +4,28 @@ struct ExercisesView: View {
     @EnvironmentObject var store: Store
     @State var search = ""
     @State var showNew = false
-
-    func items(for muscle: MuscleGroup) -> [Exercise] {
-        store.data.exercises
-            .filter { $0.muscle == muscle }
-            .filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
-            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
-    }
+    @State var equipment: Equipment? = nil
+    @State var noSelection: [UUID] = []
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(MuscleGroup.allCases) { m in
-                    if !items(for: m).isEmpty {
-                        Section(header: Text(m.rawValue)) {
-                            ForEach(items(for: m)) { ex in
-                                NavigationLink(destination: ExerciseDetailView(exerciseID: ex.id)) {
-                                    ExerciseRow(exercise: ex, selected: false)
-                                }
-                            }
+            ExerciseBrowser(mode: .library, selected: $noSelection, search: $search, equipment: $equipment)
+                .searchable(text: $search, prompt: "Buscar ejercicio")
+                .navigationTitle("Ejercicios")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showNew = true
+                        } label: {
+                            Image(systemName: "plus")
                         }
                     }
                 }
-            }
-            .listStyle(.insetGrouped)
-            .searchable(text: $search, prompt: "Buscar ejercicio")
-            .navigationTitle("Ejercicios")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showNew = true
-                    } label: {
-                        Image(systemName: "plus")
-                    }
+                .sheet(isPresented: $showNew) {
+                    NewExerciseView()
+                        .environmentObject(store)
                 }
-            }
-            .sheet(isPresented: $showNew) {
-                NewExerciseView()
-                    .environmentObject(store)
-            }
-            .activeWorkoutBanner()
+                .activeWorkoutBanner()
         }
         .navigationViewStyle(.stack)
     }
