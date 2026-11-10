@@ -240,7 +240,7 @@
     sh: [[0, 0.052], [0.22, 0.056], [0.75, 0.036], [1, 0.03]],
     neck: [[0, 0.062], [1, 0.052]]
   };
-  var MUSCLES = ['pecs', 'pecsU', 'abs', 'lats', 'traps', 'trapsU', 'lowback', 'glutes', 'gluteMed', 'delts', 'deltsF', 'deltsS', 'deltsR', 'biceps', 'triceps', 'forearms', 'brachiorad', 'forearmFlex', 'forearmExt', 'quads', 'hipFlex', 'adductors', 'hams', 'calves', 'soleus', 'tibialis', 'obliques'];
+  var MUSCLES = ['pecs', 'pecsU', 'abs', 'lats', 'traps', 'trapsU', 'lowback', 'glutes', 'gluteMed', 'delts', 'deltsF', 'deltsS', 'deltsR', 'biceps', 'triceps', 'forearms', 'brachiorad', 'forearmFlex', 'forearmExt', 'quads', 'hipFlex', 'adductors', 'hams', 'calves', 'soleus', 'tibialis', 'obliques', 'trapsM', 'neck', 'adductorsV', 'quadsV'];
   var MUSCLE_MAP = { chest: 'pecs', back: 'lats', shoulders: 'delts', biceps: 'biceps', triceps: 'triceps', forearms: 'forearms',
     quads: 'quads', hamstrings: 'hams', glutes: 'glutes', calves: 'calves', core: 'abs' };
   var SKIN = 0xe7e8ec;
@@ -1558,6 +1558,9 @@
           * soft(x / Math.max(1.5, 18 - Math.max(0, 168 - y) * 0.45) + dyT * 0.55, 0.14) * (1 - ssm(181, 185, y)) * ssm(138, 144, y);
         // erectores de la columna
         W.trapsU[i] = W.traps[i] * ssm(161, 166, y);
+        W.trapsM[i] = W.traps[i] * (1 - ssm(161, 166, y));
+        var nkW = gw('Neck', 'Neck_1');
+        W.neck[i] = ssm(0.35, 0.65, nkW + gw('Head') * 0.4) * ssm(164, 167, y) * (1 - ssm(177, 180, y)) * (1 - W.trapsU[i]) * soft(x / 6.2, 0.18);
         // pectoral superior (cabeza clavicular)
         W.pecsU[i] = W.pecs[i] * ssm(159, 163, y - (x > 12 ? (x - 12) * 0.3 : 0));
         // glúteo medio: cara lateral de la cadera, sobre el trocánter
@@ -1603,6 +1606,9 @@
           W.quads[i] = ssm(0.3, 0.6, thW) * Math.max(qd, vm);
           // aductores: cara interna del muslo; flexores de cadera: parte alta y delantera
           W.adductors[i] = ssm(0.3, 0.6, thW) * tW(th.t, 0.04, 0.72, 0.04) * angW(th.ang, -100, 8 + 42 * spin(th.t, -0.05, 0.8, 0.5), 12);
+          // aductores vistos de frente (mapa muscular): triángulo interno alto del muslo (aductor largo, pectíneo, grácil)
+          W.adductorsV[i] = ssm(0.5, 0.8, thW) * ssm(4.5, 7, x) * tW(th.t, 0.04, 0.6, 0.04) * angW(th.ang, -20 - 10 * clamp(th.t / 0.6, 0, 1), 10 + 22 * Math.pow(clamp(1 - th.t / 0.62, 0, 1), 0.7), 12);
+          W.quadsV[i] = W.quads[i] * (1 - ssm(0.15, 0.4, W.adductorsV[i]));
           W.hipFlex[i] = ssm(0.3, 0.6, thW) * tW(th.t, -0.05, 0.36, 0.05) * angW(th.ang, -5, 10 + 30 * spin(th.t, -0.15, 0.45, 0.5), 12);
           W.hams[i] = ssm(0.3, 0.6, thW) * tW(th.t, 0.18, 0.92, 0.04) * angW(th.ang, 182, 10 + 56 * spin(th.t, 0.15, 0.95, 0.5), 14);
         }
@@ -2685,9 +2691,10 @@
   //  intensities: { chest, back, shoulders, biceps, triceps, forearms, quads, hamstrings, glutes, calves, core, traps?, lats? }
   // ---------------------------------------------------------------------------
   var BODYMAP_REGIONS = {
-    chest: ['pecs', 'pecsU'], back: ['lats', 'traps', 'trapsU', 'lowback'], shoulders: ['delts'], biceps: ['biceps', 'brachiorad'],
-    triceps: ['triceps'], forearms: ['forearms', 'forearmFlex', 'forearmExt'], quads: ['quads', 'hipFlex', 'adductors'], hamstrings: ['hams'],
-    glutes: ['glutes', 'gluteMed'], calves: ['calves', 'soleus', 'tibialis'], core: ['abs', 'obliques'], traps: ['traps', 'trapsU'], lats: ['lats']
+    chest: ['pecs', 'pecsU'], back: ['lats', 'traps', 'trapsU', 'lowback'], shoulders: ['delts'], biceps: ['biceps'],
+    triceps: ['triceps'], forearms: ['forearms', 'brachiorad', 'forearmFlex', 'forearmExt'], quads: ['quadsV', 'hipFlex'], hamstrings: ['hams'],
+    glutes: ['glutes'], calves: ['calves', 'soleus', 'tibialis'], core: ['abs', 'obliques'], traps: ['trapsU'], lats: ['lats'],
+    upperBack: ['trapsM'], lowerBack: ['lowback'], abductors: ['gluteMed'], adductors: ['adductors', 'adductorsV'], neck: ['neck']
   };
   function bodyMapMaterial(baseHex) {
     var mat = new T.MeshStandardMaterial({ color: baseHex, roughness: 0.6, metalness: 0, side: T.DoubleSide });
@@ -2710,19 +2717,19 @@
   function bodyMap(canvas, intensities, opts) {
     opts = opts || {};
     if (!MODEL) return null;
-    var view = opts.view || 'both', rotate = !!opts.rotate;
+    var view = opts.view || 'both', rotate = !!opts.rotate, yaw0 = rad(+opts.yaw || 0), zoom = Math.max(0.3, +opts.zoom || 1), tY = opts.targetY != null ? +opts.targetY : null;
     var r = makeRenderer(canvas), scene = new T.Scene();
     scene.add(new T.HemisphereLight(0xffffff, 0x30343e, 0.85));
     var k1 = new T.DirectionalLight(0xffffff, 1.1); k1.position.set(2.5, 4, 3); scene.add(k1);
     var k2 = new T.DirectionalLight(0xffffff, 0.55); k2.position.set(-2.5, 3, -3); scene.add(k2);
     // postura neutra de pie, brazos algo separados del cuerpo para ver brazos y tronco
-    var pose = solve({ hip: STAND, torso: 0, legs: { ik: [0.0, ANK], fw: 0.13 }, arms: { ua: 14, fa: 18, plane: 'f', palm: 'neu' } });
+    var pose = solve({ hip: STAND, torso: 0, legs: { ik: [0.0, ANK], fw: 0.2 }, arms: { ua: 14, fa: 18, plane: 'f', palm: 'neu' } });
     var figs = (view === 'both' && !rotate) ? [{ x: -0.42, yaw: 0 }, { x: 0.42, yaw: Math.PI }] : [{ x: 0, yaw: view === 'back' ? Math.PI : 0 }];
     var bodies = figs.map(function (fg) {
       var holder = new T.Group(); scene.add(holder);
       var mb = makeModelBody(holder, { p: [], s: [] }); mb.pose(pose);
       // la figura mira a la cámara (+z): el modelo mira hacia +x en la escena
-      holder.rotation.y = -Math.PI / 2 + fg.yaw; holder.position.x = fg.x;
+      holder.rotation.y = -Math.PI / 2 + fg.yaw + yaw0; holder.position.x = fg.x;
       var meshes = []; holder.traverse(function (o) { if (o.isSkinnedMesh) meshes.push(o); });
       meshes.forEach(function (m) {
         var eyes = /eye|head/i.test(m.name) && !/body|layer/i.test(m.name);
@@ -2755,14 +2762,15 @@
       r.setPixelRatio(global.devicePixelRatio || 1); r.setSize(w, h, false);
       camera.aspect = w / h; var span = figs.length > 1 ? 1.75 : 1.0;
       var dist = Math.max(2.15 / (2 * Math.tan(rad(14))), span / camera.aspect / (2 * Math.tan(rad(14)))) * 1.06;
-      camera.position.set(0, 0.95, dist); camera.lookAt(0, 0.92, 0); camera.updateProjectionMatrix();
+      dist /= zoom; var ly = tY != null ? tY : 0.92 + (zoom > 1 ? (1.3 - 0.92) * Math.min(1, (zoom - 1) / 1.5) : 0);
+      camera.position.set(0, ly + 0.03, dist); camera.lookAt(0, ly, 0); camera.updateProjectionMatrix();
     }
     size();
     var raf = null, t0 = null, alive = true;
     function frame(ts) {
       if (!alive) return;
       if (t0 == null) t0 = ts;
-      if (rotate) bodies[0].holder.rotation.y = -Math.PI / 2 + ((ts - t0) / 9000) * Math.PI * 2;
+      if (rotate) bodies[0].holder.rotation.y = -Math.PI / 2 + yaw0 + ((ts - t0) / 9000) * Math.PI * 2;
       if (canvas.clientWidth && Math.abs(canvas.width - canvas.clientWidth * (global.devicePixelRatio || 1)) > 2) size();
       r.render(scene, camera);
       raf = rotate ? requestAnimationFrame(frame) : null;
