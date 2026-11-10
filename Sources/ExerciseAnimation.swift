@@ -2,20 +2,53 @@ import SwiftUI
 import UIKit
 import WebKit
 
-/// Animación en bucle del ejercicio (muñeco + equipamiento), dibujada con el motor de Resources/figure.js.
+/// Animación 3D en bucle del ejercicio (maniquí + equipamiento), dibujada con three.js y Resources/forja3d.js.
 struct ExerciseAnimationView: UIViewRepresentable {
     let exercise: Exercise
+    /// 1 = vista principal, 2 = otra perspectiva
+    var view: Int = 1
 
-    static let script: String = {
-        guard let url = Bundle.main.url(forResource: "figure", withExtension: "js"),
+    static func resource(_ name: String) -> String {
+        guard let url = Bundle.main.url(forResource: name, withExtension: "js"),
               let js = try? String(contentsOf: url, encoding: .utf8) else { return "" }
         return js
+    }
+    static let three: String = resource("three.min")
+    static let engine: String = resource("forja3d")
+    static let gltfLoader: String = resource("GLTFLoader")
+    static let skeletonUtils: String = resource("SkeletonUtils")
+    /// Modelo humano (GLB) codificado en base64 para cargarlo dentro de la vista web sin red.
+    static let modelBase64: String = {
+        guard let url = Bundle.main.url(forResource: "body", withExtension: "glb"),
+              let data = try? Data(contentsOf: url) else { return "" }
+        return data.base64EncodedString()
     }()
 
-    var patternKey: String { ExerciseSeed.pattern(for: exercise).rawValue }
+    /// Animación propia del ejercicio (variante) o, si no tiene, la de su patrón de movimiento
+    var patternKey: String { ExerciseSeed.animationKey(for: exercise) }
     var equipmentKey: String { ExerciseSeed.animationEquipment(exercise.equipment) }
 
+    /// Para ejercicios personalizados, resalta el músculo elegido por el usuario.
+    var muscleKey: String {
+        guard exercise.isCustom else { return "" }
+        switch exercise.muscle {
+        case .chest: return "chest"
+        case .back: return "back"
+        case .shoulders: return "shoulders"
+        case .biceps: return "biceps"
+        case .triceps: return "triceps"
+        case .forearms: return "forearms"
+        case .quads: return "quads"
+        case .hamstrings: return "hamstrings"
+        case .glutes: return "glutes"
+        case .calves: return "calves"
+        case .core: return "core"
+        case .cardio, .fullBody: return ""
+        }
+    }
+
     func makeUIView(context: Context) -> WKWebView {
+        // (las animaciones se dibujan a 60 fps dentro de la vista web)
         let config = WKWebViewConfiguration()
         let web = WKWebView(frame: .zero, configuration: config)
         web.isOpaque = false
@@ -24,12 +57,12 @@ struct ExerciseAnimationView: UIViewRepresentable {
         web.scrollView.bounces = false
         web.isUserInteractionEnabled = false
         load(web)
-        context.coordinator.key = patternKey + equipmentKey
+        context.coordinator.key = patternKey + equipmentKey + "\(view)"
         return web
     }
 
     func updateUIView(_ web: WKWebView, context: Context) {
-        let key = patternKey + equipmentKey
+        let key = patternKey + equipmentKey + "\(view)"
         if context.coordinator.key != key {
             context.coordinator.key = key
             load(web)
@@ -43,11 +76,25 @@ struct ExerciseAnimationView: UIViewRepresentable {
         let html = """
         <!doctype html><html><head>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-        <style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}
-        canvas{display:block;width:100vw;height:100vw;border-radius:16px}</style>
-        </head><body><canvas id="c"></canvas>
-        <script>\(ExerciseAnimationView.script)</script>
-        <script>FORJA.animate(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', 2600);</script>
+        <style>
+        html,body{margin:0;padding:0;background:transparent;overflow:hidden}
+        #w{position:relative;width:100vw;height:100vw;border-radius:18px;overflow:hidden;
+           background:radial-gradient(120% 90% at 50% 25%,#30333c 0%,#1b1d23 55%,#121317 100%)}
+        canvas{display:block;width:100%;height:100%}
+        #l{position:absolute;top:12px;left:12px;padding:5px 11px;border-radius:999px;
+           font:700 14px -apple-system,system-ui,sans-serif;color:#ff8a3d;background:rgba(255,138,61,.16)}
+        </style>
+        </head><body><div id="w"><canvas id="c"></canvas><div id="l"></div></div>
+        <script>\(ExerciseAnimationView.three)</script>
+        <script>\(ExerciseAnimationView.gltfLoader)</script>
+        <script>\(ExerciseAnimationView.skeletonUtils)</script>
+        <script>\(ExerciseAnimationView.engine)</script>
+        <script>
+        document.getElementById('l').remove();
+        function start() { FORJA3D.mount(document.getElementById('c'), '\(patternKey)', '\(equipmentKey)', { muscle: '\(muscleKey)', view: \(view) }); }
+        var data = '\(ExerciseAnimationView.modelBase64)';
+        if (data.length > 0) { FORJA3D.loadModel(data, function () { start(); }); } else { start(); }
+        </script>
         </body></html>
         """
         web.loadHTMLString(html, baseURL: nil)
@@ -62,13 +109,14 @@ struct ExerciseThumbnail: View {
     static var cache: [String: UIImage] = [:]
 
     var image: UIImage? {
+        let a = ExerciseSeed.animationKey(for: exercise)
         let p = ExerciseSeed.pattern(for: exercise).rawValue
         let e = ExerciseSeed.animationEquipment(exercise.equipment)
-        let key = "thumb_\(p)_\(e)"
+        let key = "thumb_\(a)_\(e)"
         if let img = ExerciseThumbnail.cache[key] { return img }
-        let candidates = [key, "thumb_\(p)_none"]
+        let candidates = [key, "thumb_\(a)_none", "thumb_\(p)_\(e)", "thumb_\(p)_none"]
         for name in candidates {
-            if let path = Bundle.main.path(forResource: name, ofType: "png"), let img = UIImage(contentsOfFile: path) {
+            if let path = Bundle.main.path(forResource: name, ofType: "jpg"), let img = UIImage(contentsOfFile: path) {
                 ExerciseThumbnail.cache[key] = img
                 return img
             }
@@ -123,12 +171,19 @@ struct ExerciseInfoSheet: View {
 /// Secciones reutilizables: animación, músculos e instrucciones.
 struct ExerciseHowToSections: View {
     let exercise: Exercise
+    @State private var view = 1
 
     var guide: ExerciseGuide { ExerciseSeed.guide(for: exercise) }
 
     var body: some View {
         Section {
-            ExerciseAnimationView(exercise: exercise)
+            Picker("Perspectiva", selection: $view) {
+                Text("Vista principal").tag(1)
+                Text("Otro ángulo").tag(2)
+            }
+            .pickerStyle(.segmented)
+            .listRowBackground(Color.clear)
+            ExerciseAnimationView(exercise: exercise, view: view)
                 .aspectRatio(1, contentMode: .fit)
                 .frame(maxWidth: 420)
                 .frame(maxWidth: .infinity)
