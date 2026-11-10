@@ -61,6 +61,7 @@ extension ExerciseSeed {
         "jalón agarre estrecho": "pulldownClose",
         "jalón agarre supino": "pulldownUnder",
         "jalón con brazos rectos": "straightArmPulldown",
+        "levantamiento turco": "turkishGetUp",
         "leñador en polea": "woodchop",
         "pallof press": "pallof",
         "peso muerto a una pierna": "singleLegRdl",
