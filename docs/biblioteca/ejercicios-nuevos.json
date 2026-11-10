@@ -1,0 +1,4975 @@
+[
+  {
+    "hevy": "Chest Fly (Band)",
+    "aliasesHevy": [],
+    "nombre": "Aperturas con banda",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Ancla la banda detrás de ti a la altura del pecho y sujeta un extremo en cada mano.",
+      "Con los codos un poco flexionados, junta las manos delante del pecho.",
+      "Vuelve despacio hasta notar estiramiento."
+    ],
+    "consejo": "Aléjate del anclaje para aumentar la tensión.",
+    "notaAnimacion": "De pie, de espaldas al anclaje; brazos se cierran en arco delante del pecho; banda elástica."
+  },
+  {
+    "hevy": "Decline Chest Fly (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Aperturas declinadas con mancuernas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en un banco declinado con las mancuernas sobre el pecho y codos ligeramente flexionados.",
+      "Abre los brazos en arco hasta notar estiramiento.",
+      "Cierra el arco hasta juntar las mancuernas."
+    ],
+    "consejo": "Trabaja más la parte baja del pecho; no bajes más de lo cómodo para el hombro.",
+    "notaAnimacion": "Aperturas en banco declinado (cabeza abajo)."
+  },
+  {
+    "hevy": "Chest Fly (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Aperturas en TRX",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders",
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Agarra las asas del TRX, inclínate hacia delante con el cuerpo recto y los brazos estirados al frente.",
+      "Abre los brazos en arco dejando que el cuerpo baje.",
+      "Cierra los brazos para volver a subir."
+    ],
+    "consejo": "Cuanto más inclinado estés, más difícil será.",
+    "notaAnimacion": "Cuerpo recto inclinado hacia delante colgado de dos asas; los brazos se abren y cierran en arco."
+  },
+  {
+    "hevy": "Seated Chest Flys (Cable)",
+    "aliasesHevy": [],
+    "nombre": "Aperturas sentado en polea",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate entre dos poleas con los agarres a la altura del pecho.",
+      "Junta las manos delante del pecho con los codos ligeramente flexionados.",
+      "Vuelve abriendo los brazos con control."
+    ],
+    "consejo": "Mantén la espalda pegada al respaldo.",
+    "notaAnimacion": "Sentado; aperturas con cables desde ambos lados."
+  },
+  {
+    "hevy": "Single Arm Cable Crossover",
+    "aliasesHevy": [],
+    "nombre": "Cruce de polea a una mano",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De lado a la polea, agarra el maneral con la mano más lejana al aparato.",
+      "Lleva la mano cruzando por delante del cuerpo.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Gira ligeramente el torso para mantener el pecho alineado con el cable.",
+    "notaAnimacion": "Apertura con un solo brazo desde una polea lateral."
+  },
+  {
+    "hevy": "Pec Static Stretch",
+    "aliasesHevy": [],
+    "nombre": "Estiramiento de pectoral",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Apoya el antebrazo en el marco de una puerta.",
+      "Gira el cuerpo hacia el lado contrario.",
+      "Mantén 30 s."
+    ],
+    "consejo": "Sin rebotes.",
+    "notaAnimacion": "Estiramiento estático."
+  },
+  {
+    "hevy": "One Arm Push Up",
+    "aliasesHevy": [],
+    "nombre": "Flexiones a una mano",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "core"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en plancha con los pies separados y una mano bajo el pecho; la otra detrás de la espalda.",
+      "Baja manteniendo la cadera nivelada.",
+      "Empuja hasta estirar el brazo."
+    ],
+    "consejo": "Separa bien los pies para tener estabilidad.",
+    "notaAnimacion": "Flexión con un solo brazo y piernas abiertas."
+  },
+  {
+    "hevy": "Push Up - Close Grip",
+    "aliasesHevy": [],
+    "nombre": "Flexiones agarre cerrado",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en plancha con las manos bajo los hombros o un poco más juntas.",
+      "Baja con los codos pegados al cuerpo.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Codos hacia atrás, no hacia fuera.",
+    "notaAnimacion": "Flexión con manos juntas bajo el pecho y codos pegados."
+  },
+  {
+    "hevy": "Kneeling Push Up",
+    "aliasesHevy": [],
+    "nombre": "Flexiones de rodillas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apoya manos y rodillas en el suelo con el cuerpo recto de cabeza a rodillas.",
+      "Baja el pecho hacia el suelo.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Buen paso previo a las flexiones completas.",
+    "notaAnimacion": "Flexión apoyando las rodillas en lugar de los pies."
+  },
+  {
+    "hevy": "Ring Push Up",
+    "aliasesHevy": [],
+    "nombre": "Flexiones en anillas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta las anillas cerca del suelo y colócate en plancha.",
+      "Baja controlando que las anillas no se abran.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Gira las palmas hacia fuera arriba para más trabajo.",
+    "notaAnimacion": "Flexión con las manos en anillas colgantes inestables."
+  },
+  {
+    "hevy": "Chest Dip (Assisted)",
+    "aliasesHevy": [],
+    "nombre": "Fondos asistidos",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "dip",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Arrodíllate o colócate sobre la plataforma de la máquina asistida y agarra las barras paralelas.",
+      "Inclina un poco el torso y baja flexionando los codos.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Cuanto más peso de asistencia pongas, más fácil será: redúcelo poco a poco.",
+    "notaAnimacion": "Fondos en paralelas con las rodillas sobre una plataforma que sube y baja (máquina asistida)."
+  },
+  {
+    "hevy": "Ring Dips",
+    "aliasesHevy": [],
+    "nombre": "Fondos en anillas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "dip",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Súbete a las anillas con los brazos estirados y pegados al cuerpo.",
+      "Baja flexionando los codos hasta que los hombros queden por debajo de los codos.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Mantén las anillas cerca del cuerpo para no perder el equilibrio.",
+    "notaAnimacion": "Fondos sobre anillas colgantes."
+  },
+  {
+    "hevy": "Plank Pushup",
+    "aliasesHevy": [],
+    "nombre": "Plancha con flexión",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "core"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Empieza en plancha sobre los antebrazos.",
+      "Sube a plancha alta apoyando una mano y luego la otra.",
+      "Baja de nuevo a antebrazos de uno en uno."
+    ],
+    "consejo": "Evita que la cadera se balancee.",
+    "notaAnimacion": "Alterna plancha de antebrazos y plancha de manos, un brazo cada vez."
+  },
+  {
+    "hevy": "Dumbbell Squeeze Press",
+    "aliasesHevy": [],
+    "nombre": "Press apretando mancuernas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con dos mancuernas juntas sobre el pecho, apretándolas entre sí.",
+      "Empuja hacia arriba sin dejar de apretarlas.",
+      "Baja hasta rozar el pecho."
+    ],
+    "consejo": "La presión entre las mancuernas es lo que activa el pecho: no la sueltes.",
+    "notaAnimacion": "Press de banca con mancuernas pegadas entre sí, palmas enfrentadas."
+  },
+  {
+    "hevy": "Plate Press",
+    "aliasesHevy": [],
+    "nombre": "Press con disco",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "chestPress",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "De pie, sujeta un disco delante del pecho con las dos manos.",
+      "Estira los brazos hacia delante empujando el disco.",
+      "Vuelve al pecho."
+    ],
+    "consejo": "Aprieta el disco entre las palmas durante todo el movimiento.",
+    "notaAnimacion": "De pie, empuje horizontal de un disco desde el pecho."
+  },
+  {
+    "hevy": "Bench Press - Wide Grip (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Press de banca agarre ancho",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con los ojos bajo la barra y agárrala bastante más abierto que los hombros.",
+      "Junta las escápulas y baja la barra a la parte media del pecho.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "El recorrido es más corto que en el press normal: controla la bajada para proteger los hombros.",
+    "notaAnimacion": "Igual que press de banca pero con las manos muy separadas (≈1,5× anchura de hombros) y menos recorrido."
+  },
+  {
+    "hevy": "Feet Up Bench Press (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Press de banca con pies arriba",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en el banco con las piernas levantadas y las rodillas flexionadas en el aire.",
+      "Baja la barra a la parte media del pecho.",
+      "Empuja hasta estirar los brazos manteniendo la espalda apoyada."
+    ],
+    "consejo": "Sin apoyo de piernas hay menos estabilidad: usa algo menos de peso.",
+    "notaAnimacion": "Press de banca con piernas elevadas y rodillas a 90° (sin tocar el suelo)."
+  },
+  {
+    "hevy": "Chest Press (Band)",
+    "aliasesHevy": [],
+    "nombre": "Press de pecho con banda",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "chestPress",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Ancla la banda detrás de ti a la altura del pecho y sujeta un extremo en cada mano.",
+      "Empuja hacia delante hasta estirar los brazos.",
+      "Vuelve despacio hasta que las manos lleguen al pecho."
+    ],
+    "consejo": "Da un paso adelante para más resistencia.",
+    "notaAnimacion": "De pie, empuje horizontal desde el pecho hacia delante con banda anclada detrás."
+  },
+  {
+    "hevy": "Iso-Lateral Chest Press (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Press de pecho isolateral en máquina",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "chestPress",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con la espalda apoyada y los agarres a la altura del pecho.",
+      "Empuja con cada brazo de forma independiente hasta casi estirarlo.",
+      "Vuelve con control."
+    ],
+    "consejo": "Puedes trabajar un brazo cada vez para corregir diferencias de fuerza.",
+    "notaAnimacion": "Máquina de press de pecho con dos brazos independientes cargados con discos."
+  },
+  {
+    "hevy": "Floor Press (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Press de suelo con mancuernas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en el suelo con las rodillas flexionadas y una mancuerna en cada mano.",
+      "Baja hasta que los codos toquen el suelo suavemente.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Haz una pequeña pausa con los codos en el suelo, sin rebotar.",
+    "notaAnimacion": "Tumbado en el suelo (sin banco); los codos tocan el suelo al bajar."
+  },
+  {
+    "hevy": "Decline Bench Press (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Press declinado en máquina",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "chestPress",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en la máquina con la espalda apoyada y los agarres a la altura de la parte baja del pecho.",
+      "Empuja hacia delante y abajo hasta casi estirar los brazos.",
+      "Vuelve con control."
+    ],
+    "consejo": "Mantén las escápulas juntas contra el respaldo.",
+    "notaAnimacion": "Press sentado en máquina con trayectoria hacia abajo (declinada)."
+  },
+  {
+    "hevy": "Decline Bench Press (Smith Machine)",
+    "aliasesHevy": [],
+    "nombre": "Press declinado en máquina Smith",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Ajusta el banco declinado bajo la barra guiada y sujeta los pies.",
+      "Desbloquea la barra y bájala a la parte baja del pecho.",
+      "Empuja hasta estirar los brazos y vuelve a bloquear al terminar."
+    ],
+    "consejo": "Comprueba los topes de seguridad antes de empezar.",
+    "notaAnimacion": "Banco declinado (cabeza más baja) bajo barra guiada de máquina Smith."
+  },
+  {
+    "hevy": "Machine Press Around",
+    "aliasesHevy": [],
+    "nombre": "Press envolvente en máquina",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "chestPress",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en la máquina con los agarres abiertos a los lados.",
+      "Empuja hacia delante describiendo un arco hasta juntar las manos.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Combina press y apertura: aprieta el pecho al final.",
+    "notaAnimacion": "Máquina de pecho con trayectoria en arco convergente."
+  },
+  {
+    "hevy": "Hex Press (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Press hexagonal con mancuernas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en un banco con dos mancuernas hexagonales juntas sobre el pecho.",
+      "Empújalas hacia arriba sin separarlas.",
+      "Baja hasta casi tocar el pecho."
+    ],
+    "consejo": "Mantén los codos cerca del cuerpo.",
+    "notaAnimacion": "Press con dos mancuernas hexagonales pegadas por sus caras planas."
+  },
+  {
+    "hevy": "Larsen Press",
+    "aliasesHevy": [],
+    "nombre": "Press Larsen",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en el banco con las piernas estiradas y los pies en el aire o apoyados sin hacer fuerza.",
+      "Baja la barra al pecho con control.",
+      "Empuja sin ayudarte de las piernas."
+    ],
+    "consejo": "Obliga al tronco a estabilizar: baja un 10–20 % el peso habitual.",
+    "notaAnimacion": "Press de banca con piernas estiradas al frente sin empujar con ellas."
+  },
+  {
+    "hevy": "Plate Squeeze (Svend Press)",
+    "aliasesHevy": [],
+    "nombre": "Press Svend",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "chestPress",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "De pie, aprieta uno o dos discos entre las palmas a la altura del pecho.",
+      "Estira los brazos hacia delante sin dejar de apretar.",
+      "Vuelve al pecho."
+    ],
+    "consejo": "Lo importante es la presión de las palmas, no el peso del disco.",
+    "notaAnimacion": "Como el press con disco, apretando los discos entre las palmas."
+  },
+  {
+    "hevy": "Around The World",
+    "aliasesHevy": [],
+    "nombre": "Vuelta al mundo con mancuernas",
+    "musculo": "chest",
+    "musculoTexto": "Pecho",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "fly",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en un banco plano con una mancuerna ligera en cada mano, brazos estirados junto a la cadera y palmas hacia arriba.",
+      "Lleva las mancuernas en un gran arco por los lados hasta juntarlas por encima de la cabeza.",
+      "Vuelve por el mismo arco hasta la cadera."
+    ],
+    "consejo": "Usa poco peso y codos ligeramente flexionados durante todo el arco.",
+    "notaAnimacion": "Tumbado en banco; brazos describen un semicírculo lateral de la cadera a encima de la cabeza; mancuernas ligeras."
+  },
+  {
+    "hevy": "Sternum Pull up (Gironda)",
+    "aliasesHevy": [],
+    "nombre": "Dominada al esternón (Gironda)",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate con agarre supino o neutro.",
+      "Tira inclinando el torso hacia atrás hasta llevar el esternón a la barra.",
+      "Baja con control."
+    ],
+    "consejo": "Muy exigente: empieza con pocas repeticiones.",
+    "notaAnimacion": "Dominada inclinando el cuerpo atrás hasta tocar la barra con el esternón."
+  },
+  {
+    "hevy": "Wide Pull Up",
+    "aliasesHevy": [],
+    "nombre": "Dominadas agarre ancho",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Agarra la barra bastante más abierto que los hombros.",
+      "Tira llevando el pecho hacia la barra.",
+      "Baja hasta estirar los brazos."
+    ],
+    "consejo": "Recorrido más corto que la dominada normal.",
+    "notaAnimacion": "Dominada con agarre muy abierto."
+  },
+  {
+    "hevy": "Pull Up (Band)",
+    "aliasesHevy": [],
+    "nombre": "Dominadas con banda",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Engancha una banda a la barra y apoya un pie o rodilla en ella.",
+      "Tira hasta pasar la barbilla de la barra.",
+      "Baja con control."
+    ],
+    "consejo": "Usa bandas más finas según progreses.",
+    "notaAnimacion": "Dominada con banda elástica bajo la rodilla."
+  },
+  {
+    "hevy": "Kipping Pull Up",
+    "aliasesHevy": [],
+    "nombre": "Dominadas con kipping",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "core",
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate y genera un balanceo con la cadera.",
+      "Aprovecha el impulso para subir la barbilla sobre la barra.",
+      "Enlaza las repeticiones con el balanceo."
+    ],
+    "consejo": "Domina las dominadas estrictas antes de usar kipping.",
+    "notaAnimacion": "Dominada con balanceo rítmico de cadera y piernas."
+  },
+  {
+    "hevy": "Ring Pull Up",
+    "aliasesHevy": [],
+    "nombre": "Dominadas en anillas",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Cuélgate de las anillas.",
+      "Tira girando las palmas hacia ti mientras subes.",
+      "Baja con control."
+    ],
+    "consejo": "Las anillas permiten un giro natural de las muñecas.",
+    "notaAnimacion": "Dominada colgando de dos anillas."
+  },
+  {
+    "hevy": "Scapular Pull Ups",
+    "aliasesHevy": [],
+    "nombre": "Dominadas escapulares",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate con los brazos estirados.",
+      "Sin doblar los codos, baja los hombros y junta las escápulas para subir unos centímetros.",
+      "Vuelve a relajar."
+    ],
+    "consejo": "Movimiento corto: solo se mueven las escápulas.",
+    "notaAnimacion": "Colgado con brazos rectos; el cuerpo sube pocos cm por depresión escapular."
+  },
+  {
+    "hevy": "Negative Pull Up",
+    "aliasesHevy": [],
+    "nombre": "Dominadas negativas",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sube a la posición alta de la dominada con ayuda de un banco o saltando.",
+      "Baja lo más despacio posible (3–5 s).",
+      "Repite."
+    ],
+    "consejo": "Excelente para aprender dominadas.",
+    "notaAnimacion": "Solo la bajada lenta de la dominada."
+  },
+  {
+    "hevy": "Chin Up (Assisted)",
+    "aliasesHevy": [],
+    "nombre": "Dominadas supinas asistidas",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en la máquina asistida con las palmas hacia ti.",
+      "Tira hasta que la barbilla pase el agarre.",
+      "Baja con control."
+    ],
+    "consejo": "Reduce la asistencia según progreses.",
+    "notaAnimacion": "Dominada supina con rodillas sobre plataforma asistida."
+  },
+  {
+    "hevy": "Chin Up (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Dominadas supinas lastradas",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate con peso en un cinturón y las palmas hacia ti.",
+      "Tira hasta pasar la barbilla de la barra.",
+      "Baja hasta estirar los brazos."
+    ],
+    "consejo": "Domina primero 8–10 dominadas sin peso.",
+    "notaAnimacion": "Dominada supina con disco colgando de un cinturón."
+  },
+  {
+    "hevy": "Kelso Shrug",
+    "aliasesHevy": [],
+    "nombre": "Encogimiento Kelso",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca abajo en un banco inclinado con una barra o mancuernas colgando.",
+      "Sin doblar los brazos, junta las escápulas.",
+      "Relaja despacio."
+    ],
+    "consejo": "Solo se mueven las escápulas.",
+    "notaAnimacion": "Boca abajo en banco inclinado; retracción escapular con brazos rectos."
+  },
+  {
+    "hevy": "Shrug (Smith Machine)",
+    "aliasesHevy": [],
+    "nombre": "Encogimientos en máquina Smith",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Agarra la barra guiada a la altura de los muslos.",
+      "Sube los hombros hacia las orejas.",
+      "Baja con control."
+    ],
+    "consejo": "Pausa de un segundo arriba.",
+    "notaAnimacion": "Encogimiento de hombros con barra guiada."
+  },
+  {
+    "hevy": "Shrug (Cable)",
+    "aliasesHevy": [],
+    "nombre": "Encogimientos en polea",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie frente a la polea baja, agarra la barra con los brazos estirados.",
+      "Sube los hombros hacia las orejas.",
+      "Baja despacio."
+    ],
+    "consejo": "No gires los hombros: sube y baja recto.",
+    "notaAnimacion": "Encogimiento de hombros tirando de una polea baja."
+  },
+  {
+    "hevy": "Lat Static Stretch",
+    "aliasesHevy": [],
+    "nombre": "Estiramiento de dorsal",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "pulldown",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Agárrate a un soporte por encima de la cabeza.",
+      "Lleva la cadera atrás.",
+      "Mantén 30 s."
+    ],
+    "consejo": "Respira profundo.",
+    "notaAnimacion": "Estiramiento estático."
+  },
+  {
+    "hevy": "Back Extension (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Extensión lumbar en máquina",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "rdl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en la máquina con el rodillo a la altura de la parte alta de la espalda.",
+      "Empuja hacia atrás extendiendo la espalda.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Movimiento controlado, sin tirones.",
+    "notaAnimacion": "Sentado; el torso se extiende hacia atrás contra un rodillo."
+  },
+  {
+    "hevy": "Lat Pulldown (Band)",
+    "aliasesHevy": [],
+    "nombre": "Jalón con banda",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pulldown",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Ancla la banda en alto y siéntate o arrodíllate debajo.",
+      "Tira hacia el pecho.",
+      "Vuelve con control."
+    ],
+    "consejo": "Mantén el torso estable.",
+    "notaAnimacion": "Jalón vertical con banda elástica."
+  },
+  {
+    "hevy": "Rope Straight Arm Pulldown",
+    "aliasesHevy": [],
+    "nombre": "Jalón con brazos rectos con cuerda",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pulldown",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie frente a la polea alta, agarra la cuerda con los brazos casi rectos.",
+      "Lleva las manos hacia los muslos en arco.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Abre la cuerda al final del recorrido.",
+    "notaAnimacion": "De pie, brazos casi rectos bajan en arco con cuerda."
+  },
+  {
+    "hevy": "Kneeling Pulldown (band)",
+    "aliasesHevy": [],
+    "nombre": "Jalón de rodillas con banda",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pulldown",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Ancla la banda en alto y arrodíllate frente a ella.",
+      "Tira hacia el pecho llevando los codos abajo.",
+      "Vuelve hasta estirar los brazos."
+    ],
+    "consejo": "Saca pecho al final del tirón.",
+    "notaAnimacion": "De rodillas, jalón vertical con banda anclada arriba."
+  },
+  {
+    "hevy": "Pullover (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Pullover en máquina",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "chest"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pulldown",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con los brazos apoyados en las almohadillas por encima de la cabeza.",
+      "Lleva los brazos hacia abajo en arco hasta el torso.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Movimiento de hombro, no de codo.",
+    "notaAnimacion": "Máquina de pullover: los brazos bajan en arco desde encima de la cabeza."
+  },
+  {
+    "hevy": "Iso-Lateral High Row (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Remo alto isolateral en máquina",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps",
+      "shoulders"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "pulldown",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con los muslos sujetos y agarra los manerales por encima de la cabeza.",
+      "Tira hacia abajo y atrás hacia el pecho.",
+      "Vuelve con control."
+    ],
+    "consejo": "Puedes trabajar cada brazo por separado.",
+    "notaAnimacion": "Máquina de tirón desde arriba en diagonal con brazos independientes."
+  },
+  {
+    "hevy": "Low Row (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Remo bajo en TRX",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps",
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Agarra las asas del TRX e inclínate hacia atrás con el cuerpo recto.",
+      "Tira del pecho hacia las manos.",
+      "Baja con control."
+    ],
+    "consejo": "Cuanto más horizontal esté el cuerpo, más difícil.",
+    "notaAnimacion": "Remo invertido colgando de un TRX con el cuerpo inclinado."
+  },
+  {
+    "hevy": "Iso-Lateral Low Row",
+    "aliasesHevy": [],
+    "nombre": "Remo bajo isolateral",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "seatedRow",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con el pecho apoyado y agarra los manerales bajos.",
+      "Tira hacia la cadera llevando los codos atrás.",
+      "Vuelve hasta estirar los brazos."
+    ],
+    "consejo": "Junta las escápulas al final.",
+    "notaAnimacion": "Remo en máquina con agarres bajos y brazos independientes."
+  },
+  {
+    "hevy": "Chest Supported Machine Row",
+    "aliasesHevy": [],
+    "nombre": "Remo en máquina con pecho apoyado",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps",
+      "shoulders"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "seatedRow",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apoya el pecho en el respaldo y agarra los manerales.",
+      "Tira llevando los codos atrás.",
+      "Vuelve hasta estirar los brazos."
+    ],
+    "consejo": "El pecho no se despega del apoyo.",
+    "notaAnimacion": "Remo sentado con el pecho apoyado en un cojín."
+  },
+  {
+    "hevy": "Gorilla Row (Kettlebell)",
+    "aliasesHevy": [],
+    "nombre": "Remo gorila con kettlebells",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps",
+      "core"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca dos kettlebells entre los pies y adopta una posición de bisagra con rodillas flexionadas.",
+      "Rema una kettlebell hacia la cadera mientras te apoyas en la otra.",
+      "Alterna los brazos."
+    ],
+    "consejo": "Mantén la cadera quieta, sin girar el torso.",
+    "notaAnimacion": "Posición de bisagra amplia; remo alterno con kettlebells en el suelo."
+  },
+  {
+    "hevy": "Bent Over Row (Band)",
+    "aliasesHevy": [],
+    "nombre": "Remo inclinado con banda",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Pisa la banda con los pies e inclina el torso con la espalda recta.",
+      "Tira de la banda hacia el abdomen llevando los codos atrás.",
+      "Vuelve con control."
+    ],
+    "consejo": "Junta las escápulas al final.",
+    "notaAnimacion": "Remo inclinado con banda pisada bajo los pies."
+  },
+  {
+    "hevy": "Bent Over Row (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Remo inclinado con mancuernas",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps",
+      "shoulders"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Con una mancuerna en cada mano, inclina el torso con la espalda recta y las rodillas algo flexionadas.",
+      "Tira de las mancuernas hacia la cadera.",
+      "Baja hasta estirar los brazos."
+    ],
+    "consejo": "No subas el torso para ayudarte.",
+    "notaAnimacion": "Remo inclinado con dos mancuernas a la vez."
+  },
+  {
+    "hevy": "Iso-Lateral Row (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Remo isolateral en máquina",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "seatedRow",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con el pecho apoyado y agarra los manerales.",
+      "Tira hacia el abdomen con uno o ambos brazos.",
+      "Vuelve con control."
+    ],
+    "consejo": "Útil para igualar fuerza entre lados.",
+    "notaAnimacion": "Remo horizontal en máquina de brazos independientes."
+  },
+  {
+    "hevy": "Landmine Row",
+    "aliasesHevy": [],
+    "nombre": "Remo landmine",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca un extremo de la barra en el anclaje y ponte a horcajadas sobre el otro.",
+      "Inclina el torso y tira de la barra hacia el pecho.",
+      "Baja con control."
+    ],
+    "consejo": "Usa un agarre en V para más comodidad.",
+    "notaAnimacion": "Remo inclinado tirando del extremo libre de una barra anclada en el suelo."
+  },
+  {
+    "hevy": "Renegade Row (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Remo renegado con mancuernas",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "core",
+      "chest"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en plancha alta con las manos sobre dos mancuernas.",
+      "Rema una mancuerna hacia la cadera sin girar el cuerpo.",
+      "Bájala y alterna."
+    ],
+    "consejo": "Separa los pies para más estabilidad.",
+    "notaAnimacion": "Plancha alta sobre mancuernas; remo alterno con un brazo."
+  },
+  {
+    "hevy": "Seated Cable Row - Bar Wide Grip",
+    "aliasesHevy": [],
+    "nombre": "Remo sentado en polea agarre ancho",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "shoulders",
+      "biceps"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "seatedRow",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate y agarra la barra con las manos bien separadas.",
+      "Tira hacia la parte baja del pecho con los codos abiertos.",
+      "Vuelve con control."
+    ],
+    "consejo": "Trabaja más la parte alta de la espalda.",
+    "notaAnimacion": "Remo sentado con barra ancha y codos abiertos."
+  },
+  {
+    "hevy": "Seated Cable Row - Bar Grip",
+    "aliasesHevy": [],
+    "nombre": "Remo sentado en polea con barra",
+    "musculo": "back",
+    "musculoTexto": "Espalda",
+    "secundarios": [
+      "biceps"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "seatedRow",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con los pies apoyados y agarra la barra recta.",
+      "Tira hacia el abdomen.",
+      "Vuelve hasta estirar los brazos."
+    ],
+    "consejo": "Torso estable, sin balancearte.",
+    "notaAnimacion": "Remo sentado en polea con barra recta."
+  },
+  {
+    "hevy": "Overhead Plate Raise",
+    "aliasesHevy": [],
+    "nombre": "Elevación de disco sobre la cabeza",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta un disco por los lados delante de los muslos.",
+      "Súbelo con los brazos estirados hasta encima de la cabeza.",
+      "Baja despacio."
+    ],
+    "consejo": "No arquees la espalda.",
+    "notaAnimacion": "Elevación frontal con disco hasta por encima de la cabeza."
+  },
+  {
+    "hevy": "Plate Front Raise",
+    "aliasesHevy": [],
+    "nombre": "Elevación frontal con disco",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta un disco con las dos manos delante de los muslos.",
+      "Súbelo al frente hasta la altura de los ojos.",
+      "Baja con control."
+    ],
+    "consejo": "Movimiento lento, sin impulso.",
+    "notaAnimacion": "Elevación frontal sujetando un disco."
+  },
+  {
+    "hevy": "Single Arm Lateral Raise (Cable)",
+    "aliasesHevy": [],
+    "nombre": "Elevación lateral a una mano en polea",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De lado a la polea baja, agarra el cable con la mano más lejana.",
+      "Sube el brazo lateralmente hasta la altura del hombro.",
+      "Baja despacio."
+    ],
+    "consejo": "Tensión constante en todo el recorrido.",
+    "notaAnimacion": "Elevación lateral de un brazo con cable cruzando por delante."
+  },
+  {
+    "hevy": "Front Raise (Band)",
+    "aliasesHevy": [],
+    "nombre": "Elevaciones frontales con banda",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Pisa la banda y sujeta los extremos delante de los muslos.",
+      "Sube los brazos al frente hasta la altura de los hombros.",
+      "Baja despacio."
+    ],
+    "consejo": "Sin balanceo del cuerpo.",
+    "notaAnimacion": "Elevación frontal tirando de una banda pisada."
+  },
+  {
+    "hevy": "Front Raise (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Elevaciones frontales en TRX",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Agarra las asas del TRX e inclínate hacia atrás con los brazos estirados.",
+      "Sube los brazos hacia arriba llevando el cuerpo con ellos.",
+      "Baja con control."
+    ],
+    "consejo": "Cuerpo recto como una tabla.",
+    "notaAnimacion": "Inclinado hacia atrás en TRX; los brazos rectos suben por delante."
+  },
+  {
+    "hevy": "Lateral Raise (Band)",
+    "aliasesHevy": [],
+    "nombre": "Elevaciones laterales con banda",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Pisa la banda y sujeta los extremos a los lados.",
+      "Sube los brazos lateralmente hasta la altura de los hombros.",
+      "Baja despacio."
+    ],
+    "consejo": "Codos ligeramente flexionados.",
+    "notaAnimacion": "Elevación lateral con banda pisada."
+  },
+  {
+    "hevy": "Seated Lateral Raise (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Elevaciones laterales sentado",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en un banco con una mancuerna a cada lado.",
+      "Sube los brazos lateralmente hasta la altura de los hombros.",
+      "Baja despacio."
+    ],
+    "consejo": "Sentado eliminas el impulso de las piernas.",
+    "notaAnimacion": "Elevación lateral sentado en banco."
+  },
+  {
+    "hevy": "Side Delt Static STRETCH",
+    "aliasesHevy": [],
+    "nombre": "Estiramiento de deltoides",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Cruza un brazo por delante del pecho.",
+      "Sujétalo con el otro brazo.",
+      "Mantén 30 s."
+    ],
+    "consejo": "Hombro relajado.",
+    "notaAnimacion": "Estiramiento estático."
+  },
+  {
+    "hevy": "Pike Pushup",
+    "aliasesHevy": [],
+    "nombre": "Flexiones en pica",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate con la cadera alta formando una V invertida.",
+      "Baja la cabeza hacia el suelo entre las manos.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Paso previo a las flexiones en pino.",
+    "notaAnimacion": "Flexión con cadera muy alta (V invertida), la cabeza baja entre las manos."
+  },
+  {
+    "hevy": "Handstand Push Up",
+    "aliasesHevy": [],
+    "nombre": "Flexiones en pino",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en pino contra la pared.",
+      "Baja la cabeza hacia el suelo flexionando los codos.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Usa una almohadilla bajo la cabeza.",
+    "notaAnimacion": "Press vertical invertido en pino contra la pared."
+  },
+  {
+    "hevy": "Kettlebell Halo",
+    "aliasesHevy": [],
+    "nombre": "Halo con kettlebell",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohExt",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la kettlebell por los cuernos delante del pecho.",
+      "Rodéala alrededor de la cabeza en círculo.",
+      "Alterna el sentido."
+    ],
+    "consejo": "Mantén la kettlebell cerca de la cabeza.",
+    "notaAnimacion": "La kettlebell describe un círculo alrededor de la cabeza."
+  },
+  {
+    "hevy": "Reverse Fly Single Arm (Cable)",
+    "aliasesHevy": [],
+    "nombre": "Pájaro a una mano en polea",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "back"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "seatedRow",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie junto a la polea, agarra el cable con la mano contraria cruzando el cuerpo.",
+      "Abre el brazo hacia atrás a la altura del hombro.",
+      "Vuelve con control."
+    ],
+    "consejo": "Codo ligeramente flexionado.",
+    "notaAnimacion": "Apertura posterior de un brazo cruzando el cable."
+  },
+  {
+    "hevy": "Chest Supported Reverse Fly (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Pájaros con pecho apoyado",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "back"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "row",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca abajo en un banco inclinado con una mancuerna en cada mano.",
+      "Abre los brazos hacia los lados con los codos ligeramente flexionados.",
+      "Baja con control."
+    ],
+    "consejo": "Peso ligero y movimiento lento.",
+    "notaAnimacion": "Boca abajo en banco inclinado; brazos se abren en arco hacia los lados."
+  },
+  {
+    "hevy": "Handstand Hold",
+    "aliasesHevy": [],
+    "nombre": "Pino (mantener)",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "core",
+      "triceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en pino contra una pared o libre.",
+      "Empuja el suelo con los brazos estirados.",
+      "Mantén la posición respirando."
+    ],
+    "consejo": "Empieza con la pared y abdomen firme.",
+    "notaAnimacion": "Posición invertida sobre las manos, cuerpo vertical."
+  },
+  {
+    "hevy": "Kettlebell Shoulder Press",
+    "aliasesHevy": [],
+    "nombre": "Press de hombro con kettlebell",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la kettlebell en posición de rack junto al hombro.",
+      "Empuja hacia arriba hasta estirar el brazo.",
+      "Baja al hombro."
+    ],
+    "consejo": "Antebrazo vertical al empezar.",
+    "notaAnimacion": "Press vertical a una mano con kettlebell."
+  },
+  {
+    "hevy": "Shoulder Press (Machine Plates)",
+    "aliasesHevy": [],
+    "nombre": "Press de hombro en máquina de discos",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con la espalda apoyada y los agarres a la altura de los hombros.",
+      "Empuja hacia arriba hasta casi estirar los brazos.",
+      "Baja con control."
+    ],
+    "consejo": "No bloquees los codos de golpe.",
+    "notaAnimacion": "Press vertical en máquina cargada con discos."
+  },
+  {
+    "hevy": "Upright Row (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Remo al mentón con mancuernas",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "back"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta las mancuernas delante de los muslos.",
+      "Súbelas pegadas al cuerpo llevando los codos altos.",
+      "Baja con control."
+    ],
+    "consejo": "No subas los codos por encima de los hombros si te molesta.",
+    "notaAnimacion": "Remo vertical con mancuernas hasta la altura del pecho."
+  },
+  {
+    "hevy": "Band Pullaparts",
+    "aliasesHevy": [],
+    "nombre": "Separación de banda",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "back"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta una banda delante del pecho con los brazos estirados.",
+      "Separa las manos llevando la banda hacia el pecho.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Junta las escápulas al final.",
+    "notaAnimacion": "De pie, brazos estirados se abren horizontalmente tensando una banda."
+  },
+  {
+    "hevy": "Shoulder Taps",
+    "aliasesHevy": [],
+    "nombre": "Toques de hombro",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en plancha alta.",
+      "Toca el hombro contrario con una mano.",
+      "Alterna sin mover la cadera."
+    ],
+    "consejo": "Separa los pies para más estabilidad.",
+    "notaAnimacion": "Plancha alta tocando alternativamente el hombro opuesto."
+  },
+  {
+    "hevy": "Kettlebell Around the World",
+    "aliasesHevy": [],
+    "nombre": "Vuelta al mundo con kettlebell",
+    "musculo": "shoulders",
+    "musculoTexto": "Hombros",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie, pasa la kettlebell alrededor de la cintura de una mano a otra.",
+      "Mantén el cuerpo quieto.",
+      "Cambia de sentido a mitad de la serie."
+    ],
+    "consejo": "Abdomen firme para no girar.",
+    "notaAnimacion": "La kettlebell da vueltas alrededor de la cintura cambiando de mano."
+  },
+  {
+    "hevy": "Single Arm Bicep Curl",
+    "aliasesHevy": [],
+    "nombre": "Curl a una mano con mancuerna",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta una mancuerna con la palma hacia delante.",
+      "Flexiona el codo hasta el hombro.",
+      "Baja con control y cambia de brazo."
+    ],
+    "consejo": "Concéntrate en un brazo cada vez.",
+    "notaAnimacion": "Curl unilateral con mancuerna."
+  },
+  {
+    "hevy": "Overhead Curl (Cable)",
+    "aliasesHevy": [],
+    "nombre": "Curl alto en polea",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Entre dos poleas altas, agarra un maneral en cada mano con los brazos en cruz.",
+      "Flexiona los codos llevando las manos hacia las orejas.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Brazos a la altura de los hombros todo el tiempo.",
+    "notaAnimacion": "Brazos en cruz a la altura de los hombros; curl hacia la cabeza con dos poleas altas."
+  },
+  {
+    "hevy": "Spider Curl (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Curl araña con barra",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca abajo en un banco inclinado con los brazos colgando y la barra en las manos.",
+      "Flexiona los codos.",
+      "Baja hasta estirar los brazos."
+    ],
+    "consejo": "Los brazos cuelgan perpendiculares al suelo.",
+    "notaAnimacion": "Boca abajo en banco inclinado; curl con barra con brazos colgando."
+  },
+  {
+    "hevy": "Drag Curl",
+    "aliasesHevy": [],
+    "nombre": "Curl arrastrado",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra delante de los muslos.",
+      "Súbela pegada al cuerpo llevando los codos hacia atrás.",
+      "Baja por el mismo camino."
+    ],
+    "consejo": "La barra roza el torso todo el recorrido.",
+    "notaAnimacion": "Curl con barra deslizándola pegada al torso, codos van hacia atrás."
+  },
+  {
+    "hevy": "Waiter Curl (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Curl camarero",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta una mancuerna en vertical con las palmas bajo el disco superior.",
+      "Flexiona los codos.",
+      "Baja con control."
+    ],
+    "consejo": "Mantén la mancuerna horizontal como una bandeja.",
+    "notaAnimacion": "Curl sujetando una mancuerna por un extremo con las palmas planas."
+  },
+  {
+    "hevy": "Plate Curl",
+    "aliasesHevy": [],
+    "nombre": "Curl con disco",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta un disco por los lados con las palmas mirándose.",
+      "Flexiona los codos hasta el pecho.",
+      "Baja despacio."
+    ],
+    "consejo": "Aprieta el disco para no perderlo.",
+    "notaAnimacion": "Curl sujetando un disco con las dos manos."
+  },
+  {
+    "hevy": "Kettlebell Curl",
+    "aliasesHevy": [],
+    "nombre": "Curl con kettlebell",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta una kettlebell por el asa o los cuernos.",
+      "Flexiona los codos hasta el pecho.",
+      "Baja con control."
+    ],
+    "consejo": "El peso descentrado exige más agarre.",
+    "notaAnimacion": "Curl con kettlebell."
+  },
+  {
+    "hevy": "Reverse Grip Concentration Curl",
+    "aliasesHevy": [],
+    "nombre": "Curl concentrado agarre inverso",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sentado, apoya el codo en la cara interna del muslo con la palma hacia abajo.",
+      "Flexiona el codo.",
+      "Baja despacio."
+    ],
+    "consejo": "Movimiento estricto, sin impulso.",
+    "notaAnimacion": "Curl concentrado con agarre prono."
+  },
+  {
+    "hevy": "Pinwheel Curl (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Curl cruzado con mancuerna",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la mancuerna con agarre neutro.",
+      "Súbela cruzando por delante del cuerpo hacia el pecho.",
+      "Baja y alterna."
+    ],
+    "consejo": "Muy parecido al curl martillo cruzado.",
+    "notaAnimacion": "Curl neutro cruzando el cuerpo."
+  },
+  {
+    "hevy": "Bicep Curl (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Curl de bíceps en TRX",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Agarra las asas con las palmas hacia arriba e inclínate hacia atrás.",
+      "Flexiona los codos llevando las manos a la frente.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Codos quietos y apuntando al frente.",
+    "notaAnimacion": "Inclinado hacia atrás en TRX; el cuerpo sube flexionando los codos."
+  },
+  {
+    "hevy": "Single Arm Cable Curl",
+    "aliasesHevy": [
+      "Single Arm Curl (Cable)"
+    ],
+    "nombre": "Curl en polea a una mano",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Agarra el maneral de la polea baja con una mano.",
+      "Flexiona el codo.",
+      "Baja despacio."
+    ],
+    "consejo": "Tensión constante gracias a la polea.",
+    "notaAnimacion": "Curl unilateral en polea baja."
+  },
+  {
+    "hevy": "Reverse Curl (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Curl inverso con mancuernas",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta las mancuernas con las palmas hacia abajo.",
+      "Flexiona los codos.",
+      "Baja despacio."
+    ],
+    "consejo": "Peso más ligero que el curl normal.",
+    "notaAnimacion": "Curl con agarre prono y mancuernas."
+  },
+  {
+    "hevy": "Reverse Curl (Cable)",
+    "aliasesHevy": [],
+    "nombre": "Curl inverso en polea",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Agarra la barra de la polea baja con las palmas hacia abajo.",
+      "Flexiona los codos.",
+      "Baja con control."
+    ],
+    "consejo": "Muñecas rectas.",
+    "notaAnimacion": "Curl con agarre prono en polea baja."
+  },
+  {
+    "hevy": "Hammer Curl (Band)",
+    "aliasesHevy": [],
+    "nombre": "Curl martillo con banda",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Pisa la banda y sujeta los extremos con las palmas enfrentadas.",
+      "Flexiona los codos.",
+      "Baja despacio."
+    ],
+    "consejo": "Codos pegados al cuerpo.",
+    "notaAnimacion": "Curl martillo con banda pisada."
+  },
+  {
+    "hevy": "Cross Body Hammer Curl",
+    "aliasesHevy": [],
+    "nombre": "Curl martillo cruzado",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie con mancuernas y palmas mirando al cuerpo.",
+      "Sube una mancuerna cruzando hacia el hombro contrario.",
+      "Alterna los brazos."
+    ],
+    "consejo": "No balancees el torso.",
+    "notaAnimacion": "Curl martillo cruzando por delante del pecho."
+  },
+  {
+    "hevy": "Zottman Curl (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Curl Zottman",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [
+      "forearms"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sube las mancuernas con las palmas hacia arriba.",
+      "Arriba, gira las palmas hacia abajo.",
+      "Baja lento con agarre prono y vuelve a girar."
+    ],
+    "consejo": "Bajada lenta para trabajar el antebrazo.",
+    "notaAnimacion": "Curl supino al subir y prono al bajar (rotación arriba)."
+  },
+  {
+    "hevy": "Bicep Static Stretch",
+    "aliasesHevy": [],
+    "nombre": "Estiramiento de bíceps",
+    "musculo": "biceps",
+    "musculoTexto": "Bíceps",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Apoya la palma en una pared detrás de ti.",
+      "Gira el cuerpo hacia el lado contrario.",
+      "Mantén 30 s."
+    ],
+    "consejo": "Sin dolor.",
+    "notaAnimacion": "Estiramiento estático."
+  },
+  {
+    "hevy": "Behind the Back Bicep Wrist Curl (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Curl de muñeca por detrás con barra",
+    "musculo": "forearms",
+    "musculoTexto": "Antebrazos",
+    "secundarios": [],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie, sujeta la barra detrás de los glúteos con las palmas hacia atrás.",
+      "Flexiona solo las muñecas subiendo la barra.",
+      "Baja despacio."
+    ],
+    "consejo": "Solo se mueven las muñecas.",
+    "notaAnimacion": "De pie, barra detrás de la cadera; flexión de muñecas."
+  },
+  {
+    "hevy": "Wrist Roller",
+    "aliasesHevy": [],
+    "nombre": "Rodillo de muñecas",
+    "musculo": "forearms",
+    "musculoTexto": "Antebrazos",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "curl",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta el rodillo con los brazos estirados al frente.",
+      "Enrolla la cuerda girando las muñecas hasta subir el peso.",
+      "Desenróllala despacio."
+    ],
+    "consejo": "Brazos a la altura de los hombros.",
+    "notaAnimacion": "Brazos al frente girando un rodillo que enrolla una cuerda con peso."
+  },
+  {
+    "hevy": "Triceps Extension (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Extensión de tríceps en TRX",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "ohExt",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Agarra las asas e inclínate hacia delante con los brazos estirados.",
+      "Flexiona los codos llevando la cabeza hacia las manos.",
+      "Estira los brazos."
+    ],
+    "consejo": "Cuerpo recto como una tabla.",
+    "notaAnimacion": "Inclinado hacia delante en TRX; flexión y extensión de codos por encima de la cabeza."
+  },
+  {
+    "hevy": "Triceps Dip (Assisted)",
+    "aliasesHevy": [],
+    "nombre": "Fondos de tríceps asistidos",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [
+      "chest"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "dip",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en la máquina asistida.",
+      "Baja flexionando los codos.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Reduce la asistencia poco a poco.",
+    "notaAnimacion": "Fondos con plataforma asistida, torso vertical."
+  },
+  {
+    "hevy": "Floor Triceps Dip",
+    "aliasesHevy": [],
+    "nombre": "Fondos de tríceps en el suelo",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "dip",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en el suelo con las manos detrás apoyadas y los dedos hacia los pies.",
+      "Eleva la cadera y flexiona los codos.",
+      "Estira los brazos."
+    ],
+    "consejo": "Codos hacia atrás, no hacia fuera.",
+    "notaAnimacion": "Sentado en el suelo, fondos levantando la cadera con las manos detrás."
+  },
+  {
+    "hevy": "Triceps Dip",
+    "aliasesHevy": [],
+    "nombre": "Fondos de tríceps en paralelas",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [
+      "chest",
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "dip",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujétate en las paralelas con el torso vertical.",
+      "Baja flexionando los codos hacia atrás.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Torso recto para centrar el trabajo en el tríceps.",
+    "notaAnimacion": "Fondos en paralelas con torso vertical."
+  },
+  {
+    "hevy": "Triceps Dip (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Fondos de tríceps lastrados",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [
+      "chest"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "dip",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuelga peso de un cinturón y sujétate en las paralelas.",
+      "Baja con el torso vertical.",
+      "Empuja hasta estirar los brazos."
+    ],
+    "consejo": "Domina primero 10–12 fondos sin peso.",
+    "notaAnimacion": "Fondos verticales con disco colgado del cinturón."
+  },
+  {
+    "hevy": "Wide-Elbow Triceps Press (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Press de tríceps codos abiertos",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [
+      "chest"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "bench",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con las mancuernas sobre el pecho y los codos abiertos.",
+      "Baja las mancuernas hacia el pecho flexionando los codos.",
+      "Empuja hasta estirar."
+    ],
+    "consejo": "Peso moderado: es un movimiento de aislamiento.",
+    "notaAnimacion": "Tumbado; press con mancuernas juntas y codos abiertos hacia fuera."
+  },
+  {
+    "hevy": "Seated Triceps Press",
+    "aliasesHevy": [],
+    "nombre": "Press de tríceps sentado",
+    "musculo": "triceps",
+    "musculoTexto": "Tríceps",
+    "secundarios": [],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohExt",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sentado, sujeta una mancuerna con ambas manos sobre la cabeza.",
+      "Baja por detrás flexionando los codos.",
+      "Estira los brazos."
+    ],
+    "consejo": "Codos apuntando hacia arriba.",
+    "notaAnimacion": "Extensión sobre la cabeza sentado con una mancuerna a dos manos."
+  },
+  {
+    "hevy": "Lateral Box Jump",
+    "aliasesHevy": [],
+    "nombre": "Salto lateral al cajón",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes",
+      "calves"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie junto a un cajón.",
+      "Salta lateralmente sobre él.",
+      "Baja y repite hacia el otro lado."
+    ],
+    "consejo": "Usa un cajón bajo al principio.",
+    "notaAnimacion": "Salto de lado sobre un cajón."
+  },
+  {
+    "hevy": "Frog Jumps",
+    "aliasesHevy": [],
+    "nombre": "Saltos de rana",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes",
+      "calves"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Ponte en sentadilla profunda con las manos cerca del suelo.",
+      "Salta hacia delante extendiendo todo el cuerpo.",
+      "Aterriza suave de nuevo en sentadilla."
+    ],
+    "consejo": "Aterriza con las rodillas alineadas con los pies.",
+    "notaAnimacion": "Salto horizontal desde sentadilla profunda."
+  },
+  {
+    "hevy": "Squat (Band)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla con banda",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Pisa la banda y pasa los extremos por encima de los hombros.",
+      "Baja en sentadilla.",
+      "Sube contra la resistencia de la banda."
+    ],
+    "consejo": "La banda aprieta más arriba: termina con fuerza.",
+    "notaAnimacion": "Sentadilla con banda pisada pasando por los hombros."
+  },
+  {
+    "hevy": "Belt Squat (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla con cinturón en máquina",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate el cinturón de la máquina en la cadera.",
+      "Baja en sentadilla con el torso erguido.",
+      "Sube empujando el suelo."
+    ],
+    "consejo": "La carga en la cadera descarga la espalda.",
+    "notaAnimacion": "Sentadilla con el peso colgando de un cinturón en la cadera."
+  },
+  {
+    "hevy": "Pause Squat (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla con pausa",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Baja en sentadilla con la barra en la espalda.",
+      "Mantén la posición abajo 2–3 segundos sin relajarte.",
+      "Sube con fuerza."
+    ],
+    "consejo": "Mantén la tensión durante la pausa.",
+    "notaAnimacion": "Sentadilla con barra con pausa de 2–3 s en el punto bajo."
+  },
+  {
+    "hevy": "Split Squat (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla dividida con mancuernas",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en posición de zancada con una mancuerna en cada mano.",
+      "Baja verticalmente sin mover los pies.",
+      "Sube y completa la serie antes de cambiar de pierna."
+    ],
+    "consejo": "Los pies no se mueven entre repeticiones.",
+    "notaAnimacion": "Zancada estática subiendo y bajando sin dar pasos."
+  },
+  {
+    "hevy": "Squat (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla en máquina",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en la máquina con los hombros bajo las almohadillas.",
+      "Baja en sentadilla.",
+      "Sube empujando la plataforma."
+    ],
+    "consejo": "Ajusta la posición de los pies para centrar el trabajo.",
+    "notaAnimacion": "Sentadilla guiada en máquina con almohadillas en los hombros."
+  },
+  {
+    "hevy": "Squat (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla en TRX",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta las asas del TRX frente a ti.",
+      "Baja en sentadilla usando las asas para equilibrarte.",
+      "Sube."
+    ],
+    "consejo": "Ideal para aprender la profundidad.",
+    "notaAnimacion": "Sentadilla sujetándose de un TRX."
+  },
+  {
+    "hevy": "Hack Squat",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla hack con barra",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra detrás de las piernas con los brazos estirados.",
+      "Baja en sentadilla manteniendo el pecho alto.",
+      "Sube empujando el suelo."
+    ],
+    "consejo": "Los talones pueden ir sobre un disco.",
+    "notaAnimacion": "Sentadilla con la barra sujeta detrás de los muslos."
+  },
+  {
+    "hevy": "Lateral Squat",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla lateral",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Separa mucho los pies.",
+      "Baja hacia un lado flexionando esa rodilla y estirando la otra.",
+      "Vuelve al centro y cambia de lado."
+    ],
+    "consejo": "El pie de la pierna estirada se queda plano.",
+    "notaAnimacion": "Pies muy abiertos; desplazamiento lateral flexionando una rodilla."
+  },
+  {
+    "hevy": "Assisted Pistol Squats",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla pistol asistida",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujétate a un poste o TRX y extiende una pierna al frente.",
+      "Baja sobre la otra pierna lo más profundo posible.",
+      "Sube empujando con el talón."
+    ],
+    "consejo": "Usa la ayuda solo lo necesario.",
+    "notaAnimacion": "Sentadilla a una pierna sujetándose con una mano."
+  },
+  {
+    "hevy": "Sissy Squat (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla sissy con peso",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta un disco contra el pecho y ponte de puntillas.",
+      "Lleva las rodillas al frente inclinando el cuerpo hacia atrás.",
+      "Vuelve a la posición inicial."
+    ],
+    "consejo": "Sujétate con una mano si lo necesitas.",
+    "notaAnimacion": "Rodillas avanzan mucho, cuerpo recto inclinado atrás de rodillas a cabeza."
+  },
+  {
+    "hevy": "Sumo Squat",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla sumo",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Separa mucho los pies con las puntas hacia fuera.",
+      "Baja manteniendo el torso erguido.",
+      "Sube apretando los glúteos."
+    ],
+    "consejo": "Rodillas en la dirección de los pies.",
+    "notaAnimacion": "Sentadilla con postura muy amplia y puntas hacia fuera."
+  },
+  {
+    "hevy": "Sumo Squat (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla sumo con barra",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca la barra en la espalda con postura amplia.",
+      "Baja con el torso erguido.",
+      "Sube empujando el suelo."
+    ],
+    "consejo": "Abre las rodillas al bajar.",
+    "notaAnimacion": "Sentadilla sumo con barra en la espalda."
+  },
+  {
+    "hevy": "Sumo Squat (Kettlebell)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla sumo con kettlebell",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la kettlebell entre las piernas con postura amplia.",
+      "Baja en sentadilla.",
+      "Sube."
+    ],
+    "consejo": "Espalda recta.",
+    "notaAnimacion": "Sentadilla sumo con kettlebell colgando."
+  },
+  {
+    "hevy": "Sumo Squat (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla sumo con mancuerna",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta una mancuerna colgando entre las piernas con postura amplia.",
+      "Baja en sentadilla.",
+      "Sube apretando los glúteos."
+    ],
+    "consejo": "La mancuerna cuelga en vertical.",
+    "notaAnimacion": "Sentadilla sumo con una mancuerna colgando entre las piernas."
+  },
+  {
+    "hevy": "Step Up",
+    "aliasesHevy": [],
+    "nombre": "Subida al cajón",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca un pie sobre un cajón o banco.",
+      "Sube empujando con esa pierna.",
+      "Baja con control."
+    ],
+    "consejo": "Empuja con la pierna de arriba, no te impulses con la de abajo.",
+    "notaAnimacion": "Subida a un cajón con una pierna."
+  },
+  {
+    "hevy": "Reverse Lunge (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Zancada atrás con barra",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca la barra en la espalda.",
+      "Da un paso atrás y baja.",
+      "Vuelve empujando con la pierna delantera."
+    ],
+    "consejo": "Paso firme y controlado.",
+    "notaAnimacion": "Zancada hacia atrás con barra en la espalda."
+  },
+  {
+    "hevy": "Reverse Lunge",
+    "aliasesHevy": [],
+    "nombre": "Zancada atrás con peso corporal",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Da un paso largo hacia atrás.",
+      "Baja hasta que la rodilla trasera casi toque el suelo.",
+      "Vuelve a la posición inicial."
+    ],
+    "consejo": "Más amable con las rodillas que la zancada al frente.",
+    "notaAnimacion": "Zancada hacia atrás sin carga."
+  },
+  {
+    "hevy": "Overhead Dumbbell Lunge",
+    "aliasesHevy": [],
+    "nombre": "Zancada con mancuerna sobre la cabeza",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes",
+      "shoulders",
+      "core"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta una o dos mancuernas con los brazos estirados sobre la cabeza.",
+      "Da un paso al frente y baja.",
+      "Vuelve sin bajar los brazos."
+    ],
+    "consejo": "Abdomen firme para no arquear la espalda.",
+    "notaAnimacion": "Zancada con los brazos bloqueados sobre la cabeza sujetando peso."
+  },
+  {
+    "hevy": "Lunge",
+    "aliasesHevy": [],
+    "nombre": "Zancada con peso corporal",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Da un paso largo al frente.",
+      "Baja hasta que ambas rodillas formen unos 90°.",
+      "Vuelve empujando con la pierna delantera."
+    ],
+    "consejo": "Torso erguido.",
+    "notaAnimacion": "Zancada al frente sin carga."
+  },
+  {
+    "hevy": "Curtsy Lunge (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Zancada cruzada con mancuernas",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie con mancuernas, da un paso atrás cruzando la pierna por detrás de la otra.",
+      "Baja hasta que la rodilla trasera casi toque el suelo.",
+      "Vuelve al centro y alterna."
+    ],
+    "consejo": "Cadera de frente durante todo el movimiento.",
+    "notaAnimacion": "Zancada hacia atrás cruzando la pierna en diagonal (reverencia)."
+  },
+  {
+    "hevy": "Walking Lunge",
+    "aliasesHevy": [],
+    "nombre": "Zancadas caminando con peso corporal",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Da una zancada al frente y baja.",
+      "Sube y avanza con la otra pierna.",
+      "Continúa caminando."
+    ],
+    "consejo": "Pasos largos y controlados.",
+    "notaAnimacion": "Zancadas avanzando sin carga."
+  },
+  {
+    "hevy": "Walking Lunge (Sandbag)",
+    "aliasesHevy": [],
+    "nombre": "Zancadas caminando con saco",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes",
+      "core"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "distanceTime",
+    "tipoTexto": "Distancia y tiempo",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Coloca el saco sobre los hombros o abrazado al pecho.",
+      "Avanza dando zancadas.",
+      "Mantén el torso erguido."
+    ],
+    "consejo": "El saco se mueve: aprieta el abdomen.",
+    "notaAnimacion": "Zancadas avanzando con saco de arena al hombro."
+  },
+  {
+    "hevy": "Jumping Lunge",
+    "aliasesHevy": [],
+    "nombre": "Zancadas con salto",
+    "musculo": "quads",
+    "musculoTexto": "Cuádriceps",
+    "secundarios": [
+      "glutes",
+      "calves"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lunge",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en posición de zancada.",
+      "Salta y cambia las piernas en el aire.",
+      "Aterriza en zancada con la otra pierna delante."
+    ],
+    "consejo": "Aterriza suave y con control.",
+    "notaAnimacion": "Zancada con salto cambiando de pierna en el aire."
+  },
+  {
+    "hevy": "Glute Ham Raise",
+    "aliasesHevy": [],
+    "nombre": "Glute ham raise",
+    "musculo": "hamstrings",
+    "musculoTexto": "Isquiotibiales",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "legCurl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca los pies bajo los rodillos con las rodillas sobre el cojín.",
+      "Baja el torso hacia delante con control.",
+      "Sube flexionando las rodillas."
+    ],
+    "consejo": "Muy exigente: ayúdate con las manos al principio.",
+    "notaAnimacion": "En máquina GHD; el cuerpo baja recto y sube flexionando las rodillas."
+  },
+  {
+    "hevy": "Single Leg Romanian Deadlift (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Peso muerto rumano a una pierna con barra",
+    "musculo": "hamstrings",
+    "musculoTexto": "Isquiotibiales",
+    "secundarios": [
+      "glutes"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "rdl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra y apóyate en una pierna.",
+      "Inclina el torso llevando la otra pierna atrás.",
+      "Vuelve a la posición erguida."
+    ],
+    "consejo": "Cadera paralela al suelo.",
+    "notaAnimacion": "Bisagra a una pierna con barra; la pierna libre sube atrás."
+  },
+  {
+    "hevy": "Clamshell",
+    "aliasesHevy": [],
+    "nombre": "Almeja",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate de lado con las rodillas flexionadas.",
+      "Separa la rodilla de arriba sin separar los pies.",
+      "Baja despacio."
+    ],
+    "consejo": "Añade una banda sobre las rodillas para más trabajo.",
+    "notaAnimacion": "Tumbado de lado; la rodilla de arriba se abre como una concha."
+  },
+  {
+    "hevy": "Lateral Leg Raises",
+    "aliasesHevy": [],
+    "nombre": "Elevación lateral de pierna",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate de lado con las piernas estiradas.",
+      "Sube la pierna de arriba.",
+      "Baja despacio."
+    ],
+    "consejo": "Pie en posición neutra, sin girar hacia arriba.",
+    "notaAnimacion": "Tumbado de lado; abducción de la pierna estirada."
+  },
+  {
+    "hevy": "Fire Hydrants",
+    "aliasesHevy": [],
+    "nombre": "Hidrantes",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate a cuatro patas.",
+      "Levanta una rodilla hacia el lado manteniéndola flexionada.",
+      "Baja y repite."
+    ],
+    "consejo": "No inclines el tronco.",
+    "notaAnimacion": "A cuatro patas; abducción lateral de la pierna flexionada."
+  },
+  {
+    "hevy": "Single Leg Hip Thrust (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Hip thrust a una pierna con mancuerna",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apoya la espalda en un banco y sujeta la mancuerna en la cadera.",
+      "Sube la cadera con una sola pierna.",
+      "Baja con control."
+    ],
+    "consejo": "Empieza con poco peso.",
+    "notaAnimacion": "Hip thrust unilateral con mancuerna en la cadera."
+  },
+  {
+    "hevy": "Hip Thrust",
+    "aliasesHevy": [],
+    "nombre": "Hip thrust con peso corporal",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apoya la espalda alta en un banco.",
+      "Sube la cadera hasta alinearla con el torso.",
+      "Baja con control."
+    ],
+    "consejo": "Barbilla al pecho.",
+    "notaAnimacion": "Hip thrust sin carga."
+  },
+  {
+    "hevy": "Hip Thrust (Smith Machine)",
+    "aliasesHevy": [],
+    "nombre": "Hip thrust en máquina Smith",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apoya la espalda alta en un banco bajo la barra guiada.",
+      "Sube la cadera empujando la barra.",
+      "Baja con control."
+    ],
+    "consejo": "Usa una almohadilla en la barra.",
+    "notaAnimacion": "Hip thrust con barra guiada."
+  },
+  {
+    "hevy": "Reverse Hyperextension",
+    "aliasesHevy": [],
+    "nombre": "Hiperextensión inversa",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings",
+      "back"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "rdl",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca abajo en el banco con la cadera en el borde y las piernas colgando.",
+      "Sube las piernas hasta alinearlas con el torso.",
+      "Baja con control."
+    ],
+    "consejo": "Aprieta los glúteos arriba.",
+    "notaAnimacion": "Boca abajo; las piernas suben desde colgando hasta la horizontal."
+  },
+  {
+    "hevy": "Lateral Band Walks",
+    "aliasesHevy": [],
+    "nombre": "Pasos laterales con banda",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Coloca una banda sobre las rodillas o tobillos y flexiona un poco las piernas.",
+      "Da pasos laterales manteniendo la tensión.",
+      "Vuelve hacia el otro lado."
+    ],
+    "consejo": "No dejes que los pies se junten del todo.",
+    "notaAnimacion": "Media sentadilla caminando de lado con banda en las rodillas."
+  },
+  {
+    "hevy": "Glute Kickback on Floor",
+    "aliasesHevy": [],
+    "nombre": "Patada de glúteo en el suelo",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate a cuatro patas.",
+      "Lleva una pierna hacia atrás y arriba.",
+      "Baja y repite."
+    ],
+    "consejo": "No arquees la zona lumbar.",
+    "notaAnimacion": "A cuatro patas; extensión de cadera con la pierna hacia atrás."
+  },
+  {
+    "hevy": "Deadlift (Band)",
+    "aliasesHevy": [],
+    "nombre": "Peso muerto con banda",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings",
+      "back"
+    ],
+    "equipo": "band",
+    "equipoTexto": "Banda",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Pisa la banda con los pies a la anchura de la cadera y agárrala con los brazos estirados.",
+      "Sube extendiendo cadera y rodillas.",
+      "Baja llevando la cadera atrás."
+    ],
+    "consejo": "Espalda recta en todo momento.",
+    "notaAnimacion": "Peso muerto tirando de una banda pisada."
+  },
+  {
+    "hevy": "Deadlift (Smith Machine)",
+    "aliasesHevy": [],
+    "nombre": "Peso muerto en máquina Smith",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings",
+      "back"
+    ],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate con la barra guiada sobre la mitad del pie.",
+      "Agárrala y sube extendiendo cadera y rodillas.",
+      "Baja con la barra pegada a las piernas."
+    ],
+    "consejo": "La guía fija la trayectoria: colócate bien antes de empezar.",
+    "notaAnimacion": "Peso muerto con barra guiada vertical."
+  },
+  {
+    "hevy": "Single Leg Glute Bridge",
+    "aliasesHevy": [],
+    "nombre": "Puente de glúteos a una pierna",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [
+      "hamstrings"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca arriba con una pierna flexionada y la otra estirada al aire.",
+      "Sube la cadera empujando con el talón.",
+      "Baja y repite."
+    ],
+    "consejo": "La cadera no debe inclinarse.",
+    "notaAnimacion": "Puente de glúteos apoyando un solo pie."
+  },
+  {
+    "hevy": "Partial Glute Bridge (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Puente de glúteos parcial con barra",
+    "musculo": "glutes",
+    "musculoTexto": "Glúteos",
+    "secundarios": [],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "hipThrust",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en el suelo con la barra sobre la cadera.",
+      "Sube la cadera solo en la mitad superior del recorrido.",
+      "Repite manteniendo la tensión."
+    ],
+    "consejo": "Pausa arriba en cada repetición.",
+    "notaAnimacion": "Puente de glúteos con barra con recorrido corto en la parte alta."
+  },
+  {
+    "hevy": "Single Leg Standing Calf Raise",
+    "aliasesHevy": [],
+    "nombre": "Elevación de talón a una pierna",
+    "musculo": "calves",
+    "musculoTexto": "Gemelos",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie sobre un escalón con un pie.",
+      "Sube de puntillas lo más alto posible.",
+      "Baja hasta notar estiramiento."
+    ],
+    "consejo": "Sujétate a una pared para equilibrarte.",
+    "notaAnimacion": "Elevación de talón sobre un pie en un escalón."
+  },
+  {
+    "hevy": "Single Leg Standing Calf Raise (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Elevación de talón a una pierna con barra",
+    "musculo": "calves",
+    "musculoTexto": "Gemelos",
+    "secundarios": [],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Con la barra en la espalda, apóyate en un pie.",
+      "Sube de puntillas.",
+      "Baja despacio."
+    ],
+    "consejo": "Muy exigente en equilibrio.",
+    "notaAnimacion": "Elevación de talón unilateral con barra en la espalda."
+  },
+  {
+    "hevy": "Single Leg Standing Calf Raise (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Elevación de talón a una pierna en máquina",
+    "musculo": "calves",
+    "musculoTexto": "Gemelos",
+    "secundarios": [],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en la máquina con un solo pie en la plataforma.",
+      "Sube de puntillas.",
+      "Baja hasta notar estiramiento."
+    ],
+    "consejo": "Recorrido completo.",
+    "notaAnimacion": "Elevación de talón unilateral en máquina de pie."
+  },
+  {
+    "hevy": "Standing Calf Raise (Barbell)",
+    "aliasesHevy": [],
+    "nombre": "Elevación de talones con barra",
+    "musculo": "calves",
+    "musculoTexto": "Gemelos",
+    "secundarios": [],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca la barra en la espalda y las puntas sobre un disco.",
+      "Sube de puntillas.",
+      "Baja despacio."
+    ],
+    "consejo": "Rodillas estiradas.",
+    "notaAnimacion": "Elevación de talones de pie con barra."
+  },
+  {
+    "hevy": "Calf Extension (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Extensión de gemelos en máquina",
+    "musculo": "calves",
+    "musculoTexto": "Gemelos",
+    "secundarios": [],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en la máquina con las puntas en la plataforma.",
+      "Empuja extendiendo los tobillos.",
+      "Baja hasta notar estiramiento."
+    ],
+    "consejo": "Recorrido completo.",
+    "notaAnimacion": "Máquina de gemelos sentado con piernas estiradas."
+  },
+  {
+    "hevy": "Calf Press (Machine)",
+    "aliasesHevy": [],
+    "nombre": "Prensa de gemelos en máquina",
+    "musculo": "calves",
+    "musculoTexto": "Gemelos",
+    "secundarios": [],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "calf",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Coloca las puntas en la plataforma de la máquina.",
+      "Empuja extendiendo los tobillos.",
+      "Baja despacio."
+    ],
+    "consejo": "Pausa arriba.",
+    "notaAnimacion": "Máquina de prensa específica de gemelos."
+  },
+  {
+    "hevy": "Sit Up (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Abdominales completos con peso",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Túmbate con un disco sobre el pecho y los pies sujetos.",
+      "Sube hasta quedar sentado.",
+      "Baja con control."
+    ],
+    "consejo": "No tires del cuello.",
+    "notaAnimacion": "Abdominal completo con disco."
+  },
+  {
+    "hevy": "Hollow Rock",
+    "aliasesHevy": [],
+    "nombre": "Balanceo hueco",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Adopta la posición hollow: piernas y hombros despegados del suelo.",
+      "Balancéate adelante y atrás sin perder la forma.",
+      "Mantén el tiempo indicado."
+    ],
+    "consejo": "Zona lumbar siempre pegada.",
+    "notaAnimacion": "Posición hollow balanceándose como una mecedora."
+  },
+  {
+    "hevy": "Bird Dog",
+    "aliasesHevy": [],
+    "nombre": "Bird dog (perro de caza)",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "glutes",
+      "back"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate a cuatro patas.",
+      "Estira a la vez un brazo y la pierna contraria.",
+      "Vuelve y alterna."
+    ],
+    "consejo": "Cadera nivelada, sin girar.",
+    "notaAnimacion": "A cuatro patas; extensión simultánea de brazo y pierna opuestos."
+  },
+  {
+    "hevy": "Elbow to Knee",
+    "aliasesHevy": [],
+    "nombre": "Codo a rodilla",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca arriba con las manos junto a la cabeza.",
+      "Lleva un codo hacia la rodilla contraria.",
+      "Alterna."
+    ],
+    "consejo": "Gira el tronco, no solo el codo.",
+    "notaAnimacion": "Crunch cruzado codo-rodilla."
+  },
+  {
+    "hevy": "Bicycle Crunch Raised Legs",
+    "aliasesHevy": [],
+    "nombre": "Crunch bicicleta con piernas elevadas",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con las piernas elevadas a 90°.",
+      "Lleva el codo hacia la rodilla contraria girando el tronco.",
+      "Alterna sin bajar las piernas."
+    ],
+    "consejo": "Movimiento lento y controlado.",
+    "notaAnimacion": "Crunch bicicleta manteniendo las piernas en alto."
+  },
+  {
+    "hevy": "Crunch (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Crunch con peso",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Túmbate con un disco sobre el pecho.",
+      "Despega los hombros del suelo.",
+      "Baja despacio."
+    ],
+    "consejo": "No tires del cuello.",
+    "notaAnimacion": "Crunch con disco sobre el pecho."
+  },
+  {
+    "hevy": "Decline Crunch",
+    "aliasesHevy": [],
+    "nombre": "Crunch declinado",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en un banco declinado con los pies sujetos.",
+      "Sube el tronco enrollando la espalda.",
+      "Baja con control."
+    ],
+    "consejo": "Más difícil cuanto más inclinado esté el banco.",
+    "notaAnimacion": "Crunch en banco declinado con pies sujetos."
+  },
+  {
+    "hevy": "Decline Crunch (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Crunch declinado con peso",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "En banco declinado, sujeta un disco contra el pecho.",
+      "Sube enrollando la espalda.",
+      "Baja despacio."
+    ],
+    "consejo": "Domina primero la versión sin peso.",
+    "notaAnimacion": "Crunch declinado con disco."
+  },
+  {
+    "hevy": "Oblique Crunch",
+    "aliasesHevy": [],
+    "nombre": "Crunch oblicuo",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate de lado con las rodillas flexionadas.",
+      "Sube el hombro hacia la cadera.",
+      "Baja y repite; luego cambia de lado."
+    ],
+    "consejo": "Movimiento corto.",
+    "notaAnimacion": "Tumbado de lado; flexión lateral del tronco."
+  },
+  {
+    "hevy": "Dragon Flag",
+    "aliasesHevy": [],
+    "nombre": "Dragon flag",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate en un banco y agárrate detrás de la cabeza.",
+      "Sube el cuerpo recto apoyándote en los hombros.",
+      "Baja lentamente sin doblar la cadera."
+    ],
+    "consejo": "Ejercicio muy avanzado: empieza con negativas.",
+    "notaAnimacion": "Tumbado; el cuerpo recto pivota sobre los hombros."
+  },
+  {
+    "hevy": "Leg Raise Parallel Bars",
+    "aliasesHevy": [],
+    "nombre": "Elevación de piernas en paralelas",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apóyate en las paralelas con los brazos estirados.",
+      "Sube las piernas estiradas hasta la horizontal.",
+      "Baja despacio."
+    ],
+    "consejo": "Más difícil que con rodillas flexionadas.",
+    "notaAnimacion": "En paralelas; piernas estiradas suben hasta 90°."
+  },
+  {
+    "hevy": "Knee Raise Parallel Bars",
+    "aliasesHevy": [],
+    "nombre": "Elevación de rodillas en paralelas",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apóyate en las paralelas con los brazos estirados.",
+      "Sube las rodillas hacia el pecho.",
+      "Bájalas despacio."
+    ],
+    "consejo": "Sin balanceo.",
+    "notaAnimacion": "En soporte de paralelas (brazos estirados) elevando rodillas."
+  },
+  {
+    "hevy": "Lying Knee Raise",
+    "aliasesHevy": [],
+    "nombre": "Elevación de rodillas tumbado",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca arriba con las piernas estiradas.",
+      "Lleva las rodillas al pecho.",
+      "Vuelve sin apoyar los pies."
+    ],
+    "consejo": "Zona lumbar pegada al suelo.",
+    "notaAnimacion": "Tumbado; rodillas al pecho."
+  },
+  {
+    "hevy": "Side Bend",
+    "aliasesHevy": [],
+    "nombre": "Flexión lateral",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De pie, inclina el tronco hacia un lado.",
+      "Vuelve al centro.",
+      "Alterna los lados."
+    ],
+    "consejo": "No te inclines hacia delante.",
+    "notaAnimacion": "De pie; inclinación lateral del tronco."
+  },
+  {
+    "hevy": "Side Bend (Dumbbell)",
+    "aliasesHevy": [],
+    "nombre": "Flexión lateral con mancuerna",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta una mancuerna en una mano.",
+      "Inclínate hacia ese lado.",
+      "Sube contrayendo el lado contrario."
+    ],
+    "consejo": "Haz todas las repeticiones de un lado antes de cambiar.",
+    "notaAnimacion": "Inclinación lateral con mancuerna en una mano."
+  },
+  {
+    "hevy": "Russian Twist (Bodyweight)",
+    "aliasesHevy": [],
+    "nombre": "Giros rusos sin peso",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con el tronco inclinado y los pies elevados.",
+      "Gira el tronco de un lado a otro.",
+      "Mantén el equilibrio."
+    ],
+    "consejo": "Gira desde el tronco, no solo los brazos.",
+    "notaAnimacion": "Sentado en V; rotaciones del tronco."
+  },
+  {
+    "hevy": "L-Sit Hold",
+    "aliasesHevy": [],
+    "nombre": "L-sit",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "triceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Apóyate en paralelas o en el suelo con los brazos estirados.",
+      "Levanta las piernas estiradas formando una L.",
+      "Mantén la posición."
+    ],
+    "consejo": "Empieza con las rodillas flexionadas.",
+    "notaAnimacion": "Soporte sobre manos con piernas horizontales en L."
+  },
+  {
+    "hevy": "Landmine 180",
+    "aliasesHevy": [],
+    "nombre": "Landmine 180",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta el extremo de la barra con los brazos estirados delante.",
+      "Gira la barra de un lado al otro en arco.",
+      "Controla el movimiento con el abdomen."
+    ],
+    "consejo": "La cadera gira poco; el trabajo es del tronco.",
+    "notaAnimacion": "Brazos estirados llevan el extremo de una barra anclada de lado a lado."
+  },
+  {
+    "hevy": "Cable Twist (Down to up)",
+    "aliasesHevy": [],
+    "nombre": "Leñador de abajo arriba en polea",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "De lado a la polea baja, agarra el maneral con las dos manos.",
+      "Gira el tronco llevando las manos en diagonal hacia arriba.",
+      "Vuelve con control."
+    ],
+    "consejo": "El giro sale del tronco, no de los brazos.",
+    "notaAnimacion": "Rotación diagonal de abajo a arriba con cable."
+  },
+  {
+    "hevy": "Dragonfly",
+    "aliasesHevy": [],
+    "nombre": "Libélula",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate y sujeta un soporte detrás de la cabeza.",
+      "Sube las piernas y la cadera en línea recta.",
+      "Baja despacio."
+    ],
+    "consejo": "Variante avanzada similar al dragon flag.",
+    "notaAnimacion": "Variante del dragon flag."
+  },
+  {
+    "hevy": "Jackknife Sit Up",
+    "aliasesHevy": [],
+    "nombre": "Navaja",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con brazos y piernas estirados.",
+      "Sube a la vez brazos y piernas hasta tocar los pies.",
+      "Baja con control."
+    ],
+    "consejo": "Muévete con el abdomen, no con impulso.",
+    "notaAnimacion": "Tumbado; brazos y piernas suben a encontrarse en V."
+  },
+  {
+    "hevy": "Jack Knife (Suspension)",
+    "aliasesHevy": [],
+    "nombre": "Navaja en TRX",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Colócate en plancha alta con los pies en el TRX.",
+      "Lleva las rodillas hacia el pecho.",
+      "Vuelve a la plancha."
+    ],
+    "consejo": "Hombros sobre las manos.",
+    "notaAnimacion": "Plancha con pies colgados del TRX; rodillas al pecho."
+  },
+  {
+    "hevy": "Flutter Kicks",
+    "aliasesHevy": [],
+    "nombre": "Patadas de aleteo",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con las piernas estiradas y algo elevadas.",
+      "Mueve las piernas arriba y abajo alternando.",
+      "Mantén la zona lumbar pegada al suelo."
+    ],
+    "consejo": "Movimientos cortos y rápidos.",
+    "notaAnimacion": "Tumbado; piernas estiradas aletean arriba y abajo."
+  },
+  {
+    "hevy": "Pilates",
+    "aliasesHevy": [],
+    "nombre": "Pilates",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Respira de forma controlada.",
+      "Activa el centro del cuerpo.",
+      "Movimientos lentos y precisos."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "Reverse Plank",
+    "aliasesHevy": [],
+    "nombre": "Plancha invertida",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "glutes",
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate con las piernas estiradas y las manos detrás.",
+      "Sube la cadera hasta alinear el cuerpo.",
+      "Mantén la posición."
+    ],
+    "consejo": "Aprieta los glúteos.",
+    "notaAnimacion": "Plancha boca arriba sobre manos y talones."
+  },
+  {
+    "hevy": "Torso Rotation",
+    "aliasesHevy": [],
+    "nombre": "Rotación de tronco en máquina",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "machine",
+    "equipoTexto": "Máquina",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "lateral",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Siéntate en la máquina de rotación.",
+      "Gira el tronco contra la resistencia.",
+      "Vuelve despacio."
+    ],
+    "consejo": "Rango cómodo, sin forzar la espalda.",
+    "notaAnimacion": "Máquina de rotación sentado."
+  },
+  {
+    "hevy": "Spiderman",
+    "aliasesHevy": [],
+    "nombre": "Spiderman",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Colócate en plancha alta.",
+      "Lleva una rodilla hacia el codo del mismo lado.",
+      "Vuelve y alterna."
+    ],
+    "consejo": "Cadera baja y estable.",
+    "notaAnimacion": "Plancha llevando la rodilla al codo por el lateral."
+  },
+  {
+    "hevy": "Ab Scissors",
+    "aliasesHevy": [],
+    "nombre": "Tijeras abdominales",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca arriba con las piernas estiradas y algo elevadas.",
+      "Cruza las piernas alternativamente como unas tijeras.",
+      "Mantén la zona lumbar pegada al suelo."
+    ],
+    "consejo": "Cuanto más bajas las piernas, más difícil.",
+    "notaAnimacion": "Tumbado; piernas estiradas se cruzan arriba y abajo."
+  },
+  {
+    "hevy": "Toe Touch",
+    "aliasesHevy": [],
+    "nombre": "Toques de pies",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con las piernas estiradas hacia arriba.",
+      "Sube el tronco intentando tocar los pies.",
+      "Baja despacio."
+    ],
+    "consejo": "Movimiento corto y controlado.",
+    "notaAnimacion": "Tumbado con piernas verticales; crunch tocando los pies."
+  },
+  {
+    "hevy": "Heel Taps",
+    "aliasesHevy": [],
+    "nombre": "Toques de talón",
+    "musculo": "core",
+    "musculoTexto": "Abdomen",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate con las rodillas flexionadas y los hombros algo elevados.",
+      "Inclínate a un lado para tocar el talón.",
+      "Alterna."
+    ],
+    "consejo": "Mantén los hombros despegados todo el tiempo.",
+    "notaAnimacion": "Crunch lateral tocando talones alternos."
+  },
+  {
+    "hevy": "Lying Neck Extension (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Extensión de cuello con peso",
+    "musculo": "neck",
+    "musculoTexto": "Cuello (grupo nuevo)",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Boca abajo con un disco sobre la nuca (con toalla).",
+      "Sube la cabeza.",
+      "Baja despacio."
+    ],
+    "consejo": "Peso muy ligero.",
+    "notaAnimacion": "Igual con disco en la nuca."
+  },
+  {
+    "hevy": "Lying Neck Extension",
+    "aliasesHevy": [],
+    "nombre": "Extensión de cuello tumbado",
+    "musculo": "neck",
+    "musculoTexto": "Cuello (grupo nuevo)",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca abajo con la cabeza fuera del banco.",
+      "Sube la cabeza mirando al frente.",
+      "Baja despacio."
+    ],
+    "consejo": "Sin tirones.",
+    "notaAnimacion": "Boca abajo; extensión de cuello."
+  },
+  {
+    "hevy": "Lying Neck Curls (Weighted)",
+    "aliasesHevy": [],
+    "nombre": "Flexión de cuello con peso",
+    "musculo": "neck",
+    "musculoTexto": "Cuello (grupo nuevo)",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Túmbate con la cabeza fuera del banco y un disco sobre la frente (con toalla).",
+      "Lleva la barbilla al pecho.",
+      "Baja despacio."
+    ],
+    "consejo": "Peso muy ligero.",
+    "notaAnimacion": "Igual con disco sobre la frente."
+  },
+  {
+    "hevy": "Lying Neck Curls",
+    "aliasesHevy": [],
+    "nombre": "Flexión de cuello tumbado",
+    "musculo": "neck",
+    "musculoTexto": "Cuello (grupo nuevo)",
+    "secundarios": [],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "crunch",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Túmbate boca arriba con la cabeza fuera del banco.",
+      "Lleva la barbilla hacia el pecho.",
+      "Baja despacio."
+    ],
+    "consejo": "Movimientos lentos y suaves. Requiere un grupo muscular nuevo «Cuello».",
+    "notaAnimacion": "Tumbado; flexión de cuello con la cabeza fuera del banco."
+  },
+  {
+    "hevy": "Hang Snatch",
+    "aliasesHevy": [],
+    "nombre": "Arrancada colgante",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "quads"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra a la altura de los muslos con agarre ancho.",
+      "Extiende la cadera y llévala sobre la cabeza.",
+      "Recíbela en sentadilla y ponte de pie."
+    ],
+    "consejo": "Técnica antes que peso.",
+    "notaAnimacion": "Arrancada empezando desde los muslos."
+  },
+  {
+    "hevy": "Dumbbell Snatch",
+    "aliasesHevy": [],
+    "nombre": "Arrancada con mancuerna",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "glutes"
+    ],
+    "equipo": "dumbbell",
+    "equipoTexto": "Mancuernas",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "swing",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la mancuerna entre los pies.",
+      "Extiende la cadera con fuerza y llévala sobre la cabeza en un solo movimiento.",
+      "Bájala y repite."
+    ],
+    "consejo": "El impulso sale de la cadera.",
+    "notaAnimacion": "De la posición baja a brazo estirado sobre la cabeza en un movimiento."
+  },
+  {
+    "hevy": "Power Snatch",
+    "aliasesHevy": [],
+    "nombre": "Arrancada de potencia",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "quads"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Levanta la barra del suelo con agarre ancho.",
+      "Extiende la cadera y llévala sobre la cabeza.",
+      "Recíbela en media sentadilla."
+    ],
+    "consejo": "Técnica antes que peso.",
+    "notaAnimacion": "Arrancada recibiendo en media sentadilla."
+  },
+  {
+    "hevy": "Sled Pull",
+    "aliasesHevy": [],
+    "nombre": "Arrastre de trineo",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "hamstrings"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "distanceTime",
+    "tipoTexto": "Distancia y tiempo",
+    "animacionBase": "run",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Agarra la cuerda o el arnés del trineo.",
+      "Camina hacia atrás tirando del trineo.",
+      "Mantén el tronco firme."
+    ],
+    "consejo": "Pasos cortos y continuos.",
+    "notaAnimacion": "Caminar hacia atrás arrastrando un trineo."
+  },
+  {
+    "hevy": "Burpee Broad Jumps",
+    "aliasesHevy": [],
+    "nombre": "Burpee con salto largo",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "quads"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Haz un burpee.",
+      "Al levantarte, salta hacia delante lo más lejos posible.",
+      "Repite."
+    ],
+    "consejo": "Aterriza suave.",
+    "notaAnimacion": "Burpee seguido de un salto horizontal."
+  },
+  {
+    "hevy": "Burpee Over the Bar",
+    "aliasesHevy": [],
+    "nombre": "Burpee saltando la barra",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "quads"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Haz un burpee junto a una barra en el suelo.",
+      "Salta lateralmente por encima de la barra.",
+      "Repite al otro lado."
+    ],
+    "consejo": "Ritmo constante.",
+    "notaAnimacion": "Burpee con salto lateral sobre una barra."
+  },
+  {
+    "hevy": "Warm Up",
+    "aliasesHevy": [],
+    "nombre": "Calentamiento",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "run",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Movilidad y cardio suave.",
+      "Activación del músculo a trabajar.",
+      "Series de aproximación."
+    ],
+    "consejo": "Actividad, sin animación de técnica.",
+    "notaAnimacion": "Actividad genérica: animación de trote suave."
+  },
+  {
+    "hevy": "Clean",
+    "aliasesHevy": [],
+    "nombre": "Cargada",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "quads",
+      "back",
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Levanta la barra del suelo como en un peso muerto.",
+      "Extiende la cadera con fuerza y métete bajo la barra.",
+      "Recíbela sobre los hombros en sentadilla frontal y ponte de pie."
+    ],
+    "consejo": "Aprende la técnica con poco peso.",
+    "notaAnimacion": "Del suelo a los hombros con sentadilla frontal de recepción."
+  },
+  {
+    "hevy": "Hang Clean",
+    "aliasesHevy": [],
+    "nombre": "Cargada colgante",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "quads",
+      "back"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra a la altura de los muslos.",
+      "Extiende la cadera y recíbela sobre los hombros.",
+      "Ponte de pie."
+    ],
+    "consejo": "Codos rápidos hacia delante.",
+    "notaAnimacion": "Cargada empezando desde los muslos."
+  },
+  {
+    "hevy": "Front Lever Raise",
+    "aliasesHevy": [],
+    "nombre": "Elevación a front lever",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "core"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate de la barra.",
+      "Sube el cuerpo recto hasta la horizontal.",
+      "Baja despacio."
+    ],
+    "consejo": "Muy avanzado.",
+    "notaAnimacion": "Desde colgado, el cuerpo recto sube a la horizontal."
+  },
+  {
+    "hevy": "Jump Shrug",
+    "aliasesHevy": [],
+    "nombre": "Encogimiento con salto",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "calves"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra a la altura de los muslos.",
+      "Salta extendiendo la cadera y encoge los hombros.",
+      "Aterriza suave."
+    ],
+    "consejo": "Brazos rectos.",
+    "notaAnimacion": "Salto con barra y encogimiento de hombros."
+  },
+  {
+    "hevy": "Split Jerk",
+    "aliasesHevy": [],
+    "nombre": "Envión con tijera",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "quads"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Con la barra sobre los hombros, flexiona y extiende las piernas.",
+      "Empuja la barra y abre las piernas en tijera.",
+      "Junta los pies con la barra arriba."
+    ],
+    "consejo": "Practica la tijera sin peso.",
+    "notaAnimacion": "Envión recibiendo en posición de tijera."
+  },
+  {
+    "hevy": "Stretching",
+    "aliasesHevy": [],
+    "nombre": "Estiramientos",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Mantén cada estiramiento 30–60 s.",
+      "Respira con calma.",
+      "Sin rebotes."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "Front Lever Hold",
+    "aliasesHevy": [],
+    "nombre": "Front lever",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "core"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "hangLeg",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate de la barra.",
+      "Lleva el cuerpo recto a la horizontal boca arriba.",
+      "Mantén la posición."
+    ],
+    "consejo": "Empieza con la variante agrupada (rodillas al pecho).",
+    "notaAnimacion": "Colgado; cuerpo horizontal boca arriba con brazos rectos."
+  },
+  {
+    "hevy": "Ball Slams",
+    "aliasesHevy": [],
+    "nombre": "Lanzamientos de balón al suelo",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "core",
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "swing",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Sujeta un balón medicinal sobre la cabeza.",
+      "Lánzalo con fuerza contra el suelo flexionando la cadera.",
+      "Recógelo y repite."
+    ],
+    "consejo": "Usa un balón que no bote.",
+    "notaAnimacion": "Balón sobre la cabeza lanzado al suelo con flexión de cadera."
+  },
+  {
+    "hevy": "Muscle Up",
+    "aliasesHevy": [],
+    "nombre": "Muscle up",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "triceps"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Cuélgate y haz una dominada explosiva.",
+      "Pasa el pecho por encima de la barra.",
+      "Estira los brazos arriba y baja con control."
+    ],
+    "consejo": "Necesitas dominadas y fondos sólidos.",
+    "notaAnimacion": "Dominada explosiva que termina en fondo sobre la barra."
+  },
+  {
+    "hevy": "Downward Dog",
+    "aliasesHevy": [],
+    "nombre": "Perro boca abajo",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "hamstrings",
+      "shoulders"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "pushup",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Desde plancha, sube la cadera formando una V invertida.",
+      "Estira la espalda y lleva los talones al suelo.",
+      "Mantén respirando."
+    ],
+    "consejo": "Rodillas flexionadas si no llegas.",
+    "notaAnimacion": "Postura de yoga en V invertida."
+  },
+  {
+    "hevy": "Deadlift High Pull",
+    "aliasesHevy": [],
+    "nombre": "Peso muerto con remo alto",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "back"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Levanta la barra del suelo.",
+      "Al llegar arriba, tira hasta la altura del pecho con los codos altos.",
+      "Baja con control."
+    ],
+    "consejo": "Movimiento fluido.",
+    "notaAnimacion": "Peso muerto encadenado con remo al mentón."
+  },
+  {
+    "hevy": "Press Under",
+    "aliasesHevy": [],
+    "nombre": "Press bajo la barra",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "ohp",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra sobre la cabeza.",
+      "Baja el cuerpo empujando contra la barra hasta la sentadilla.",
+      "Sube."
+    ],
+    "consejo": "Ejercicio técnico de halterofilia.",
+    "notaAnimacion": "Empujón del cuerpo hacia abajo bajo la barra."
+  },
+  {
+    "hevy": "Kettlebell High Pull",
+    "aliasesHevy": [],
+    "nombre": "Remo alto con kettlebell",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "back"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "swing",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Haz un swing.",
+      "Arriba, tira de la kettlebell hacia el pecho con el codo alto.",
+      "Bájala y repite."
+    ],
+    "consejo": "El impulso es de la cadera.",
+    "notaAnimacion": "Swing terminando en remo alto."
+  },
+  {
+    "hevy": "High Knees",
+    "aliasesHevy": [],
+    "nombre": "Rodillas altas",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "calves"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "run",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Corre en el sitio.",
+      "Sube las rodillas a la altura de la cadera.",
+      "Mantén un ritmo rápido."
+    ],
+    "consejo": "Tronco erguido.",
+    "notaAnimacion": "Carrera en el sitio con rodillas altas."
+  },
+  {
+    "hevy": "Overhead Squat",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla con barra sobre la cabeza",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "shoulders",
+      "core"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la barra con agarre ancho y brazos estirados sobre la cabeza.",
+      "Baja en sentadilla manteniendo la barra sobre los pies.",
+      "Sube."
+    ],
+    "consejo": "Requiere mucha movilidad.",
+    "notaAnimacion": "Sentadilla con barra bloqueada sobre la cabeza."
+  },
+  {
+    "hevy": "Squat Row",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla con remo",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "quads"
+    ],
+    "equipo": "cable",
+    "equipoTexto": "Polea",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Frente a la polea, agarra el maneral.",
+      "Baja en sentadilla con los brazos estirados.",
+      "Sube y rema hacia el pecho."
+    ],
+    "consejo": "Coordina subida y remo.",
+    "notaAnimacion": "Sentadilla encadenada con remo en polea."
+  },
+  {
+    "hevy": "Landmine Squat and Press",
+    "aliasesHevy": [],
+    "nombre": "Sentadilla y press landmine",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "quads",
+      "shoulders"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "frontSquat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta el extremo de la barra junto al pecho.",
+      "Baja en sentadilla.",
+      "Sube y empuja la barra hacia arriba."
+    ],
+    "consejo": "Movimiento continuo.",
+    "notaAnimacion": "Sentadilla con el extremo de una barra anclada y press al subir."
+  },
+  {
+    "hevy": "High Knee Skips",
+    "aliasesHevy": [],
+    "nombre": "Skipping con rodillas altas",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "calves"
+    ],
+    "equipo": "bodyweight",
+    "equipoTexto": "Peso corporal",
+    "tipo": "repsOnly",
+    "tipoTexto": "Solo repeticiones",
+    "animacionBase": "run",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Avanza dando pequeños saltos.",
+      "Sube las rodillas alternas a la altura de la cadera.",
+      "Mueve los brazos al ritmo."
+    ],
+    "consejo": "Aterriza con la parte delantera del pie.",
+    "notaAnimacion": "Skipping avanzando con rodillas altas."
+  },
+  {
+    "hevy": "Thruster (Kettlebell)",
+    "aliasesHevy": [],
+    "nombre": "Thruster con kettlebell",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "quads",
+      "shoulders"
+    ],
+    "equipo": "kettlebell",
+    "equipoTexto": "Kettlebell",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "frontSquat",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Sujeta la kettlebell junto al pecho.",
+      "Baja en sentadilla.",
+      "Sube y empuja la kettlebell sobre la cabeza."
+    ],
+    "consejo": "Movimiento continuo.",
+    "notaAnimacion": "Sentadilla frontal con kettlebell y press al subir."
+  },
+  {
+    "hevy": "Clean Pull",
+    "aliasesHevy": [],
+    "nombre": "Tirón de cargada",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [
+      "back",
+      "hamstrings"
+    ],
+    "equipo": "barbell",
+    "equipoTexto": "Barra",
+    "tipo": "weightReps",
+    "tipoTexto": "Peso y repeticiones",
+    "animacionBase": "deadlift",
+    "prioridadAnimacion": "alta",
+    "pasos": [
+      "Levanta la barra del suelo con técnica de cargada.",
+      "Extiende la cadera con fuerza y encoge los hombros.",
+      "Baja la barra."
+    ],
+    "consejo": "Los brazos siguen rectos.",
+    "notaAnimacion": "Primer tirón de la cargada terminando de puntillas con encogimiento."
+  },
+  {
+    "hevy": "Yoga",
+    "aliasesHevy": [],
+    "nombre": "Yoga",
+    "musculo": "fullBody",
+    "musculoTexto": "Cuerpo completo",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "plank",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Respira de forma controlada.",
+      "Entra y sal de cada postura despacio.",
+      "Respeta tus límites."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "Aerobics",
+    "aliasesHevy": [],
+    "nombre": "Aeróbic",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "run",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta 5 minutos.",
+      "Sigue la coreografía a tu ritmo.",
+      "Termina con estiramientos."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "Boxing",
+    "aliasesHevy": [],
+    "nombre": "Boxeo",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [
+      "shoulders"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "run",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta.",
+      "Golpea combinaciones manteniendo la guardia.",
+      "Respira con cada golpe."
+    ],
+    "consejo": "Protege las muñecas con vendas.",
+    "notaAnimacion": "Actividad: animación de golpeo (nueva)."
+  },
+  {
+    "hevy": "Climbing",
+    "aliasesHevy": [],
+    "nombre": "Escalada",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [
+      "back",
+      "forearms"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "pullup",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta dedos y hombros.",
+      "Usa las piernas para empujar.",
+      "Descansa entre vías."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación de escalada (nueva)."
+  },
+  {
+    "hevy": "Skiing",
+    "aliasesHevy": [],
+    "nombre": "Esquí",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [
+      "quads"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta piernas.",
+      "Rodillas flexionadas.",
+      "Descansa entre bajadas."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "HIIT",
+    "aliasesHevy": [],
+    "nombre": "HIIT",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [
+      "fullBody"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "run",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta.",
+      "Alterna intervalos intensos y de descanso.",
+      "Vuelve a la calma."
+    ],
+    "consejo": "Usa el temporizador de intervalos de Forja.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "Skating",
+    "aliasesHevy": [],
+    "nombre": "Patinaje",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "distanceTime",
+    "tipoTexto": "Distancia y tiempo",
+    "animacionBase": "run",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta.",
+      "Rodillas flexionadas y peso al frente.",
+      "Usa protecciones."
+    ],
+    "consejo": "Registra distancia y tiempo.",
+    "notaAnimacion": "Actividad: animación de patinaje (nueva)."
+  },
+  {
+    "hevy": "Snowboarding",
+    "aliasesHevy": [],
+    "nombre": "Snowboard",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [
+      "quads"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "duration",
+    "tipoTexto": "Duración",
+    "animacionBase": "squat",
+    "prioridadAnimacion": "baja",
+    "pasos": [
+      "Calienta.",
+      "Peso centrado sobre la tabla.",
+      "Usa casco."
+    ],
+    "consejo": "Registra el tiempo.",
+    "notaAnimacion": "Actividad: animación genérica."
+  },
+  {
+    "hevy": "Sprints",
+    "aliasesHevy": [],
+    "nombre": "Sprints",
+    "musculo": "cardio",
+    "musculoTexto": "Cardio",
+    "secundarios": [
+      "quads",
+      "hamstrings"
+    ],
+    "equipo": "other",
+    "equipoTexto": "Otro",
+    "tipo": "distanceTime",
+    "tipoTexto": "Distancia y tiempo",
+    "animacionBase": "run",
+    "prioridadAnimacion": "media",
+    "pasos": [
+      "Calienta bien.",
+      "Corre a máxima velocidad la distancia indicada.",
+      "Recupera caminando."
+    ],
+    "consejo": "Calienta siempre antes de esprintar.",
+    "notaAnimacion": "Carrera a máxima velocidad."
+  }
+]
