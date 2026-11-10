@@ -24,7 +24,8 @@ struct ExerciseAnimationView: UIViewRepresentable {
         return data.base64EncodedString()
     }()
 
-    var patternKey: String { ExerciseSeed.pattern(for: exercise).rawValue }
+    /// Animación propia del ejercicio (variante) o, si no tiene, la de su patrón de movimiento
+    var patternKey: String { ExerciseSeed.animationKey(for: exercise) }
     var equipmentKey: String { ExerciseSeed.animationEquipment(exercise.equipment) }
 
     /// Para ejercicios personalizados, resalta el músculo elegido por el usuario.
@@ -108,11 +109,12 @@ struct ExerciseThumbnail: View {
     static var cache: [String: UIImage] = [:]
 
     var image: UIImage? {
+        let a = ExerciseSeed.animationKey(for: exercise)
         let p = ExerciseSeed.pattern(for: exercise).rawValue
         let e = ExerciseSeed.animationEquipment(exercise.equipment)
-        let key = "thumb_\(p)_\(e)"
+        let key = "thumb_\(a)_\(e)"
         if let img = ExerciseThumbnail.cache[key] { return img }
-        let candidates = [key, "thumb_\(p)_none"]
+        let candidates = [key, "thumb_\(a)_none", "thumb_\(p)_\(e)", "thumb_\(p)_none"]
         for name in candidates {
             if let path = Bundle.main.path(forResource: name, ofType: "jpg"), let img = UIImage(contentsOfFile: path) {
                 ExerciseThumbnail.cache[key] = img
