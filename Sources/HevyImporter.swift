@@ -506,7 +506,7 @@ enum HevyImporter {
             // Ejercicio
             let exTitle = value(row, cExercise)
             guard !exTitle.isEmpty else { continue }
-            let mapped = nameMap[exTitle.lowercased()] ?? exTitle
+            let mapped = nameMap[exTitle.lowercased()] ?? ExerciseMatcher.catalogName(for: exTitle) ?? exTitle
             var exID = exerciseByName[mapped.lowercased()]
             if exID == nil {
                 let kind: ExerciseKind

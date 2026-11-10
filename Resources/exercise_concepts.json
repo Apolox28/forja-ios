@@ -1,0 +1,3185 @@
+[
+ {
+  "alts": [
+   [
+    "rowing"
+   ],
+   [
+    "remo ergometro"
+   ],
+   [
+    "maquina de remo"
+   ],
+   [
+    "ergometro de remo"
+   ],
+   [
+    "concept2"
+   ],
+   [
+    "remoergometro"
+   ]
+  ],
+  "name": "Remo ergómetro"
+ },
+ {
+  "alts": [
+   [
+    "ski erg"
+   ],
+   [
+    "skierg"
+   ],
+   [
+    "ski ergometro"
+   ]
+  ],
+  "name": "Ski ergómetro"
+ },
+ {
+  "alts": [
+   [
+    "treadmill"
+   ],
+   [
+    "cinta"
+   ],
+   [
+    "caminadora"
+   ]
+  ],
+  "rules": [
+   [
+    "walk|caminar|incline|inclinad",
+    "Caminar en cinta inclinada"
+   ]
+  ],
+  "name": "Correr en cinta"
+ },
+ {
+  "alts": [
+   [
+    "running"
+   ],
+   [
+    "correr"
+   ],
+   [
+    "carrera"
+   ],
+   [
+    "trote"
+   ],
+   [
+    "jogging"
+   ],
+   [
+    "sprint"
+   ]
+  ],
+  "name": "Correr"
+ },
+ {
+  "alts": [
+   [
+    "hiking"
+   ],
+   [
+    "senderismo"
+   ],
+   [
+    "trekking"
+   ]
+  ],
+  "name": "Senderismo"
+ },
+ {
+  "alts": [
+   [
+    "walking lunge"
+   ],
+   [
+    "zancada",
+    "caminando"
+   ],
+   [
+    "zancadas caminando"
+   ],
+   [
+    "estocada",
+    "caminando"
+   ],
+   [
+    "desplante",
+    "caminando"
+   ]
+  ],
+  "name": "Zancadas caminando"
+ },
+ {
+  "alts": [
+   [
+    "walking"
+   ],
+   [
+    "caminar"
+   ],
+   [
+    "caminata"
+   ],
+   [
+    "andar"
+   ]
+  ],
+  "not": [
+   "lunge",
+   "zancada",
+   "farmer",
+   "granjero",
+   "oso",
+   "bear"
+  ],
+  "name": "Caminar"
+ },
+ {
+  "alts": [
+   [
+    "air bike"
+   ],
+   [
+    "assault"
+   ],
+   [
+    "bicicleta de aire"
+   ],
+   [
+    "airbike"
+   ]
+  ],
+  "name": "Bicicleta de aire"
+ },
+ {
+  "alts": [
+   [
+    "stationary bike"
+   ],
+   [
+    "bicicleta estatica"
+   ],
+   [
+    "spinning"
+   ],
+   [
+    "spin bike"
+   ],
+   [
+    "bici estatica"
+   ]
+  ],
+  "name": "Bicicleta estática"
+ },
+ {
+  "alts": [
+   [
+    "cycling"
+   ],
+   [
+    "ciclismo"
+   ],
+   [
+    "bicicleta"
+   ],
+   [
+    "bike"
+   ]
+  ],
+  "not": [
+   "crunch",
+   "abdominal"
+  ],
+  "name": "Ciclismo"
+ },
+ {
+  "alts": [
+   [
+    "elliptical"
+   ],
+   [
+    "eliptica"
+   ],
+   [
+    "eliptico"
+   ]
+  ],
+  "name": "Elíptica"
+ },
+ {
+  "alts": [
+   [
+    "stair"
+   ],
+   [
+    "escaladora"
+   ],
+   [
+    "escaleras"
+   ],
+   [
+    "stepmill"
+   ]
+  ],
+  "name": "Escaladora"
+ },
+ {
+  "alts": [
+   [
+    "swimming"
+   ],
+   [
+    "natacion"
+   ],
+   [
+    "nadar"
+   ]
+  ],
+  "name": "Natación"
+ },
+ {
+  "alts": [
+   [
+    "jump rope"
+   ],
+   [
+    "comba"
+   ],
+   [
+    "saltar la cuerda"
+   ],
+   [
+    "saltar cuerda"
+   ],
+   [
+    "skipping rope"
+   ]
+  ],
+  "name": "Saltar la cuerda"
+ },
+ {
+  "alts": [
+   [
+    "jumping jack"
+   ],
+   [
+    "saltos de tijera"
+   ]
+  ],
+  "name": "Jumping jacks"
+ },
+ {
+  "alts": [
+   [
+    "sled"
+   ],
+   [
+    "trineo"
+   ]
+  ],
+  "name": "Empuje de trineo"
+ },
+ {
+  "alts": [
+   [
+    "battle rope"
+   ],
+   [
+    "cuerdas de batalla"
+   ],
+   [
+    "cuerdas navales"
+   ]
+  ],
+  "name": "Cuerdas de batalla"
+ },
+ {
+  "alts": [
+   [
+    "bear crawl"
+   ],
+   [
+    "caminata del oso"
+   ],
+   [
+    "paso del oso"
+   ]
+  ],
+  "name": "Caminata del oso"
+ },
+ {
+  "alts": [
+   [
+    "leg ext",
+    "single"
+   ],
+   [
+    "extension",
+    "pierna",
+    "una pierna"
+   ],
+   [
+    "extension",
+    "cuadricep",
+    "una pierna"
+   ],
+   [
+    "extension",
+    "unilateral"
+   ]
+  ],
+  "not": [
+   "tricep",
+   "lumbar",
+   "espalda",
+   "back",
+   "cadera",
+   "hip"
+  ],
+  "name": "Extensión de cuádriceps a una pierna"
+ },
+ {
+  "alts": [
+   [
+    "leg ext"
+   ],
+   [
+    "extension de pierna"
+   ],
+   [
+    "extensiones de pierna"
+   ],
+   [
+    "extension de cuadricep"
+   ],
+   [
+    "extension cuadricep"
+   ],
+   [
+    "extension de rodilla"
+   ],
+   [
+    "sillon de cuadricep"
+   ],
+   [
+    "extension",
+    "pierna"
+   ]
+  ],
+  "not": [
+   "tricep",
+   "lumbar",
+   "espalda",
+   "back",
+   "cadera",
+   "hip",
+   "gemelo",
+   "calf",
+   "pantorrill"
+  ],
+  "name": "Extensión de cuádriceps"
+ },
+ {
+  "alts": [
+   [
+    "leg curl",
+    "seated"
+   ],
+   [
+    "curl femoral",
+    "sentado"
+   ],
+   [
+    "curl de pierna",
+    "sentado"
+   ],
+   [
+    "curl isquio",
+    "sentado"
+   ],
+   [
+    "curl femoral",
+    "maquina sentado"
+   ]
+  ],
+  "name": "Curl femoral sentado"
+ },
+ {
+  "alts": [
+   [
+    "leg curl",
+    "standing"
+   ],
+   [
+    "curl femoral",
+    "de pie"
+   ],
+   [
+    "curl de pierna",
+    "de pie"
+   ]
+  ],
+  "name": "Curl femoral de pie"
+ },
+ {
+  "alts": [
+   [
+    "nordic"
+   ],
+   [
+    "nordico"
+   ]
+  ],
+  "name": "Curl nórdico"
+ },
+ {
+  "alts": [
+   [
+    "leg curl"
+   ],
+   [
+    "curl femoral"
+   ],
+   [
+    "curl de pierna"
+   ],
+   [
+    "curl isquio"
+   ],
+   [
+    "femoral tumbado"
+   ],
+   [
+    "femoral acostado"
+   ],
+   [
+    "curl acostado"
+   ],
+   [
+    "hamstring curl"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Curl femoral con mancuerna"
+   ],
+   [
+    "ball|fitball|pelota",
+    "Curl femoral con fitball"
+   ]
+  ],
+  "name": "Curl femoral tumbado"
+ },
+ {
+  "alts": [
+   [
+    "leg press",
+    "calf"
+   ],
+   [
+    "prensa",
+    "gemel"
+   ],
+   [
+    "prensa",
+    "pantorrill"
+   ],
+   [
+    "prensa",
+    "talon"
+   ],
+   [
+    "toe press"
+   ],
+   [
+    "calf press"
+   ]
+  ],
+  "name": "Elevación de talones en prensa"
+ },
+ {
+  "alts": [
+   [
+    "calf",
+    "seated"
+   ],
+   [
+    "gemel",
+    "sentado"
+   ],
+   [
+    "pantorrill",
+    "sentado"
+   ],
+   [
+    "talon",
+    "sentado"
+   ],
+   [
+    "talones",
+    "sentado"
+   ]
+  ],
+  "name": "Elevación de talones sentado"
+ },
+ {
+  "alts": [
+   [
+    "tibialis"
+   ],
+   [
+    "tibial"
+   ],
+   [
+    "toe raise"
+   ],
+   [
+    "elevacion de puntas"
+   ]
+  ],
+  "name": "Elevación de puntas (tibial)"
+ },
+ {
+  "alts": [
+   [
+    "calf"
+   ],
+   [
+    "gemel"
+   ],
+   [
+    "pantorrill"
+   ],
+   [
+    "elevacion de talon"
+   ],
+   [
+    "elevaciones de talon"
+   ],
+   [
+    "talones"
+   ]
+  ],
+  "rules": [
+   [
+    "smith",
+    "Elevación de talones en máquina Smith"
+   ],
+   [
+    "eq:dumbbell",
+    "Elevación de talones con mancuerna"
+   ],
+   [
+    "eq:bodyweight",
+    "Elevación de talones con peso corporal"
+   ],
+   [
+    "eq:none+standing",
+    "Elevación de talones con peso corporal"
+   ]
+  ],
+  "name": "Elevación de talones de pie"
+ },
+ {
+  "alts": [
+   [
+    "leg press",
+    "single"
+   ],
+   [
+    "prensa",
+    "una pierna"
+   ],
+   [
+    "prensa",
+    "unilateral"
+   ]
+  ],
+  "name": "Prensa a una pierna"
+ },
+ {
+  "alts": [
+   [
+    "leg press",
+    "horizontal"
+   ],
+   [
+    "prensa horizontal"
+   ],
+   [
+    "prensa",
+    "horizontal"
+   ]
+  ],
+  "name": "Prensa de piernas horizontal"
+ },
+ {
+  "alts": [
+   [
+    "leg press"
+   ],
+   [
+    "prensa"
+   ]
+  ],
+  "name": "Prensa de piernas"
+ },
+ {
+  "alts": [
+   [
+    "pendul"
+   ]
+  ],
+  "name": "Sentadilla péndulo"
+ },
+ {
+  "alts": [
+   [
+    "hack"
+   ]
+  ],
+  "name": "Sentadilla hack"
+ },
+ {
+  "alts": [
+   [
+    "front squat"
+   ],
+   [
+    "sentadilla frontal"
+   ]
+  ],
+  "name": "Sentadilla frontal"
+ },
+ {
+  "alts": [
+   [
+    "goblet"
+   ],
+   [
+    "copa"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:kettlebell",
+    "Sentadilla goblet con kettlebell"
+   ]
+  ],
+  "name": "Sentadilla goblet"
+ },
+ {
+  "alts": [
+   [
+    "zercher"
+   ]
+  ],
+  "name": "Sentadilla Zercher"
+ },
+ {
+  "alts": [
+   [
+    "bulgar"
+   ],
+   [
+    "split squat"
+   ],
+   [
+    "sentadilla dividida"
+   ],
+   [
+    "sentadilla bulgara"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:barbell",
+    "Sentadilla búlgara con barra"
+   ]
+  ],
+  "name": "Sentadilla búlgara"
+ },
+ {
+  "alts": [
+   [
+    "pistol"
+   ]
+  ],
+  "name": "Sentadilla pistol"
+ },
+ {
+  "alts": [
+   [
+    "sissy"
+   ]
+  ],
+  "name": "Sentadilla sissy"
+ },
+ {
+  "alts": [
+   [
+    "wall sit"
+   ],
+   [
+    "sentadilla en pared"
+   ],
+   [
+    "sentadilla isometrica"
+   ],
+   [
+    "silla en pared"
+   ]
+  ],
+  "name": "Sentadilla en pared"
+ },
+ {
+  "alts": [
+   [
+    "box squat"
+   ],
+   [
+    "sentadilla en caja"
+   ],
+   [
+    "sentadilla al cajon"
+   ],
+   [
+    "sentadilla en cajon"
+   ]
+  ],
+  "name": "Sentadilla en caja"
+ },
+ {
+  "alts": [
+   [
+    "jump squat"
+   ],
+   [
+    "sentadilla con salto"
+   ],
+   [
+    "sentadilla saltando"
+   ],
+   [
+    "squat jump"
+   ]
+  ],
+  "name": "Sentadilla con salto"
+ },
+ {
+  "alts": [
+   [
+    "box jump"
+   ],
+   [
+    "salto al cajon"
+   ],
+   [
+    "salto al cajón"
+   ],
+   [
+    "salto cajon"
+   ]
+  ],
+  "name": "Salto al cajón"
+ },
+ {
+  "alts": [
+   [
+    "reverse lunge"
+   ],
+   [
+    "zancada",
+    "atras"
+   ],
+   [
+    "zancadas",
+    "atras"
+   ],
+   [
+    "zancada inversa"
+   ],
+   [
+    "estocada",
+    "atras"
+   ],
+   [
+    "desplante",
+    "atras"
+   ]
+  ],
+  "name": "Zancadas hacia atrás"
+ },
+ {
+  "alts": [
+   [
+    "lateral lunge"
+   ],
+   [
+    "side lunge"
+   ],
+   [
+    "zancada lateral"
+   ],
+   [
+    "zancadas laterales"
+   ],
+   [
+    "estocada lateral"
+   ],
+   [
+    "lateral squat"
+   ],
+   [
+    "sentadilla lateral"
+   ],
+   [
+    "cossack"
+   ]
+  ],
+  "name": "Zancadas laterales"
+ },
+ {
+  "alts": [
+   [
+    "lunge",
+    "smith"
+   ],
+   [
+    "zancada",
+    "smith"
+   ]
+  ],
+  "name": "Zancadas en máquina Smith"
+ },
+ {
+  "alts": [
+   [
+    "step up"
+   ],
+   [
+    "stepup"
+   ],
+   [
+    "subida al cajon"
+   ],
+   [
+    "subida al banco"
+   ],
+   [
+    "subidas al cajon"
+   ],
+   [
+    "step-up"
+   ]
+  ],
+  "name": "Step-up con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "lunge"
+   ],
+   [
+    "zancada"
+   ],
+   [
+    "estocada"
+   ],
+   [
+    "desplante"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:barbell",
+    "Zancadas con barra"
+   ]
+  ],
+  "name": "Zancadas con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "squat"
+   ],
+   [
+    "sentadilla"
+   ]
+  ],
+  "not": [
+   "sumo deadlift"
+  ],
+  "rules": [
+   [
+    "smith",
+    "Sentadilla en máquina Smith"
+   ],
+   [
+    "eq:machine",
+    "Sentadilla hack"
+   ],
+   [
+    "eq:dumbbell",
+    "Sentadilla con mancuernas"
+   ],
+   [
+    "eq:kettlebell",
+    "Sentadilla goblet con kettlebell"
+   ],
+   [
+    "eq:bodyweight|air squat|libre",
+    "Sentadilla con peso corporal"
+   ]
+  ],
+  "name": "Sentadilla con barra"
+ },
+ {
+  "alts": [
+   [
+    "single leg",
+    "deadlift"
+   ],
+   [
+    "peso muerto",
+    "una pierna"
+   ],
+   [
+    "peso muerto",
+    "unilateral"
+   ],
+   [
+    "single leg rdl"
+   ]
+  ],
+  "name": "Peso muerto a una pierna"
+ },
+ {
+  "alts": [
+   [
+    "romanian"
+   ],
+   [
+    "rumano"
+   ],
+   [
+    "rdl"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Peso muerto rumano con mancuernas"
+   ]
+  ],
+  "name": "Peso muerto rumano"
+ },
+ {
+  "alts": [
+   [
+    "stiff"
+   ],
+   [
+    "straight leg deadlift"
+   ],
+   [
+    "piernas rigidas"
+   ],
+   [
+    "piernas rectas"
+   ],
+   [
+    "piernas estiradas"
+   ]
+  ],
+  "name": "Peso muerto piernas rígidas"
+ },
+ {
+  "alts": [
+   [
+    "good morning"
+   ],
+   [
+    "buenos dias"
+   ]
+  ],
+  "name": "Buenos días"
+ },
+ {
+  "alts": [
+   [
+    "sumo",
+    "deadlift"
+   ],
+   [
+    "peso muerto sumo"
+   ],
+   [
+    "sumo",
+    "peso muerto"
+   ]
+  ],
+  "name": "Peso muerto sumo"
+ },
+ {
+  "alts": [
+   [
+    "trap bar"
+   ],
+   [
+    "hex bar"
+   ],
+   [
+    "barra hexagonal"
+   ],
+   [
+    "trapbar"
+   ]
+  ],
+  "name": "Peso muerto con barra hexagonal"
+ },
+ {
+  "alts": [
+   [
+    "rack pull"
+   ],
+   [
+    "peso muerto parcial"
+   ],
+   [
+    "peso muerto desde rack"
+   ]
+  ],
+  "name": "Rack pull"
+ },
+ {
+  "alts": [
+   [
+    "deadlift"
+   ],
+   [
+    "peso muerto"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Peso muerto con mancuernas"
+   ]
+  ],
+  "name": "Peso muerto"
+ },
+ {
+  "alts": [
+   [
+    "hip thrust"
+   ],
+   [
+    "empuje de cadera"
+   ],
+   [
+    "empuje de gluteo"
+   ],
+   [
+    "empujes de cadera"
+   ]
+  ],
+  "rules": [
+   [
+    "single|una pierna|unilateral",
+    "Hip thrust a una pierna"
+   ],
+   [
+    "eq:machine",
+    "Hip thrust en máquina"
+   ],
+   [
+    "eq:dumbbell",
+    "Hip thrust con mancuerna"
+   ]
+  ],
+  "name": "Hip thrust con barra"
+ },
+ {
+  "alts": [
+   [
+    "glute bridge"
+   ],
+   [
+    "puente de gluteo"
+   ],
+   [
+    "puente gluteo"
+   ],
+   [
+    "elevacion de cadera"
+   ],
+   [
+    "puente de cadera"
+   ]
+  ],
+  "rules": [
+   [
+    "single|una pierna|unilateral",
+    "Hip thrust a una pierna"
+   ],
+   [
+    "eq:barbell",
+    "Puente de glúteos con barra"
+   ]
+  ],
+  "name": "Puente de glúteos"
+ },
+ {
+  "alts": [
+   [
+    "frog pump"
+   ]
+  ],
+  "name": "Frog pump"
+ },
+ {
+  "alts": [
+   [
+    "abduct"
+   ],
+   [
+    "abduccion"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:band",
+    "Abducción con banda"
+   ]
+  ],
+  "name": "Abducción en máquina"
+ },
+ {
+  "alts": [
+   [
+    "adduct"
+   ],
+   [
+    "aduccion"
+   ]
+  ],
+  "name": "Aducción en máquina"
+ },
+ {
+  "alts": [
+   [
+    "kickback",
+    "glute"
+   ],
+   [
+    "glute kick"
+   ],
+   [
+    "patada de gluteo"
+   ],
+   [
+    "patada",
+    "gluteo"
+   ],
+   [
+    "rear kick"
+   ],
+   [
+    "patada trasera"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:machine",
+    "Patada de glúteo en máquina"
+   ]
+  ],
+  "name": "Patada de glúteo en polea"
+ },
+ {
+  "alts": [
+   [
+    "pull through"
+   ],
+   [
+    "pullthrough"
+   ]
+  ],
+  "name": "Pull-through en polea"
+ },
+ {
+  "alts": [
+   [
+    "hyperext"
+   ],
+   [
+    "back extension"
+   ],
+   [
+    "hiperextension"
+   ],
+   [
+    "extension lumbar"
+   ],
+   [
+    "extension de espalda"
+   ],
+   [
+    "extensiones lumbares"
+   ]
+  ],
+  "rules": [
+   [
+    "weighted|lastrad|con peso",
+    "Hiperextensiones lastradas"
+   ]
+  ],
+  "name": "Hiperextensiones"
+ },
+ {
+  "alts": [
+   [
+    "y raise"
+   ],
+   [
+    "y-raise"
+   ],
+   [
+    "elevacion en y"
+   ],
+   [
+    "elevaciones en y"
+   ]
+  ],
+  "name": "Elevaciones en Y"
+ },
+ {
+  "alts": [
+   [
+    "rear delt"
+   ],
+   [
+    "reverse fly"
+   ],
+   [
+    "pajaro"
+   ],
+   [
+    "deltoide posterior"
+   ],
+   [
+    "deltoides posterior"
+   ],
+   [
+    "reverse pec"
+   ],
+   [
+    "aperturas invertidas"
+   ],
+   [
+    "aperturas inversas"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:machine",
+    "Pájaros en máquina"
+   ],
+   [
+    "eq:cable",
+    "Pájaros en polea"
+   ]
+  ],
+  "name": "Pájaros con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "incline",
+    "fly"
+   ],
+   [
+    "aperturas inclinad"
+   ],
+   [
+    "apertura inclinad"
+   ]
+  ],
+  "name": "Aperturas inclinadas con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "crossover"
+   ],
+   [
+    "cruce de polea"
+   ],
+   [
+    "cruce de poleas"
+   ],
+   [
+    "cable fly"
+   ],
+   [
+    "fly",
+    "cable"
+   ],
+   [
+    "aperturas",
+    "polea"
+   ],
+   [
+    "cruce"
+   ]
+  ],
+  "rules": [
+   [
+    "low|bajo|abajo arriba|de abajo",
+    "Cruce de poleas de abajo arriba"
+   ],
+   [
+    "high|alto|arriba abajo|de arriba",
+    "Cruce de poleas de arriba abajo"
+   ]
+  ],
+  "name": "Cruce de poleas"
+ },
+ {
+  "alts": [
+   [
+    "pec deck"
+   ],
+   [
+    "peck deck"
+   ],
+   [
+    "butterfly"
+   ],
+   [
+    "mariposa"
+   ],
+   [
+    "fly",
+    "machine"
+   ],
+   [
+    "aperturas",
+    "maquina"
+   ],
+   [
+    "contractor"
+   ],
+   [
+    "pec fly"
+   ]
+  ],
+  "name": "Aperturas en máquina"
+ },
+ {
+  "alts": [
+   [
+    "fly"
+   ],
+   [
+    "flye"
+   ],
+   [
+    "aperturas"
+   ],
+   [
+    "apertura"
+   ]
+  ],
+  "not": [
+   "reverse",
+   "rear",
+   "posterior",
+   "invers"
+  ],
+  "name": "Aperturas con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "incline",
+    "press"
+   ],
+   [
+    "incline bench"
+   ],
+   [
+    "press inclinado"
+   ],
+   [
+    "inclinado",
+    "press"
+   ],
+   [
+    "banca inclinada"
+   ]
+  ],
+  "rules": [
+   [
+    "smith",
+    "Press inclinado en máquina Smith"
+   ],
+   [
+    "eq:machine",
+    "Press inclinado en máquina"
+   ],
+   [
+    "eq:dumbbell",
+    "Press inclinado con mancuernas"
+   ]
+  ],
+  "name": "Press inclinado con barra"
+ },
+ {
+  "alts": [
+   [
+    "decline",
+    "press"
+   ],
+   [
+    "decline bench"
+   ],
+   [
+    "press declinado"
+   ],
+   [
+    "banca declinada"
+   ],
+   [
+    "declinado",
+    "press"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Press declinado con mancuernas"
+   ]
+  ],
+  "name": "Press declinado con barra"
+ },
+ {
+  "alts": [
+   [
+    "close grip",
+    "bench"
+   ],
+   [
+    "agarre cerrado"
+   ],
+   [
+    "agarre estrecho",
+    "banca"
+   ],
+   [
+    "press cerrado"
+   ]
+  ],
+  "name": "Press de banca agarre cerrado"
+ },
+ {
+  "alts": [
+   [
+    "floor press"
+   ],
+   [
+    "press de suelo"
+   ],
+   [
+    "press en el suelo"
+   ],
+   [
+    "press en suelo"
+   ]
+  ],
+  "name": "Press de suelo con barra"
+ },
+ {
+  "alts": [
+   [
+    "jm press"
+   ]
+  ],
+  "name": "Press JM"
+ },
+ {
+  "alts": [
+   [
+    "chest press"
+   ],
+   [
+    "press de pecho"
+   ],
+   [
+    "press pecho"
+   ],
+   [
+    "press pectoral"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Press de pecho en polea"
+   ]
+  ],
+  "name": "Press de pecho en máquina"
+ },
+ {
+  "alts": [
+   [
+    "bench press"
+   ],
+   [
+    "press de banca"
+   ],
+   [
+    "press banca"
+   ],
+   [
+    "press plano"
+   ],
+   [
+    "banca plana"
+   ],
+   [
+    "press de pecho plano"
+   ]
+  ],
+  "rules": [
+   [
+    "smith",
+    "Press de banca en máquina Smith"
+   ],
+   [
+    "eq:dumbbell",
+    "Press de banca con mancuernas"
+   ],
+   [
+    "eq:machine",
+    "Press de pecho en máquina"
+   ],
+   [
+    "eq:cable",
+    "Press de pecho en polea"
+   ]
+  ],
+  "name": "Press de banca"
+ },
+ {
+  "alts": [
+   [
+    "diamond"
+   ],
+   [
+    "diamante"
+   ]
+  ],
+  "name": "Flexiones diamante"
+ },
+ {
+  "alts": [
+   [
+    "incline push"
+   ],
+   [
+    "flexiones inclinadas"
+   ],
+   [
+    "flexion inclinada"
+   ]
+  ],
+  "name": "Flexiones inclinadas"
+ },
+ {
+  "alts": [
+   [
+    "decline push"
+   ],
+   [
+    "flexiones declinadas"
+   ],
+   [
+    "flexion declinada"
+   ]
+  ],
+  "name": "Flexiones declinadas"
+ },
+ {
+  "alts": [
+   [
+    "clap"
+   ],
+   [
+    "palmada"
+   ]
+  ],
+  "name": "Flexiones con palmada"
+ },
+ {
+  "alts": [
+   [
+    "push up"
+   ],
+   [
+    "pushup"
+   ],
+   [
+    "push-up"
+   ],
+   [
+    "flexion"
+   ],
+   [
+    "lagartija"
+   ]
+  ],
+  "not": [
+   "handstand",
+   "pino",
+   "pike",
+   "pica"
+  ],
+  "rules": [
+   [
+    "weighted|lastrad|con peso",
+    "Flexiones lastradas"
+   ]
+  ],
+  "name": "Flexiones"
+ },
+ {
+  "alts": [
+   [
+    "bench dip"
+   ],
+   [
+    "fondos en banco"
+   ],
+   [
+    "fondo en banco"
+   ],
+   [
+    "fondos en silla"
+   ],
+   [
+    "floor"
+   ]
+  ],
+  "name": "Fondos en banco"
+ },
+ {
+  "alts": [
+   [
+    "dip",
+    "machine"
+   ],
+   [
+    "seated dip"
+   ],
+   [
+    "fondos en maquina"
+   ],
+   [
+    "fondos",
+    "maquina"
+   ]
+  ],
+  "name": "Fondos en máquina"
+ },
+ {
+  "alts": [
+   [
+    "dip"
+   ],
+   [
+    "fondos"
+   ],
+   [
+    "fondo"
+   ]
+  ],
+  "rules": [
+   [
+    "weighted|lastrad|con peso",
+    "Fondos lastrados"
+   ]
+  ],
+  "name": "Fondos en paralelas"
+ },
+ {
+  "alts": [
+   [
+    "pullover"
+   ],
+   [
+    "pull over"
+   ],
+   [
+    "jalon por encima"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Pullover en polea"
+   ]
+  ],
+  "name": "Pullover con mancuerna"
+ },
+ {
+  "alts": [
+   [
+    "chin up"
+   ],
+   [
+    "chinup"
+   ],
+   [
+    "chin-up"
+   ],
+   [
+    "dominada supina"
+   ],
+   [
+    "dominadas supinas"
+   ]
+  ],
+  "name": "Dominadas supinas"
+ },
+ {
+  "alts": [
+   [
+    "assisted",
+    "pull"
+   ],
+   [
+    "dominada",
+    "asistid"
+   ],
+   [
+    "dominadas asistidas"
+   ],
+   [
+    "pull up",
+    "band"
+   ]
+  ],
+  "name": "Dominadas asistidas"
+ },
+ {
+  "alts": [
+   [
+    "weighted",
+    "pull up"
+   ],
+   [
+    "dominada",
+    "lastrad"
+   ],
+   [
+    "dominadas",
+    "con peso"
+   ]
+  ],
+  "name": "Dominadas lastradas"
+ },
+ {
+  "alts": [
+   [
+    "neutral",
+    "pull"
+   ],
+   [
+    "dominada",
+    "neutr"
+   ]
+  ],
+  "name": "Dominadas agarre neutro"
+ },
+ {
+  "alts": [
+   [
+    "dead hang"
+   ],
+   [
+    "colgarse"
+   ],
+   [
+    "colgado de la barra"
+   ],
+   [
+    "suspension en barra"
+   ]
+  ],
+  "name": "Colgarse de la barra"
+ },
+ {
+  "alts": [
+   [
+    "pull up"
+   ],
+   [
+    "pullup"
+   ],
+   [
+    "pull-up"
+   ],
+   [
+    "dominada"
+   ]
+  ],
+  "name": "Dominadas"
+ },
+ {
+  "alts": [
+   [
+    "straight arm"
+   ],
+   [
+    "brazos rectos"
+   ],
+   [
+    "brazos estirados"
+   ],
+   [
+    "jalon recto"
+   ]
+  ],
+  "name": "Jalón con brazos rectos"
+ },
+ {
+  "alts": [
+   [
+    "pulldown",
+    "close"
+   ],
+   [
+    "pulldown",
+    "v grip"
+   ],
+   [
+    "jalon",
+    "estrecho"
+   ],
+   [
+    "jalon",
+    "cerrado"
+   ],
+   [
+    "jalon",
+    "neutro"
+   ]
+  ],
+  "name": "Jalón agarre estrecho"
+ },
+ {
+  "alts": [
+   [
+    "pulldown",
+    "reverse"
+   ],
+   [
+    "pulldown",
+    "underhand"
+   ],
+   [
+    "jalon",
+    "supino"
+   ],
+   [
+    "jalon",
+    "invertido"
+   ]
+  ],
+  "name": "Jalón agarre supino"
+ },
+ {
+  "alts": [
+   [
+    "pulldown",
+    "single"
+   ],
+   [
+    "pulldown",
+    "one arm"
+   ],
+   [
+    "jalon",
+    "una mano"
+   ],
+   [
+    "jalon",
+    "unilateral"
+   ]
+  ],
+  "name": "Jalón a una mano"
+ },
+ {
+  "alts": [
+   [
+    "pulldown"
+   ],
+   [
+    "pull down"
+   ],
+   [
+    "jalon"
+   ],
+   [
+    "polea alta"
+   ],
+   [
+    "vertical traction"
+   ],
+   [
+    "traccion vertical"
+   ]
+  ],
+  "not": [
+   "tricep"
+  ],
+  "rules": [
+   [
+    "eq:machine",
+    "Jalón en máquina"
+   ]
+  ],
+  "name": "Jalón al pecho"
+ },
+ {
+  "alts": [
+   [
+    "upright row"
+   ],
+   [
+    "remo al menton"
+   ],
+   [
+    "remo vertical"
+   ],
+   [
+    "remo al cuello"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Remo al mentón en polea"
+   ]
+  ],
+  "name": "Remo al mentón con barra"
+ },
+ {
+  "alts": [
+   [
+    "seated row"
+   ],
+   [
+    "seated cable row"
+   ],
+   [
+    "remo sentado"
+   ],
+   [
+    "remo en polea"
+   ],
+   [
+    "remo bajo"
+   ],
+   [
+    "cable row"
+   ],
+   [
+    "low row"
+   ],
+   [
+    "remo con polea"
+   ]
+  ],
+  "rules": [
+   [
+    "single|una mano|one arm|unilateral",
+    "Remo en polea a una mano"
+   ],
+   [
+    "eq:machine",
+    "Remo en máquina"
+   ]
+  ],
+  "name": "Remo sentado en polea"
+ },
+ {
+  "alts": [
+   [
+    "t bar"
+   ],
+   [
+    "tbar"
+   ],
+   [
+    "t-bar"
+   ],
+   [
+    "remo en t"
+   ],
+   [
+    "barra t"
+   ],
+   [
+    "remo t"
+   ]
+  ],
+  "name": "Remo en T"
+ },
+ {
+  "alts": [
+   [
+    "pendlay"
+   ]
+  ],
+  "name": "Remo Pendlay"
+ },
+ {
+  "alts": [
+   [
+    "meadows"
+   ]
+  ],
+  "name": "Remo Meadows"
+ },
+ {
+  "alts": [
+   [
+    "inverted row"
+   ],
+   [
+    "remo invertido"
+   ],
+   [
+    "australian"
+   ],
+   [
+    "remo australiano"
+   ]
+  ],
+  "name": "Remo invertido"
+ },
+ {
+  "alts": [
+   [
+    "chest supported"
+   ],
+   [
+    "pecho apoyado"
+   ],
+   [
+    "apoyado en banco"
+   ],
+   [
+    "seal row"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:machine",
+    "Remo en máquina"
+   ]
+  ],
+  "name": "Remo con mancuernas con pecho apoyado"
+ },
+ {
+  "alts": [
+   [
+    "row",
+    "machine"
+   ],
+   [
+    "remo",
+    "maquina"
+   ],
+   [
+    "iso-lateral row"
+   ],
+   [
+    "iso lateral row"
+   ]
+  ],
+  "name": "Remo en máquina"
+ },
+ {
+  "alts": [
+   [
+    "dumbbell row"
+   ],
+   [
+    "remo con mancuerna"
+   ],
+   [
+    "remo a una mano"
+   ],
+   [
+    "one arm row"
+   ],
+   [
+    "single arm row"
+   ],
+   [
+    "remo unilateral"
+   ]
+  ],
+  "name": "Remo con mancuerna"
+ },
+ {
+  "alts": [
+   [
+    "row"
+   ],
+   [
+    "remo"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Remo con mancuerna"
+   ],
+   [
+    "reverse grip|underhand|supino|invertido",
+    "Remo con barra agarre supino"
+   ],
+   [
+    "eq:cable",
+    "Remo sentado en polea"
+   ],
+   [
+    "eq:machine",
+    "Remo en máquina"
+   ]
+  ],
+  "name": "Remo con barra"
+ },
+ {
+  "alts": [
+   [
+    "shrug"
+   ],
+   [
+    "encogimiento"
+   ]
+  ],
+  "not": [
+   "abdominal",
+   "abdomen"
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Encogimientos con mancuernas"
+   ],
+   [
+    "eq:machine|smith",
+    "Encogimientos en máquina"
+   ]
+  ],
+  "name": "Encogimientos con barra"
+ },
+ {
+  "alts": [
+   [
+    "face pull"
+   ],
+   [
+    "facepull"
+   ],
+   [
+    "tiron a la cara"
+   ],
+   [
+    "jalon a la cara"
+   ]
+  ],
+  "name": "Face pull"
+ },
+ {
+  "alts": [
+   [
+    "superman"
+   ]
+  ],
+  "name": "Superman"
+ },
+ {
+  "alts": [
+   [
+    "arnold"
+   ]
+  ],
+  "name": "Press Arnold"
+ },
+ {
+  "alts": [
+   [
+    "landmine",
+    "press"
+   ],
+   [
+    "press landmine"
+   ],
+   [
+    "press mina"
+   ]
+  ],
+  "name": "Press landmine"
+ },
+ {
+  "alts": [
+   [
+    "push press"
+   ]
+  ],
+  "name": "Push press"
+ },
+ {
+  "alts": [
+   [
+    "overhead press"
+   ],
+   [
+    "military"
+   ],
+   [
+    "militar"
+   ],
+   [
+    "shoulder press"
+   ],
+   [
+    "press de hombro"
+   ],
+   [
+    "press hombro"
+   ],
+   [
+    "press de hombros"
+   ],
+   [
+    "ohp"
+   ],
+   [
+    "press por encima"
+   ],
+   [
+    "press sobre la cabeza"
+   ]
+  ],
+  "not": [
+   "tricep"
+  ],
+  "rules": [
+   [
+    "smith",
+    "Press de hombro en máquina Smith"
+   ],
+   [
+    "eq:machine",
+    "Press de hombro en máquina"
+   ],
+   [
+    "eq:dumbbell+seated|eq:dumbbell+sentado",
+    "Press de hombro sentado con mancuernas"
+   ],
+   [
+    "eq:dumbbell",
+    "Press de hombro con mancuernas"
+   ],
+   [
+    "seated|sentado",
+    "Press militar sentado"
+   ]
+  ],
+  "name": "Press militar con barra"
+ },
+ {
+  "alts": [
+   [
+    "lateral raise"
+   ],
+   [
+    "side raise"
+   ],
+   [
+    "elevacion lateral"
+   ],
+   [
+    "elevaciones laterales"
+   ],
+   [
+    "vuelos laterales"
+   ],
+   [
+    "laterales"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Elevaciones laterales en polea"
+   ],
+   [
+    "eq:machine",
+    "Elevaciones laterales en máquina"
+   ]
+  ],
+  "name": "Elevaciones laterales"
+ },
+ {
+  "alts": [
+   [
+    "front raise"
+   ],
+   [
+    "elevacion frontal"
+   ],
+   [
+    "elevaciones frontales"
+   ],
+   [
+    "vuelos frontales"
+   ],
+   [
+    "frontales"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:barbell",
+    "Elevaciones frontales con barra"
+   ],
+   [
+    "eq:cable",
+    "Elevaciones frontales en polea"
+   ]
+  ],
+  "name": "Elevaciones frontales"
+ },
+ {
+  "alts": [
+   [
+    "hammer"
+   ],
+   [
+    "martillo"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Curl martillo en polea"
+   ]
+  ],
+  "name": "Curl martillo"
+ },
+ {
+  "alts": [
+   [
+    "preacher"
+   ],
+   [
+    "predicador"
+   ],
+   [
+    "scott"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Curl predicador con mancuerna"
+   ],
+   [
+    "eq:machine",
+    "Curl predicador en máquina"
+   ]
+  ],
+  "name": "Curl predicador"
+ },
+ {
+  "alts": [
+   [
+    "concentration"
+   ],
+   [
+    "concentrado"
+   ]
+  ],
+  "name": "Curl concentrado"
+ },
+ {
+  "alts": [
+   [
+    "spider"
+   ],
+   [
+    "arana"
+   ]
+  ],
+  "name": "Curl araña"
+ },
+ {
+  "alts": [
+   [
+    "incline",
+    "curl"
+   ],
+   [
+    "curl inclinado"
+   ],
+   [
+    "curl en banco inclinado"
+   ]
+  ],
+  "name": "Curl inclinado con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "bayesian"
+   ],
+   [
+    "bayesiano"
+   ],
+   [
+    "behind the back curl"
+   ],
+   [
+    "curl por detras"
+   ]
+  ],
+  "name": "Curl bayesiano en polea"
+ },
+ {
+  "alts": [
+   [
+    "21s"
+   ],
+   [
+    "curl 21"
+   ],
+   [
+    "21 curl"
+   ]
+  ],
+  "name": "Curl 21"
+ },
+ {
+  "alts": [
+   [
+    "reverse wrist"
+   ],
+   [
+    "wrist extension"
+   ],
+   [
+    "muneca inverso"
+   ],
+   [
+    "extension de muneca"
+   ],
+   [
+    "curl de muneca invertido"
+   ]
+  ],
+  "name": "Curl de muñeca inverso"
+ },
+ {
+  "alts": [
+   [
+    "wrist curl"
+   ],
+   [
+    "curl de muneca"
+   ],
+   [
+    "muneca"
+   ],
+   [
+    "antebrazo"
+   ]
+  ],
+  "name": "Curl de muñeca"
+ },
+ {
+  "alts": [
+   [
+    "reverse curl"
+   ],
+   [
+    "curl inverso"
+   ],
+   [
+    "curl invertido"
+   ],
+   [
+    "curl prono"
+   ],
+   [
+    "curl agarre prono"
+   ]
+  ],
+  "name": "Curl inverso con barra"
+ },
+ {
+  "alts": [
+   [
+    "rope",
+    "curl"
+   ],
+   [
+    "cuerda",
+    "curl"
+   ]
+  ],
+  "name": "Curl con cuerda en polea"
+ },
+ {
+  "alts": [
+   [
+    "curl"
+   ]
+  ],
+  "not": [
+   "leg",
+   "femoral",
+   "pierna",
+   "isquio",
+   "nordic",
+   "nordico",
+   "crunch"
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Curl en polea"
+   ],
+   [
+    "eq:machine",
+    "Curl en máquina"
+   ],
+   [
+    "ez|barra z|barra w",
+    "Curl con barra Z"
+   ],
+   [
+    "eq:barbell",
+    "Curl con barra"
+   ],
+   [
+    "alternate|alterno|alternado",
+    "Curl alterno con mancuernas"
+   ]
+  ],
+  "name": "Curl con mancuernas"
+ },
+ {
+  "alts": [
+   [
+    "skull"
+   ],
+   [
+    "rompecraneo"
+   ],
+   [
+    "press frances"
+   ],
+   [
+    "french press"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Press francés con mancuernas"
+   ]
+  ],
+  "name": "Press francés"
+ },
+ {
+  "alts": [
+   [
+    "kickback"
+   ],
+   [
+    "patada de tricep"
+   ],
+   [
+    "patada",
+    "tricep"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Patada de tríceps en polea"
+   ]
+  ],
+  "name": "Patada de tríceps"
+ },
+ {
+  "alts": [
+   [
+    "overhead",
+    "tricep"
+   ],
+   [
+    "tricep",
+    "sobre la cabeza"
+   ],
+   [
+    "tras nuca"
+   ],
+   [
+    "extension",
+    "nuca"
+   ],
+   [
+    "tricep",
+    "por encima"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:cable",
+    "Extensión sobre la cabeza en polea"
+   ],
+   [
+    "eq:barbell",
+    "Extensión sobre la cabeza con barra Z"
+   ]
+  ],
+  "name": "Extensión sobre la cabeza con mancuerna"
+ },
+ {
+  "alts": [
+   [
+    "pushdown"
+   ],
+   [
+    "pressdown"
+   ],
+   [
+    "push down"
+   ],
+   [
+    "tricep",
+    "polea"
+   ],
+   [
+    "tricep",
+    "cable"
+   ],
+   [
+    "jalon de tricep"
+   ],
+   [
+    "extension de tricep"
+   ],
+   [
+    "extension tricep"
+   ],
+   [
+    "tricep extension"
+   ],
+   [
+    "triceps extension"
+   ],
+   [
+    "tricep"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Extensión sobre la cabeza con mancuerna"
+   ],
+   [
+    "eq:barbell",
+    "Extensión sobre la cabeza con barra Z"
+   ],
+   [
+    "rope|cuerda",
+    "Extensión de tríceps con cuerda"
+   ],
+   [
+    "single|una mano|one arm|unilateral",
+    "Extensión de tríceps a una mano en polea"
+   ],
+   [
+    "reverse|inverso|supino",
+    "Extensión de tríceps agarre inverso"
+   ],
+   [
+    "eq:machine",
+    "Extensión de tríceps en máquina"
+   ]
+  ],
+  "name": "Extensión de tríceps en polea"
+ },
+ {
+  "alts": [
+   [
+    "crunch",
+    "cable"
+   ],
+   [
+    "crunch",
+    "polea"
+   ],
+   [
+    "abdominal",
+    "polea"
+   ],
+   [
+    "abdominales",
+    "polea"
+   ]
+  ],
+  "name": "Crunch en polea"
+ },
+ {
+  "alts": [
+   [
+    "crunch",
+    "machine"
+   ],
+   [
+    "crunch",
+    "maquina"
+   ],
+   [
+    "abdominal",
+    "maquina"
+   ]
+  ],
+  "name": "Crunch en máquina"
+ },
+ {
+  "alts": [
+   [
+    "reverse crunch"
+   ],
+   [
+    "crunch inverso"
+   ],
+   [
+    "crunch invertido"
+   ]
+  ],
+  "name": "Crunch inverso"
+ },
+ {
+  "alts": [
+   [
+    "bicycle"
+   ],
+   [
+    "bicicleta"
+   ]
+  ],
+  "name": "Crunch bicicleta"
+ },
+ {
+  "alts": [
+   [
+    "hanging knee"
+   ],
+   [
+    "rodillas",
+    "colgado"
+   ],
+   [
+    "elevacion de rodillas"
+   ],
+   [
+    "knee raise"
+   ]
+  ],
+  "name": "Elevación de rodillas colgado"
+ },
+ {
+  "alts": [
+   [
+    "toes to bar"
+   ],
+   [
+    "pies a la barra"
+   ]
+  ],
+  "name": "Toes to bar"
+ },
+ {
+  "alts": [
+   [
+    "hanging leg"
+   ],
+   [
+    "piernas",
+    "colgado"
+   ],
+   [
+    "elevacion de piernas colgado"
+   ]
+  ],
+  "name": "Elevación de piernas colgado"
+ },
+ {
+  "alts": [
+   [
+    "leg raise"
+   ],
+   [
+    "elevacion de piernas"
+   ],
+   [
+    "elevaciones de piernas"
+   ]
+  ],
+  "name": "Elevación de piernas tumbado"
+ },
+ {
+  "alts": [
+   [
+    "side plank"
+   ],
+   [
+    "plancha lateral"
+   ]
+  ],
+  "name": "Plancha lateral"
+ },
+ {
+  "alts": [
+   [
+    "plank"
+   ],
+   [
+    "plancha"
+   ]
+  ],
+  "rules": [
+   [
+    "weighted|con peso|lastrad",
+    "Plancha con peso"
+   ]
+  ],
+  "name": "Plancha"
+ },
+ {
+  "alts": [
+   [
+    "russian twist"
+   ],
+   [
+    "giro ruso"
+   ],
+   [
+    "giros rusos"
+   ]
+  ],
+  "name": "Giros rusos"
+ },
+ {
+  "alts": [
+   [
+    "ab wheel"
+   ],
+   [
+    "ab roller"
+   ],
+   [
+    "rueda abdominal"
+   ],
+   [
+    "rodillo abdominal"
+   ]
+  ],
+  "name": "Rueda abdominal"
+ },
+ {
+  "alts": [
+   [
+    "dead bug"
+   ],
+   [
+    "bicho muerto"
+   ]
+  ],
+  "name": "Dead bug"
+ },
+ {
+  "alts": [
+   [
+    "v up"
+   ],
+   [
+    "v-up"
+   ],
+   [
+    "abdominales en v"
+   ],
+   [
+    "navaja"
+   ]
+  ],
+  "name": "Abdominales en V"
+ },
+ {
+  "alts": [
+   [
+    "hollow"
+   ]
+  ],
+  "name": "Hollow hold"
+ },
+ {
+  "alts": [
+   [
+    "woodchop"
+   ],
+   [
+    "wood chop"
+   ],
+   [
+    "lenador"
+   ],
+   [
+    "cable twist"
+   ],
+   [
+    "rotacion en polea"
+   ]
+  ],
+  "name": "Leñador en polea"
+ },
+ {
+  "alts": [
+   [
+    "pallof"
+   ]
+  ],
+  "name": "Pallof press"
+ },
+ {
+  "alts": [
+   [
+    "mountain climber"
+   ],
+   [
+    "escaladores"
+   ],
+   [
+    "escalador"
+   ]
+  ],
+  "name": "Escaladores"
+ },
+ {
+  "alts": [
+   [
+    "sit up"
+   ],
+   [
+    "situp"
+   ],
+   [
+    "sit-up"
+   ],
+   [
+    "abdominales completos"
+   ],
+   [
+    "abdominal completo"
+   ]
+  ],
+  "name": "Abdominales completos"
+ },
+ {
+  "alts": [
+   [
+    "crunch"
+   ],
+   [
+    "abdominal"
+   ],
+   [
+    "encogimiento abdominal"
+   ]
+  ],
+  "name": "Crunch abdominal"
+ },
+ {
+  "alts": [
+   [
+    "swing"
+   ]
+  ],
+  "rules": [
+   [
+    "single|una mano|one arm",
+    "Swing con kettlebell a una mano"
+   ],
+   [
+    "pull through|polea",
+    "Pull-through en polea"
+   ]
+  ],
+  "name": "Swing con kettlebell"
+ },
+ {
+  "alts": [
+   [
+    "turkish"
+   ],
+   [
+    "turco"
+   ],
+   [
+    "get up"
+   ]
+  ],
+  "name": "Levantamiento turco"
+ },
+ {
+  "alts": [
+   [
+    "burpee"
+   ]
+  ],
+  "name": "Burpees"
+ },
+ {
+  "alts": [
+   [
+    "thruster"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:dumbbell",
+    "Thruster con mancuernas"
+   ]
+  ],
+  "name": "Thruster"
+ },
+ {
+  "alts": [
+   [
+    "clean and press"
+   ],
+   [
+    "cargada y press"
+   ]
+  ],
+  "name": "Cargada y press"
+ },
+ {
+  "alts": [
+   [
+    "clean and jerk"
+   ],
+   [
+    "envion"
+   ],
+   [
+    "jerk"
+   ]
+  ],
+  "name": "Envión"
+ },
+ {
+  "alts": [
+   [
+    "snatch"
+   ],
+   [
+    "arrancada"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:kettlebell",
+    "Arrancada con kettlebell"
+   ]
+  ],
+  "name": "Arrancada"
+ },
+ {
+  "alts": [
+   [
+    "clean"
+   ],
+   [
+    "cargada"
+   ]
+  ],
+  "rules": [
+   [
+    "eq:kettlebell",
+    "Cargada con kettlebell"
+   ]
+  ],
+  "name": "Cargada de potencia"
+ },
+ {
+  "alts": [
+   [
+    "wall ball"
+   ],
+   [
+    "balon a la pared"
+   ]
+  ],
+  "name": "Wall ball"
+ },
+ {
+  "alts": [
+   [
+    "farmer"
+   ],
+   [
+    "granjero"
+   ]
+  ],
+  "name": "Paseo del granjero"
+ },
+ {
+  "alts": [
+   [
+    "devil press"
+   ]
+  ],
+  "name": "Devil press"
+ },
+ {
+  "alts": [
+   [
+    "man maker"
+   ]
+  ],
+  "name": "Man maker"
+ }
+]

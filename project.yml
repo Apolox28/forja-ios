@@ -22,7 +22,7 @@ targets:
           - es
           - en
         CFBundleShortVersionString: "1.5"
-        CFBundleVersion: "31"
+        CFBundleVersion: "32"
         UILaunchScreen:
           UIImageName: LaunchLogo
           UIColorName: LaunchBackground
@@ -50,7 +50,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.forja.app
         MARKETING_VERSION: "1.5"
-        CURRENT_PROJECT_VERSION: "31"
+        CURRENT_PROJECT_VERSION: "32"
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

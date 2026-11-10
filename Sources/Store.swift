@@ -51,6 +51,11 @@ final class Store: ObservableObject {
             for ex in ExerciseSeed.make() where !existing.contains(ex.name.lowercased()) {
                 loaded.exercises.append(ex)
             }
+            // Repara (una sola vez) los ejercicios importados de Hevy que quedaron como personalizados.
+            if !UserDefaults.standard.bool(forKey: "importRepairV2") {
+                Store.repairImported(&loaded)
+                UserDefaults.standard.set(true, forKey: "importRepairV2")
+            }
             // Mantiene al día el grupo muscular de los ejercicios incluidos (no toca los personalizados).
             let catalog = Dictionary(ExerciseSeed.make().map { ($0.name.lowercased(), $0.muscle) }, uniquingKeysWith: { a, _ in a })
             for i in loaded.exercises.indices where !loaded.exercises[i].isCustom {
@@ -65,6 +70,36 @@ final class Store: ObservableObject {
         if data.activeWorkout != nil {
             showActiveWorkout = false
         }
+    }
+
+    /// Une los ejercicios importados (personalizados) con su equivalente de la biblioteca,
+    /// conservando el historial y las rutinas. Los que no parecen importados solo corrigen su músculo.
+    static func repairImported(_ data: inout AppData) {
+        var byName: [String: Exercise] = [:]
+        for ex in data.exercises where !ex.isCustom { byName[ex.name.lowercased()] = ex }
+        var remap: [UUID: UUID] = [:]
+        for i in data.exercises.indices where data.exercises[i].isCustom {
+            let ex = data.exercises[i]
+            let lower = ex.name.lowercased()
+            guard let target = HevyImporter.nameMap[lower] ?? ExerciseMatcher.catalogName(for: ex.name),
+                  let cat = byName[target.lowercased()] else { continue }
+            let looksImported = ex.name.contains("(") || HevyImporter.nameMap[lower] != nil
+            if looksImported {
+                remap[ex.id] = cat.id
+            } else {
+                data.exercises[i].muscle = cat.muscle
+            }
+        }
+        guard !remap.isEmpty else { return }
+        func fix(_ list: inout [WorkoutExercise]) {
+            for j in list.indices {
+                if let n = remap[list[j].exerciseID] { list[j].exerciseID = n }
+            }
+        }
+        for w in data.workouts.indices { fix(&data.workouts[w].exercises) }
+        for r in data.routines.indices { fix(&data.routines[r].exercises) }
+        if data.activeWorkout != nil { fix(&data.activeWorkout!.exercises) }
+        data.exercises.removeAll { remap[$0.id] != nil }
     }
 
     // MARK: - Persistencia

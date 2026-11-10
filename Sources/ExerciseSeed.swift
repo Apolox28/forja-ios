@@ -30,6 +30,7 @@ enum ExerciseSeed {
 
     static func pattern(for exercise: Exercise) -> MovementPattern {
         if let p = patternByName[exercise.name.lowercased()] { return p }
+        if let ref = ExerciseMatcher.catalogName(for: exercise.name), let p = patternByName[ref.lowercased()] { return p }
         return guess(name: exercise.name, muscle: exercise.muscle)
     }
 
