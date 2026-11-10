@@ -412,7 +412,7 @@ struct IconSection: View {
                     return
                 }
                 if error.code == -54 {
-                    errorText = "iOS no dejó cambiar el icono (error -54). Con TrollStore suele arreglarse así: abre TrollStore, toca Forja y cambia «Registration Type» a «User» (o reinstálala), abre Forja y vuelve a intentarlo."
+                    errorText = "iOS no dejó cambiar el icono (error -54: permiso del sistema). Prueba a cerrar Forja del todo y volver a abrirla. Si la instalaste con TrollStore y en sus opciones de Forja aparece cambiar el registro a «User», actívalo y vuelve a intentarlo."
                 } else {
                     errorText = "No se pudo cambiar el icono: \(error.localizedDescription) (código \(error.code))."
                 }
