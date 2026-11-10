@@ -30,6 +30,8 @@ struct ForjaApp: App {
             }
             .onAppear {
                 // El logo sigue al de la pantalla de arranque y se desvanece al terminar de cargar.
+                // Prepara el visor 3D en segundo plano para que las animaciones abran al instante.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { Viewer3DHost.warmUp() }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     withAnimation(.easeOut(duration: 0.45)) { showSplash = false }
                 }

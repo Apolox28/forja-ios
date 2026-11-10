@@ -392,13 +392,29 @@ struct IconSection: View {
             errorText = "Este iPhone no permite cambiar el icono."
             return
         }
+        errorText = nil
+        attempt(c, retriesLeft: 2)
+    }
+
+    /// iOS a veces rechaza el cambio con el error -54 si el sistema está ocupado: se reintenta.
+    func attempt(_ c: IconChoice, retriesLeft: Int) {
         UIApplication.shared.setAlternateIconName(c.alternateName) { error in
             DispatchQueue.main.async {
-                if let error = error {
-                    errorText = "No se pudo cambiar el icono: \(error.localizedDescription)"
-                } else {
+                guard let error = error as NSError? else {
                     errorText = nil
                     icon = c.rawValue
+                    return
+                }
+                if retriesLeft > 0 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (retriesLeft == 2 ? 0.6 : 1.5)) {
+                        attempt(c, retriesLeft: retriesLeft - 1)
+                    }
+                    return
+                }
+                if error.code == -54 {
+                    errorText = "iOS no dejó cambiar el icono (error -54). Con TrollStore suele arreglarse así: abre TrollStore, toca Forja y cambia «Registration Type» a «User» (o reinstálala), abre Forja y vuelve a intentarlo."
+                } else {
+                    errorText = "No se pudo cambiar el icono: \(error.localizedDescription) (código \(error.code))."
                 }
             }
         }
