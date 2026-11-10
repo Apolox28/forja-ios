@@ -5,8 +5,30 @@ import UIKit
 
 extension MuscleGroup {
     /// Orden en el que se muestran los grupos.
-    static let browseOrder: [MuscleGroup] = [.chest, .shoulders, .back, .biceps, .triceps, .forearms, .core,
-                                              .quads, .hamstrings, .glutes, .calves, .fullBody, .cardio]
+    static let browseOrder: [MuscleGroup] = [.chest, .shoulders, .back, .lats, .upperBack, .lowerBack, .traps,
+                                              .biceps, .triceps, .forearms, .core, .obliques,
+                                              .quads, .hamstrings, .glutes, .abductors, .adductors, .calves,
+                                              .neck, .fullBody, .cardio]
+
+    /// Músculos que incluye este grupo al explorar (Espalda reúne todas sus partes).
+    var browseMembers: Set<MuscleGroup> {
+        switch self {
+        case .back: return [.back, .lats, .upperBack, .lowerBack, .traps]
+        default: return [self]
+        }
+    }
+
+    /// Imagen provisional mientras no exista la del grupo.
+    var fallbackImageName: String {
+        switch self {
+        case .lats, .upperBack, .lowerBack, .traps: return "muscle_back"
+        case .obliques: return "muscle_core"
+        case .abductors: return "muscle_glutes"
+        case .adductors: return "muscle_quads"
+        case .neck: return "muscle_shoulders"
+        default: return "muscle_fullBody"
+        }
+    }
 
     var imageName: String {
         switch self {
@@ -23,6 +45,14 @@ extension MuscleGroup {
         case .core: return "muscle_core"
         case .cardio: return "muscle_cardio"
         case .fullBody: return "muscle_fullBody"
+        case .lats: return "muscle_lats"
+        case .upperBack: return "muscle_upperBack"
+        case .lowerBack: return "muscle_lowerBack"
+        case .traps: return "muscle_traps"
+        case .obliques: return "muscle_obliques"
+        case .abductors: return "muscle_abductors"
+        case .adductors: return "muscle_adductors"
+        case .neck: return "muscle_neck"
         }
     }
 }
@@ -64,10 +94,14 @@ struct MuscleImage: View {
     var image: UIImage? {
         let name = muscle.imageName
         if let img = MuscleImage.cache[name] { return img }
-        guard let path = Bundle.main.path(forResource: name, ofType: "jpg"),
-              let img = UIImage(contentsOfFile: path) else { return nil }
-        MuscleImage.cache[name] = img
-        return img
+        for candidate in [name, muscle.fallbackImageName] {
+            if let path = Bundle.main.path(forResource: candidate, ofType: "jpg"),
+               let img = UIImage(contentsOfFile: path) {
+                MuscleImage.cache[name] = img
+                return img
+            }
+        }
+        return nil
     }
 
     var body: some View {
@@ -138,7 +172,7 @@ struct ExerciseBrowser: View {
 
     func exercises(_ muscle: MuscleGroup?) -> [Exercise] {
         store.data.exercises
-            .filter { muscle == nil || $0.muscle == muscle }
+            .filter { muscle == nil || muscle!.browseMembers.contains($0.muscle) }
             .filter { equipment == nil || $0.equipment == equipment }
             .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
     }
@@ -310,7 +344,7 @@ struct MuscleExerciseList: View {
     var items: [Exercise] {
         let q = KnowledgeBase.normalize(search)
         return store.data.exercises
-            .filter { muscle == nil || $0.muscle == muscle }
+            .filter { muscle == nil || muscle!.browseMembers.contains($0.muscle) }
             .filter { equipment == nil || $0.equipment == equipment }
             .filter { search.isEmpty || KnowledgeBase.normalize($0.name).contains(q) }
             .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }

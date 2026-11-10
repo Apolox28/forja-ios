@@ -43,6 +43,14 @@ struct ExerciseAnimationView: UIViewRepresentable {
         case .glutes: return "glutes"
         case .calves: return "calves"
         case .core: return "core"
+        case .lats: return "lats"
+        case .upperBack: return "upperBack"
+        case .lowerBack: return "lowerBack"
+        case .traps: return "traps"
+        case .obliques: return "obliques"
+        case .abductors: return "abductors"
+        case .adductors: return "adductors"
+        case .neck: return "neck"
         case .cardio, .fullBody: return ""
         }
     }

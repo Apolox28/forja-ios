@@ -17,6 +17,14 @@ enum MuscleGroup: String, Codable, CaseIterable, Identifiable {
     case core = "Abdomen"
     case cardio = "Cardio"
     case fullBody = "Cuerpo completo"
+    case lats = "Dorsales"
+    case upperBack = "Espalda alta"
+    case lowerBack = "Lumbares"
+    case traps = "Trapecios"
+    case obliques = "Oblicuos"
+    case abductors = "Abductores"
+    case adductors = "Aductores"
+    case neck = "Cuello"
 
     var id: String { rawValue }
 }

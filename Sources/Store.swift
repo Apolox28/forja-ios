@@ -51,6 +51,13 @@ final class Store: ObservableObject {
             for ex in ExerciseSeed.make() where !existing.contains(ex.name.lowercased()) {
                 loaded.exercises.append(ex)
             }
+            // Mantiene al día el grupo muscular de los ejercicios incluidos (no toca los personalizados).
+            let catalog = Dictionary(ExerciseSeed.make().map { ($0.name.lowercased(), $0.muscle) }, uniquingKeysWith: { a, _ in a })
+            for i in loaded.exercises.indices where !loaded.exercises[i].isCustom {
+                if let m = catalog[loaded.exercises[i].name.lowercased()], m != loaded.exercises[i].muscle {
+                    loaded.exercises[i].muscle = m
+                }
+            }
         }
         data = loaded
         UNUserNotificationCenter.current().delegate = notificationDelegate

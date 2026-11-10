@@ -18,6 +18,14 @@ extension MuscleGroup {
         case .glutes: return "glutes"
         case .calves: return "calves"
         case .core: return "core"
+        case .lats: return "lats"
+        case .upperBack: return "upperBack"
+        case .lowerBack: return "lowerBack"
+        case .traps: return "traps"
+        case .obliques: return "obliques"
+        case .abductors: return "abductors"
+        case .adductors: return "adductors"
+        case .neck: return "neck"
         case .cardio, .fullBody: return nil
         }
     }
@@ -38,6 +46,14 @@ extension MuscleGroup {
         case .forearms: return []
         case .fullBody: return [(.quads, 0.5), (.glutes, 0.5), (.back, 0.5), (.shoulders, 0.4), (.core, 0.4), (.hamstrings, 0.3)]
         case .cardio: return [(.quads, 0.3), (.calves, 0.3), (.hamstrings, 0.2), (.glutes, 0.2)]
+        case .lats: return [(.biceps, 0.5), (.upperBack, 0.3), (.forearms, 0.2)]
+        case .upperBack: return [(.biceps, 0.4), (.lats, 0.3), (.shoulders, 0.3), (.traps, 0.2)]
+        case .lowerBack: return [(.glutes, 0.4), (.hamstrings, 0.3)]
+        case .traps: return [(.forearms, 0.3), (.upperBack, 0.2)]
+        case .obliques: return [(.core, 0.5)]
+        case .abductors: return [(.glutes, 0.4)]
+        case .adductors: return [(.quads, 0.2)]
+        case .neck: return []
         }
     }
 }
