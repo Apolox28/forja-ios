@@ -286,6 +286,9 @@ struct ProgressTabView: View {
         }
 
         Section(header: Text("Músculos trabajados esta semana")) {
+            if !thisWeek.isEmpty {
+                MuscleMapCard(workouts: thisWeek)
+            }
             let stats = store.muscleSets(in: thisWeek)
             if stats.isEmpty {
                 Text("Aún no has entrenado esta semana.").foregroundColor(.secondary)
@@ -301,6 +304,7 @@ struct ProgressTabView: View {
                 NavigationLink(destination: WorkoutDetailView(workoutID: w.id)) {
                     WorkoutRow(workout: w)
                 }
+                .listRowBackground(AppTheme.cardBackground)
             }
         }
     }
@@ -601,6 +605,7 @@ struct WeekWorkoutsView: View {
                     NavigationLink(destination: WorkoutDetailView(workoutID: w.id)) {
                         WorkoutRow(workout: w)
                     }
+                    .listRowBackground(AppTheme.cardBackground)
                 }
             }
             let stats = store.muscleSets(in: bucket.workouts)

@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import AVFoundation
 
 // MARK: - Modelo del chat
 
@@ -10,6 +11,24 @@ struct CoachMessage: Identifiable, Codable, Equatable {
     var date = Date()
     var exerciseName: String? = nil
     var offline: Bool? = nil
+    var articleTitle: String? = nil
+    var imageCount: Int? = nil
+}
+
+enum CoachSheet: Identifiable {
+    case exercise(Exercise)
+    case article(KnowledgeArticle)
+    case library
+    case camera(UIImagePickerController.SourceType)
+
+    var id: String {
+        switch self {
+        case .exercise(let e): return "ex-" + e.id.uuidString
+        case .article(let a): return "art-" + a.title
+        case .library: return "library"
+        case .camera(let s): return "camera-\(s.rawValue)"
+        }
+    }
 }
 
 struct CoachRoutineProposal: Identifiable, Equatable {
@@ -37,6 +56,8 @@ final class CoachModel: ObservableObject {
     @Published var sending = false
     @Published var remaining: Int? = nil
     @Published var errorText: String? = nil
+    /// Hasta cuándo está silenciado el Coach por usarlo para otras cosas.
+    @Published var mutedUntil: Date? = nil
 
     private let storeKey = "coachHistory"
 
@@ -45,6 +66,19 @@ final class CoachModel: ObservableObject {
            let saved = try? JSONDecoder().decode([CoachMessage].self, from: raw) {
             messages = saved
         }
+        if let until = UserDefaults.standard.object(forKey: "coachMutedUntil") as? Date, until > Date() {
+            mutedUntil = until
+        }
+    }
+
+    var isMuted: Bool {
+        if let until = mutedUntil { return until > Date() }
+        return false
+    }
+
+    func setMuted(_ until: Date?) {
+        mutedUntil = until
+        UserDefaults.standard.set(until, forKey: "coachMutedUntil")
     }
 
     func persist() {
@@ -60,11 +94,12 @@ final class CoachModel: ObservableObject {
         persist()
     }
 
-    func send(_ text: String, context: String, library: [Exercise]) async {
+    func send(_ text: String, context: String, library: [Exercise], images: [String] = []) async {
         let question = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !question.isEmpty, !sending else { return }
+        if isMuted { return }
         errorText = nil
-        messages.append(CoachMessage(role: "user", text: question))
+        messages.append(CoachMessage(role: "user", text: question, imageCount: images.isEmpty ? nil : images.count))
         persist()
         sending = true
         defer { sending = false }
@@ -75,18 +110,27 @@ final class CoachModel: ObservableObject {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("forja-ios", forHTTPHeaderField: "X-Forja-App")
         req.setValue(CoachConfig.deviceID, forHTTPHeaderField: "X-Forja-Device")
-        let payload: [String: Any] = [
-            "messages": messages.filter { $0.offline != true }.suffix(16).map { ["role": $0.role, "text": $0.text] },
+        var payload: [String: Any] = [
+            "messages": messages.filter { $0.offline != true && $0.role != "warning" }.suffix(16).map { ["role": $0.role, "text": $0.text] },
             "context": context,
         ]
+        if !images.isEmpty { payload["images"] = images }
         req.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+        if !images.isEmpty { req.timeoutInterval = 90 }
 
         do {
             let (data, _) = try await URLSession.shared.data(for: req)
             let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
             if let r = json["remaining"] as? Int { remaining = r }
+            if let mutedMs = json["mutedUntil"] as? Double, mutedMs > 0 {
+                setMuted(Date(timeIntervalSince1970: mutedMs / 1000))
+            }
             if let reply = json["reply"] as? String, !reply.isEmpty {
                 messages.append(CoachMessage(role: "model", text: reply))
+                persist()
+            } else if let err = json["error"] as? String, err == "off_topic" || err == "muted" {
+                // Uso fuera de lo previsto: aviso visible en la conversación.
+                messages.append(CoachMessage(role: "warning", text: (json["message"] as? String) ?? "El Coach solo responde sobre entrenamiento."))
                 persist()
             } else {
                 errorText = (json["message"] as? String) ?? "El Coach no ha podido responder. Inténtalo de nuevo."
@@ -106,6 +150,10 @@ final class CoachModel: ObservableObject {
 
     /// Busca el ejercicio de la biblioteca al que se refiere la pregunta.
     static func findExercise(in question: String, library: [Exercise]) -> Exercise? {
+        findExerciseScored(in: question, library: library)?.0
+    }
+
+    static func findExerciseScored(in question: String, library: [Exercise]) -> (Exercise, Int)? {
         let q = normalize(question)
         let stop: Set<String> = ["con", "en", "de", "del", "la", "el", "los", "las", "al", "para", "sobre", "una", "por", "agarre"]
         var best: Exercise? = nil
@@ -130,14 +178,27 @@ final class CoachModel: ObservableObject {
             }
             if score > bestScore { bestScore = score; best = ex }
         }
-        return best
+        return best.map { ($0, bestScore) }
     }
 
     static func offlineAnswer(to question: String, library: [Exercise]) -> CoachMessage {
-        let q = normalize(question)
-        let header = "📴 **Sin conexión.** Te respondo con la guía guardada en tu iPhone; cuando vuelva internet tendrás al Coach completo.\n\n"
+        let header = "📴 **Sin conexión.** Te respondo con la biblioteca guardada en tu iPhone; cuando vuelva internet tendrás al Coach completo.\n\n"
+        let exMatch = findExerciseScored(in: question, library: library)
+        let kbMatch = KnowledgeBase.bestMatch(for: question)
+        let strongExercise = (exMatch?.1 ?? 0) >= 3_000
+        let kbScore = kbMatch?.1 ?? 0
 
-        if let ex = findExercise(in: question, library: library) {
+        // 1) Artículo científico si la pregunta es de un tema (y no nombra claramente un ejercicio).
+        if case let (article, _)? = kbMatch, kbScore >= 2, !(strongExercise && kbScore < 4) {
+            var text = header + "**\(article.title)**\n\(article.summary)\n\n\(article.body)"
+            if case let (ex, _)? = exMatch, strongExercise {
+                text += "\n\nTambién puedes ver la técnica de **\(ex.name)** con el botón de abajo."
+                return CoachMessage(role: "model", text: text, exerciseName: ex.name, offline: true, articleTitle: article.title)
+            }
+            return CoachMessage(role: "model", text: text, offline: true, articleTitle: article.title)
+        }
+
+        if case let (ex, _)? = exMatch {
             let guide = ExerciseSeed.guide(for: ex)
             var text = header + "**\(ex.name)** · \(ex.muscle.rawValue) · \(ex.equipment.rawValue)\n\n"
             if !guide.steps.isEmpty {
@@ -152,17 +213,12 @@ final class CoachModel: ObservableObject {
                                 exerciseName: ex.name, offline: true)
         }
 
-        let topics: [([String], String)] = [
-            (["descans", "pausa", "recuper"], "**Descanso entre series (guía general)**\n• Fuerza (1–5 reps): 2–5 minutos.\n• Hipertrofia (6–12 reps): 1–2 minutos y medio.\n• Resistencia o aislamiento (12+ reps): 30–90 segundos.\nPuedes ajustar el temporizador de cada ejercicio en su menú ⋯ durante el entrenamiento."),
-            (["calent", "entrar en calor"], "**Calentamiento**\n1. 5 minutos de cardio suave.\n2. Movilidad de las articulaciones que vas a usar.\n3. 2–4 series de aproximación del primer ejercicio, subiendo el peso poco a poco.\nTienes la calculadora en Perfil → Series de calentamiento."),
-            (["rutina", "plan", "programa", "dias"], "**Rutinas sin conexión**\nEn **Entrenar → Explorar programas predefinidos** tienes planes listos (cuerpo completo, torso/pierna, empuje/tirón/pierna y en casa). Con internet, pídeme uno a tu medida y lo guardo en tus rutinas."),
-            (["estanc", "progres", "subir peso"], "**Para progresar**\n• Sube peso cuando completes todas las series con buena técnica.\n• Si te estancas, prueba más repeticiones antes de subir peso, o baja un 10 % y vuelve a subir.\n• Duerme bien y come suficiente proteína.\n• Revisa tus récords en la ficha de cada ejercicio."),
-        ]
-        for (keys, answer) in topics where keys.contains(where: { q.contains($0) }) {
-            return CoachMessage(role: "model", text: header + answer, offline: true)
+        let q = normalize(question)
+        if ["rutina", "plan", "programa"].contains(where: { q.contains($0) }) {
+            return CoachMessage(role: "model", text: header + "**Rutinas sin conexión**\nEn **Entrenar → Explorar programas predefinidos** tienes planes listos (cuerpo completo, torso/pierna, empuje/tirón/pierna y en casa). Con internet, pídeme uno a tu medida y lo guardo en tus rutinas.", offline: true)
         }
         return CoachMessage(role: "model",
-                            text: header + "Sin internet puedo explicarte **cualquier ejercicio de tu biblioteca**: escribe su nombre (por ejemplo «peso muerto» o «jalón al pecho»). También puedo darte pautas de **descanso**, **calentamiento** y **progresión**.",
+                            text: header + "Sin internet puedo explicarte **cualquier ejercicio de tu biblioteca** (escribe su nombre, por ejemplo «peso muerto») y responder con la **biblioteca científica**: repeticiones, volumen, descanso, proteína, calorías, sueño, cardio, lesiones y más. Toca 📚 arriba para verla entera.",
                             offline: true)
     }
 
@@ -275,7 +331,11 @@ struct CoachView: View {
     @State var input = ""
     @State var savedMessage: String? = nil
     @State var confirmReset = false
-    @State var infoExercise: Exercise? = nil
+    @State var sheet: CoachSheet? = nil
+    @State var showVideoOptions = false
+    @State var videoFrames: [String] = []
+    @State var videoThumb: UIImage? = nil
+    @State var processingVideo = false
 
     let suggestions = [
         "¿Cómo mejoro mi press de banca?",
@@ -297,7 +357,13 @@ struct CoachView: View {
                             }
                             ForEach(model.messages) { m in
                                 CoachBubble(message: m, onShowExercise: { name in
-                                    infoExercise = store.data.exercises.first { $0.name == name }
+                                    if let ex = store.data.exercises.first(where: { $0.name == name }) {
+                                        sheet = .exercise(ex)
+                                    }
+                                }, onShowArticle: { title in
+                                    if let a = KnowledgeBase.articles.first(where: { $0.title == title }) {
+                                        sheet = .article(a)
+                                    }
                                 }) { p in
                                     let n = store.saveCoachRoutine(p)
                                     savedMessage = n > 0
@@ -309,7 +375,7 @@ struct CoachView: View {
                             if model.sending {
                                 HStack(spacing: 8) {
                                     ProgressView()
-                                    Text("El Coach está pensando…")
+                                    Text(videoFrames.isEmpty ? "El Coach está pensando…" : "El Coach está revisando tu vídeo…")
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }
@@ -335,7 +401,11 @@ struct CoachView: View {
                     }
                     .onAppear { proxy.scrollTo("bottom", anchor: .bottom) }
                 }
-                inputBar
+                if model.isMuted {
+                    mutedBanner
+                } else {
+                    inputBar
+                }
             }
             .background(AppTheme.screenBackground.ignoresSafeArea())
             .navigationTitle("Coach")
@@ -348,7 +418,12 @@ struct CoachView: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                        sheet = .library
+                    } label: {
+                        Image(systemName: "books.vertical")
+                    }
                     Button {
                         confirmReset = true
                     } label: {
@@ -361,9 +436,44 @@ struct CoachView: View {
                 Button("Nueva conversación", role: .destructive) { model.reset() }
                 Button("Cancelar", role: .cancel) {}
             }
-            .sheet(item: $infoExercise) { ex in
-                ExerciseInfoSheet(exercise: ex)
-                    .environmentObject(store)
+            .confirmationDialog("Revisar tu técnica", isPresented: $showVideoOptions, titleVisibility: .visible) {
+                if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                    Button("Grabar vídeo (máx. 20 s)") { sheet = .camera(.camera) }
+                }
+                Button("Elegir vídeo de la galería") { sheet = .camera(.photoLibrary) }
+                Button("Cancelar", role: .cancel) {}
+            } message: {
+                Text("Grábate de lado, con todo el cuerpo y la barra o mancuernas visibles. El Coach analizará varios fotogramas (necesita internet).")
+            }
+            .sheet(item: $sheet) { s in
+                switch s {
+                case .exercise(let ex):
+                    ExerciseInfoSheet(exercise: ex).environmentObject(store)
+                case .article(let a):
+                    NavigationView {
+                        KnowledgeArticleView(article: a)
+                            .toolbar {
+                                ToolbarItem(placement: .confirmationAction) {
+                                    Button("Cerrar") { sheet = nil }
+                                }
+                            }
+                    }
+                case .library:
+                    NavigationView {
+                        KnowledgeLibraryView()
+                            .toolbar {
+                                ToolbarItem(placement: .confirmationAction) {
+                                    Button("Cerrar") { sheet = nil }
+                                }
+                            }
+                    }
+                case .camera(let source):
+                    VideoPicker(source: source) { url in
+                        sheet = nil
+                        processVideo(url)
+                    }
+                    .ignoresSafeArea()
+                }
             }
             .alert("Coach", isPresented: Binding(get: { savedMessage != nil }, set: { if !$0 { savedMessage = nil } })) {
                 Button("OK", role: .cancel) {}
@@ -384,7 +494,7 @@ struct CoachView: View {
                 .frame(width: 44, height: 44)
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Tu Coach").font(.title3.bold())
-                    Text("Pregúntame sobre técnica, rutinas, progresión o descanso. Conozco tu historial de Forja.")
+                    Text("Pregúntame sobre técnica, rutinas, progresión o descanso. Conozco tu historial de Forja. Toca 📷 para que revise un vídeo de tu técnica.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -403,57 +513,149 @@ struct CoachView: View {
                 }
                 .buttonStyle(.plain)
             }
-            Text("Las respuestas son orientativas y no sustituyen a un médico ni a un fisioterapeuta.")
+            Text("Las respuestas son orientativas y no sustituyen a un médico ni a un fisioterapeuta. El Coach solo responde sobre entrenamiento, salud y nutrición deportiva.")
                 .font(.caption)
                 .foregroundColor(.secondary)
         }
         .padding(.horizontal)
     }
 
-    var inputBar: some View {
-        HStack(alignment: .bottom, spacing: 10) {
-            TextField("Pregunta al Coach…", text: $input)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(Capsule().fill(Color(.secondarySystemBackground)))
-                .submitLabel(.send)
-                .onSubmit { ask(input) }
-            Button {
-                ask(input)
-            } label: {
-                Image(systemName: "arrow.up")
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundColor(.white)
-                    .frame(width: 40, height: 40)
-                    .background(Circle().fill(canSend ? Color.brand : Color.gray.opacity(0.4)))
+    var mutedBanner: some View {
+        TimelineView(.periodic(from: Date(), by: 1)) { ctx in
+            let left = max(0, (model.mutedUntil ?? ctx.date).timeIntervalSince(ctx.date))
+            HStack(spacing: 10) {
+                Image(systemName: "speaker.slash.fill").foregroundColor(.orange)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Coach en pausa").font(.subheadline.bold())
+                    Text("Por usarlo para temas que no son de entrenamiento. Vuelve en \(Fmt.clock(left)).")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
             }
-            .disabled(!canSend)
+            .padding(14)
+            .background(.bar)
+            .onChange(of: left <= 0) { done in
+                if done { model.setMuted(nil) }
+            }
         }
-        .padding(.horizontal, 12)
+    }
+
+    var inputBar: some View {
+        VStack(spacing: 6) {
+            if processingVideo || !videoFrames.isEmpty {
+                HStack(spacing: 10) {
+                    if let img = videoThumb {
+                        Image(uiImage: img)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 44, height: 44)
+                            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    } else {
+                        ProgressView().frame(width: 44, height: 44)
+                    }
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(processingVideo ? "Preparando vídeo…" : "Vídeo adjunto").font(.subheadline.bold())
+                        Text(processingVideo ? "Extrayendo fotogramas" : "\(videoFrames.count) fotogramas para el Coach")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                    Button {
+                        videoFrames = []
+                        videoThumb = nil
+                    } label: {
+                        Image(systemName: "xmark.circle.fill").foregroundColor(.secondary).font(.title3)
+                    }
+                    .disabled(processingVideo)
+                }
+                .padding(10)
+                .background(RoundedRectangle(cornerRadius: 14, style: .continuous).fill(Color(.secondarySystemBackground)))
+                .padding(.horizontal, 12)
+            }
+            HStack(alignment: .bottom, spacing: 8) {
+                Button {
+                    hideKeyboard()
+                    showVideoOptions = true
+                } label: {
+                    Image(systemName: "video.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.brand)
+                        .frame(width: 40, height: 40)
+                        .background(Circle().fill(Color.brand.opacity(0.14)))
+                }
+                .disabled(model.sending || processingVideo)
+                TextField(videoFrames.isEmpty ? "Pregunta al Coach…" : "¿Qué ejercicio es y qué quieres que revise?", text: $input)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background(Capsule().fill(Color(.secondarySystemBackground)))
+                    .submitLabel(.send)
+                    .onSubmit { ask(input) }
+                Button {
+                    ask(input)
+                } label: {
+                    Image(systemName: "arrow.up")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(width: 40, height: 40)
+                        .background(Circle().fill(canSend ? Color.brand : Color.gray.opacity(0.4)))
+                }
+                .disabled(!canSend)
+            }
+            .padding(.horizontal, 12)
+        }
         .padding(.vertical, 8)
         .background(.bar)
     }
 
     var canSend: Bool {
-        !model.sending && !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        guard !model.sending, !processingVideo else { return false }
+        if !videoFrames.isEmpty { return true }
+        return !input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
     func ask(_ text: String) {
-        let q = text
+        var q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let frames = videoFrames
+        if !frames.isEmpty && q.isEmpty {
+            q = "Revisa mi técnica en este vídeo. ¿Está bien hecho? Dime qué corregir."
+        }
+        guard !q.isEmpty else { return }
         input = ""
+        videoFrames = []
+        videoThumb = nil
         hideKeyboard()
         let context = store.coachContext()
         let library = store.data.exercises
-        Task { await model.send(q, context: context, library: library) }
+        Task { await model.send(q, context: context, library: library, images: frames) }
+    }
+
+    func processVideo(_ url: URL) {
+        processingVideo = true
+        videoFrames = []
+        videoThumb = nil
+        DispatchQueue.global(qos: .userInitiated).async {
+            let result = VideoFrames.extract(from: url, count: 5)
+            DispatchQueue.main.async {
+                processingVideo = false
+                videoFrames = result.base64
+                videoThumb = result.thumbnail
+                if result.base64.isEmpty {
+                    savedMessage = "No se pudo leer el vídeo. Prueba con otro más corto."
+                }
+            }
+        }
     }
 }
 
 struct CoachBubble: View {
     let message: CoachMessage
     var onShowExercise: (String) -> Void = { _ in }
+    var onShowArticle: (String) -> Void = { _ in }
     let onSaveRoutine: (CoachRoutineProposal) -> Void
 
     var isUser: Bool { message.role == "user" }
+    var isWarning: Bool { message.role == "warning" }
 
     var attributed: AttributedString {
         let text = isUser ? message.text : CoachModel.displayText(message.text)
@@ -463,19 +665,39 @@ struct CoachBubble: View {
 
     var body: some View {
         VStack(alignment: isUser ? .trailing : .leading, spacing: 8) {
-            HStack {
-                if isUser { Spacer(minLength: 40) }
-                Text(attributed)
-                    .font(.subheadline)
-                    .foregroundColor(isUser ? .white : .primary)
-                    .textSelection(.enabled)
+            if isWarning {
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "exclamationmark.shield.fill")
+                        .foregroundColor(.orange)
+                        .font(.title3)
+                    Text(attributed)
+                        .font(.subheadline)
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.orange.opacity(0.14)))
+            } else {
+                HStack {
+                    if isUser { Spacer(minLength: 40) }
+                    VStack(alignment: isUser ? .trailing : .leading, spacing: 6) {
+                        if let n = message.imageCount, n > 0 {
+                            Label("Vídeo · \(n) fotogramas", systemImage: "video.fill")
+                                .font(.caption.bold())
+                                .foregroundColor(isUser ? .white.opacity(0.9) : .secondary)
+                        }
+                        Text(attributed)
+                            .font(.subheadline)
+                            .foregroundColor(isUser ? .white : .primary)
+                            .textSelection(.enabled)
+                    }
                     .padding(.horizontal, 14)
                     .padding(.vertical, 10)
                     .background(
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fill(isUser ? Color.brand : Color(.secondarySystemBackground))
                     )
-                if !isUser { Spacer(minLength: 24) }
+                    if !isUser { Spacer(minLength: 24) }
+                }
             }
             if !isUser, let name = message.exerciseName {
                 Button {
@@ -490,7 +712,20 @@ struct CoachBubble: View {
                 }
                 .buttonStyle(.plain)
             }
-            if !isUser {
+            if !isUser, let title = message.articleTitle {
+                Button {
+                    onShowArticle(title)
+                } label: {
+                    Label("Leer artículo completo", systemImage: "book.fill")
+                        .font(.subheadline.bold())
+                        .foregroundColor(.brand)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(Capsule().stroke(Color.brand, lineWidth: 1.5))
+                }
+                .buttonStyle(.plain)
+            }
+            if !isUser && !isWarning {
                 ForEach(CoachModel.proposals(in: message.text)) { p in
                     Button {
                         onSaveRoutine(p)
@@ -513,5 +748,81 @@ struct CoachBubble: View {
             }
         }
         .padding(.horizontal)
+    }
+}
+
+// MARK: - Vídeo de técnica
+
+/// Grabar o elegir un vídeo (cámara o galería).
+struct VideoPicker: UIViewControllerRepresentable {
+    let source: UIImagePickerController.SourceType
+    let onPick: (URL) -> Void
+    @Environment(\.dismiss) var dismiss
+
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.sourceType = UIImagePickerController.isSourceTypeAvailable(source) ? source : .photoLibrary
+        picker.mediaTypes = ["public.movie"]
+        picker.videoMaximumDuration = 20
+        picker.videoQuality = .typeMedium
+        if picker.sourceType == .camera {
+            picker.cameraCaptureMode = .video
+        }
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: VideoPicker
+        init(_ parent: VideoPicker) { self.parent = parent }
+
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+            if let url = info[.mediaURL] as? URL {
+                // Copia a la carpeta temporal para que no desaparezca.
+                let dest = FileManager.default.temporaryDirectory.appendingPathComponent("tecnica-\(UUID().uuidString).mov")
+                try? FileManager.default.copyItem(at: url, to: dest)
+                parent.onPick(FileManager.default.fileExists(atPath: dest.path) ? dest : url)
+            } else {
+                parent.dismiss()
+            }
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            parent.dismiss()
+        }
+    }
+}
+
+enum VideoFrames {
+    /// Extrae fotogramas repartidos por el vídeo, reducidos a JPEG en base64.
+    static func extract(from url: URL, count: Int) -> (base64: [String], thumbnail: UIImage?) {
+        let asset = AVURLAsset(url: url)
+        let duration = CMTimeGetSeconds(asset.duration)
+        guard duration.isFinite, duration > 0 else { return ([], nil) }
+        let generator = AVAssetImageGenerator(asset: asset)
+        generator.appliesPreferredTrackTransform = true
+        generator.maximumSize = CGSize(width: 640, height: 640)
+        generator.requestedTimeToleranceBefore = CMTime(seconds: 0.2, preferredTimescale: 600)
+        generator.requestedTimeToleranceAfter = CMTime(seconds: 0.2, preferredTimescale: 600)
+
+        var frames: [String] = []
+        var thumb: UIImage? = nil
+        for i in 0..<count {
+            let t = duration * (Double(i) + 0.5) / Double(count)
+            let time = CMTime(seconds: t, preferredTimescale: 600)
+            guard let cg = try? generator.copyCGImage(at: time, actualTime: nil) else { continue }
+            let image = UIImage(cgImage: cg)
+            if thumb == nil { thumb = image }
+            if let data = image.jpegData(compressionQuality: 0.55) {
+                frames.append(data.base64EncodedString())
+            }
+        }
+        try? FileManager.default.removeItem(at: url)
+        return (frames, thumb)
     }
 }

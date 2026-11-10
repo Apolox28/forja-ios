@@ -34,6 +34,7 @@ struct HomeView: View {
                         NavigationLink(destination: WorkoutDetailView(workoutID: w.id)) {
                             WorkoutRow(workout: w)
                         }
+                        .listRowBackground(AppTheme.cardBackground)
                     }
                     .onDelete { offsets in
                         let ids = offsets.map { filtered[$0].id }
@@ -213,6 +214,7 @@ struct CalendarView: View {
                     NavigationLink(destination: WorkoutDetailView(workoutID: w.id)) {
                         WorkoutRow(workout: w)
                     }
+                    .listRowBackground(AppTheme.cardBackground)
                 }
             }
         }
@@ -264,6 +266,9 @@ struct WorkoutDetailView: View {
                 if !w.notes.isEmpty {
                     Text(w.notes).font(.subheadline)
                 }
+            }
+            Section(header: Text("Músculos trabajados")) {
+                MuscleMapCard(workouts: [w])
             }
             ForEach(w.exercises) { e in
                 Section(header: exerciseHeader(e, in: w)) {

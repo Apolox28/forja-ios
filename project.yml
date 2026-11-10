@@ -26,6 +26,9 @@ targets:
         UILaunchScreen:
           UIImageName: LaunchLogo
           UIColorName: LaunchBackground
+        NSCameraUsageDescription: Forja usa la cámara para grabar tu técnica y que el Coach la revise.
+        NSMicrophoneUsageDescription: Al grabar vídeo, iOS también usa el micrófono; Forja no envía el audio.
+        NSPhotoLibraryUsageDescription: Forja accede a tus vídeos solo cuando eliges uno para revisar la técnica.
         UIFileSharingEnabled: true
         LSSupportsOpeningDocumentsInPlace: true
         ITSAppUsesNonExemptEncryption: false
@@ -51,6 +54,8 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         SWIFT_VERSION: "5.0"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: "YES"
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIcon-Perrito AppIcon-Naranja AppIcon-Rojo AppIcon-Azul AppIcon-Verde AppIcon-Morado AppIcon-Rosa AppIcon-Dorado AppIcon-Claro AppIcon-Degradado"
         IPHONEOS_DEPLOYMENT_TARGET: "15.0"
         CODE_SIGNING_ALLOWED: "NO"
         CODE_SIGNING_REQUIRED: "NO"

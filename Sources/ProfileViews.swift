@@ -126,6 +126,9 @@ struct ProfileView: View {
                     NavigationLink(destination: ToolsView()) {
                         ProfileRow(icon: "wrench.and.screwdriver.fill", color: .orange, title: "Herramientas")
                     }
+                    NavigationLink(destination: KnowledgeLibraryView()) {
+                        ProfileRow(icon: "books.vertical.fill", color: .purple, title: "Ciencia del entrenamiento")
+                    }
                     NavigationLink(destination: DataSettingsView()) {
                         ProfileRow(icon: "externaldrive.fill", color: .green, title: "Datos y copias de seguridad")
                     }
@@ -249,6 +252,36 @@ struct ToolsView: View {
             }
             NavigationLink(destination: WarmupCalculatorView()) {
                 ProfileRow(icon: "thermometer.sun.fill", color: .orange, title: "Series de calentamiento")
+            }
+            Section(header: Text("Cuerpo y nutrición")) {
+                NavigationLink(destination: CaloriesToolView()) {
+                    ProfileRow(icon: "leaf.fill", color: .green, title: "Calorías y macros")
+                }
+                NavigationLink(destination: BodyCompositionToolView()) {
+                    ProfileRow(icon: "figure.stand", color: .teal, title: "IMC y grasa corporal")
+                }
+                NavigationLink(destination: HydrationToolView()) {
+                    ProfileRow(icon: "drop.fill", color: .blue, title: "Hidratación")
+                }
+            }
+            Section(header: Text("Cardio y tiempo")) {
+                NavigationLink(destination: IntervalTimerView()) {
+                    ProfileRow(icon: "timer", color: .red, title: "Intervalos (HIIT / Tabata)")
+                }
+                NavigationLink(destination: StopwatchView()) {
+                    ProfileRow(icon: "stopwatch.fill", color: .indigo, title: "Cronómetro")
+                }
+                NavigationLink(destination: HeartZonesToolView()) {
+                    ProfileRow(icon: "heart.fill", color: .pink, title: "Zonas de pulso")
+                }
+                NavigationLink(destination: PaceToolView()) {
+                    ProfileRow(icon: "figure.walk", color: .orange, title: "Ritmo de carrera")
+                }
+            }
+            Section(header: Text("Otros")) {
+                NavigationLink(destination: ConverterToolView()) {
+                    ProfileRow(icon: "arrow.left.arrow.right", color: .gray, title: "Conversor kg ↔ lb")
+                }
             }
         }
         .listStyle(.insetGrouped)
