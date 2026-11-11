@@ -79,7 +79,11 @@ enum CSV {
 
 enum HevyImporter {
     /// Nombres habituales del CSV (en inglés) → ejercicios incluidos en Forja.
-    static let nameMap: [String: String] = [
+    static let nameMap: [String: String] = baseNameMap.merging(
+        ExerciseSeed.extras.flatMap { x in x.hevy.map { ($0.lowercased(), x.name) } },
+        uniquingKeysWith: { a, _ in a })
+
+    private static let baseNameMap: [String: String] = [
         "21s bicep curl": "Curl 21",
         "ab wheel": "Rueda abdominal",
         "air bike": "Bicicleta de aire",

@@ -46,6 +46,22 @@ enum ExerciseMatcher {
         return out.trimmingCharacters(in: .whitespaces)
     }
 
+    /// La frase aparece como palabras completas (así «de pie» no coincide con «de piernas»).
+    /// Cada palabra admite plural (-s/-es) y las de 5+ letras valen como raíz («gemel» → «gemelos»).
+    static func has(_ n: String, _ phrase: String) -> Bool {
+        let words = n.split(separator: " ").map(String.init)
+        let p = normalize(phrase).split(separator: " ").map(String.init)
+        guard !p.isEmpty, words.count >= p.count else { return false }
+        for start in 0...(words.count - p.count) {
+            let ok = p.indices.allSatisfy { j in
+                let w = p[j], t = words[start + j]
+                return t == w || t == w + "s" || t == w + "es" || (w.count >= 5 && t.hasPrefix(w))
+            }
+            if ok { return true }
+        }
+        return false
+    }
+
     static func detectEquipment(_ n: String) -> Equipment? {
         let padded = " " + n + " "
         for (eq, words) in equipmentWords {
@@ -64,7 +80,7 @@ enum ExerciseMatcher {
                     let want = String(part.dropFirst(3))
                     let ok = want == "none" ? eq == nil : eq.map { equipmentKey($0) == want } ?? false
                     if !ok { all = false; break }
-                } else if !n.contains(normalize(part)) {
+                } else if !has(n, part) {
                     all = false
                     break
                 }
@@ -94,8 +110,8 @@ enum ExerciseMatcher {
         let eq = detectEquipment(n)
         var result: String? = nil
         for c in concepts {
-            guard c.alts.contains(where: { alt in alt.allSatisfy { n.contains(normalize($0)) } }) else { continue }
-            if let not = c.not, not.contains(where: { n.contains(normalize($0)) }) { continue }
+            guard c.alts.contains(where: { alt in alt.allSatisfy { has(n, $0) } }) else { continue }
+            if let not = c.not, not.contains(where: { has(n, $0) }) { continue }
             result = c.name
             for rule in c.rules ?? [] where rule.count == 2 && holds(rule[0], n, eq) {
                 result = rule[1]

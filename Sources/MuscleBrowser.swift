@@ -174,7 +174,7 @@ struct ExerciseBrowser: View {
         store.data.exercises
             .filter { muscle == nil || muscle!.browseMembers.contains($0.muscle) }
             .filter { equipment == nil || $0.equipment == equipment }
-            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
+            .sorted(by: ExerciseSeed.popularFirst)
     }
 
     var searchResults: [Exercise] {
@@ -182,7 +182,7 @@ struct ExerciseBrowser: View {
         return store.data.exercises
             .filter { equipment == nil || $0.equipment == equipment }
             .filter { KnowledgeBase.normalize($0.name + " " + $0.muscle.rawValue).contains(q) }
-            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
+            .sorted(by: ExerciseSeed.popularFirst)
     }
 
     var recent: [Exercise] {
@@ -347,7 +347,7 @@ struct MuscleExerciseList: View {
             .filter { muscle == nil || muscle!.browseMembers.contains($0.muscle) }
             .filter { equipment == nil || $0.equipment == equipment }
             .filter { search.isEmpty || KnowledgeBase.normalize($0.name).contains(q) }
-            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
+            .sorted(by: ExerciseSeed.popularFirst)
     }
 
     var body: some View {

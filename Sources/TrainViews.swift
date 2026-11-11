@@ -210,6 +210,7 @@ struct RoutineEditorView: View {
                                     siblings: routine.exercises,
                                     onAction: { action in routine.exercises.apply(action, to: entry.id) })
                 }
+                RedundancyNote(exerciseIDs: routine.exercises.map { $0.exerciseID })
                 Section {
                     Button {
                         showPicker = true
@@ -358,7 +359,7 @@ struct ProgramTemplatesView: View {
                     if ex.kind == .duration { s.seconds = 45 } else { s.reps = item.2 }
                     return s
                 }
-                r.exercises.append(WorkoutExercise(exerciseID: ex.id, sets: sets, restSeconds: store.data.settings.defaultRest))
+                r.exercises.append(WorkoutExercise(exerciseID: ex.id, sets: sets, restSeconds: store.restFor(ex.id)))
             }
             store.data.routines.append(r)
         }

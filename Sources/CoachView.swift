@@ -315,7 +315,7 @@ extension Store {
                 if ex.kind == .duration { s.seconds = max(item.reps, 30) } else { s.reps = item.reps }
                 return s
             }
-            routine.exercises.append(WorkoutExercise(exerciseID: ex.id, sets: sets, restSeconds: item.rest > 0 ? item.rest : data.settings.defaultRest))
+            routine.exercises.append(WorkoutExercise(exerciseID: ex.id, sets: sets, restSeconds: item.rest > 0 ? item.rest : restFor(ex.id)))
             added += 1
         }
         if added > 0 { data.routines.append(routine) }

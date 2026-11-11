@@ -98,6 +98,15 @@ struct ExerciseHowToSections: View {
             .font(.subheadline)
             .foregroundColor(.secondary)
         }
+        Section(header: Text("Qué trabaja")) {
+            if let f = ExerciseFocus.focus(for: exercise) {
+                Label(f.text, systemImage: "scope")
+                    .font(.subheadline)
+            }
+            Label("Descanso sugerido: \(Fmt.rest(ExerciseFocus.suggestedRest(for: exercise))). \(ExerciseFocus.restReason(for: exercise))", systemImage: "timer")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
         if !guide.steps.isEmpty {
             Section(header: Text("Cómo hacerlo")) {
                 ForEach(Array(guide.steps.enumerated()), id: \.offset) { item in

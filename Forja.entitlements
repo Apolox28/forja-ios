@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Sin esto, iOS responde -54 («process may not map database») al cambiar el icono en apps instaladas con TrollStore. -->
+	<key>com.apple.security.exception.mach-lookup.global-name</key>
+	<array>
+		<string>com.apple.lsd.mapdb</string>
+		<string>com.apple.lsd.modifydb</string>
+		<string>com.apple.lsd.icons</string>
+	</array>
+</dict>
+</plist>

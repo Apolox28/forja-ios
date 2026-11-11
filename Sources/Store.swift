@@ -148,13 +148,30 @@ final class Store: ObservableObject {
         return true
     }
 
+    /// Ajustes guardados fuera de AppData (apariencia, perfil, descansos) que también viajan en la copia.
+    static let backedUpPrefs = ["themeAccent", "themeBackground", "themeCardStrength", "themeCardTint", "themeIcon",
+                                "profileName", "bioAge", "bioHeight", "bioSex", "autoRest", "restByExercise"]
+
     func encodedData() -> Data? {
-        try? JSONEncoder().encode(data)
+        guard let raw = try? JSONEncoder().encode(data),
+              var json = try? JSONSerialization.jsonObject(with: raw) as? [String: Any] else { return nil }
+        var prefs: [String: Any] = [:]
+        for key in Store.backedUpPrefs {
+            if let v = UserDefaults.standard.object(forKey: key), JSONSerialization.isValidJSONObject([v]) { prefs[key] = v }
+        }
+        json["forjaPrefs"] = prefs
+        return try? JSONSerialization.data(withJSONObject: json)
     }
 
     func restore(from raw: Data) -> String {
         guard var decoded = try? JSONDecoder().decode(AppData.self, from: raw) else {
             return "La copia no es válida."
+        }
+        if let json = try? JSONSerialization.jsonObject(with: raw) as? [String: Any],
+           let prefs = json["forjaPrefs"] as? [String: Any] {
+            for (key, value) in prefs where Store.backedUpPrefs.contains(key) {
+                UserDefaults.standard.set(value, forKey: key)
+            }
         }
         let existing = Set(decoded.exercises.map { $0.name.lowercased() })
         for ex in ExerciseSeed.make() where !existing.contains(ex.name.lowercased()) {
@@ -235,7 +252,12 @@ final class Store: ObservableObject {
     /// Descanso que el usuario eligió la última vez para este ejercicio (o el general).
     func restFor(_ exerciseID: UUID) -> Int {
         let dict = UserDefaults.standard.dictionary(forKey: Store.restKey) as? [String: Int] ?? [:]
-        return dict[exerciseID.uuidString] ?? data.settings.defaultRest
+        if let remembered = dict[exerciseID.uuidString] { return remembered }
+        // Por defecto, descanso según el tipo de ejercicio (compuesto/aislado), salvo que se desactive.
+        if UserDefaults.standard.object(forKey: "autoRest") as? Bool ?? true, let ex = exercise(exerciseID) {
+            return ExerciseFocus.suggestedRest(for: ex)
+        }
+        return data.settings.defaultRest
     }
 
     func rememberRest(_ seconds: Int, for exerciseID: UUID) {

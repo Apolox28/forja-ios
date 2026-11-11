@@ -157,7 +157,7 @@
 "Ajustes" = "Settings";
 "Unidad de peso" = "Weight unit";
 "Objetivo semanal: %lld días" = "Weekly goal: %lld days";
-"Idioma de la app (Español / English)" = "App language (Español / English)";
+"Idioma de la app" = "App language";
 "Notificaciones del descanso" = "Rest notifications";
 "Herramientas" = "Tools";
 "Calculadora de 1RM" = "1RM calculator";
@@ -193,3 +193,6 @@
 "Perspectiva" = "Angle";
 "Vista principal" = "Main view";
 "Otro ángulo" = "Other angle";
+
+"Qué trabaja" = "What it works";
+"Descanso según el ejercicio" = "Rest based on exercise";

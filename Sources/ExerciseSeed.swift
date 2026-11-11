@@ -126,7 +126,39 @@ enum ExerciseSeed {
     // MARK: - Instrucciones por patrón
 
     static func guide(for exercise: Exercise) -> ExerciseGuide {
-        guides[pattern(for: exercise)] ?? ExerciseGuide(steps: [], tips: [])
+        let base = guides[pattern(for: exercise)] ?? ExerciseGuide(steps: [], tips: [])
+        guard let x = extraByName[exercise.name.lowercased()] else { return base }
+        return ExerciseGuide(steps: x.steps, tips: [x.tip] + base.tips)
+    }
+
+    // MARK: - Biblioteca de Hevy que no estaba en Forja (Resources/hevy_extra.json)
+
+    struct HevyExtra: Decodable {
+        let hevy: [String]
+        let name: String
+        let muscle: String
+        let equipment: String
+        let kind: String
+        let pattern: String
+        let steps: [String]
+        let tip: String
+    }
+
+    static let extras: [HevyExtra] = {
+        guard let url = Bundle.main.url(forResource: "hevy_extra", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let list = try? JSONDecoder().decode([HevyExtra].self, from: data) else { return [] }
+        return list
+    }()
+
+    private static let extraByName: [String: HevyExtra] =
+        Dictionary(extras.map { ($0.name.lowercased(), $0) }, uniquingKeysWith: { a, _ in a })
+
+    private static let extraEntries: [Entry] = extras.compactMap { x in
+        guard let m = MuscleGroup.allCases.first(where: { String(describing: $0) == x.muscle }),
+              let e = Equipment.allCases.first(where: { String(describing: $0) == x.equipment }),
+              let k = ExerciseKind.allCases.first(where: { String(describing: $0) == x.kind }) else { return nil }
+        return (x.name, m, e, k, MovementPattern(rawValue: x.pattern) ?? guess(name: x.name, muscle: m))
     }
 
     static let guides: [MovementPattern: ExerciseGuide] = [
@@ -442,7 +474,9 @@ enum ExerciseSeed {
 
     // MARK: - Catálogo
 
-    static let catalog: [Entry] = [
+    static let catalog: [Entry] = base + extraEntries
+
+    private static let base: [Entry] = [
         // Pecho
         ("Press de banca", .chest, .barbell, .weightReps, .bench),
         ("Press de banca con mancuernas", .chest, .dumbbell, .weightReps, .bench),
@@ -487,6 +521,7 @@ enum ExerciseSeed {
         ("Remo con mancuerna", .upperBack, .dumbbell, .weightReps, .dbRow),
         ("Remo con mancuernas con pecho apoyado", .upperBack, .dumbbell, .weightReps, .row),
         ("Remo en T", .upperBack, .barbell, .weightReps, .row),
+        ("Remo en T con pecho apoyado", .upperBack, .machine, .weightReps, .row),
         ("Remo Meadows", .upperBack, .barbell, .weightReps, .row),
         ("Remo invertido", .upperBack, .bodyweight, .repsOnly, .row),
         ("Remo sentado en polea", .upperBack, .cable, .weightReps, .seatedRow),
@@ -693,4 +728,15 @@ enum ExerciseSeed {
         ("Devil press", .fullBody, .dumbbell, .weightReps, .pushup),
         ("Man maker", .fullBody, .dumbbell, .weightReps, .pushup),
     ]
+}
+
+extension ExerciseSeed {
+    /// Posición en el catálogo: dentro de cada grupo están de más a menos habitual; los de Hevy y los personalizados van después.
+    private static let rank: [String: Int] =
+        Dictionary(catalog.enumerated().map { ($0.element.0.lowercased(), $0.offset) }, uniquingKeysWith: { a, _ in a })
+
+    static func popularFirst(_ a: Exercise, _ b: Exercise) -> Bool {
+        let ra = rank[a.name.lowercased()] ?? Int.max, rb = rank[b.name.lowercased()] ?? Int.max
+        return ra != rb ? ra < rb : a.name.localizedCompare(b.name) == .orderedAscending
+    }
 }

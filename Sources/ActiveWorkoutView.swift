@@ -58,6 +58,7 @@ struct ActiveWorkoutView: View {
                                     },
                                     onSetCompleted: { seconds in store.startRest(seconds) })
                 }
+                RedundancyNote(exerciseIDs: workout.wrappedValue.exercises.map { $0.exerciseID })
 
                 Section {
                     Button {

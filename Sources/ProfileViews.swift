@@ -194,6 +194,7 @@ struct ProfileRow: View {
 // MARK: - Ajustes
 
 struct SettingsView: View {
+    @AppStorage("autoRest") var autoRest = true
     @EnvironmentObject var store: Store
     @AppStorage("profileName") var name: String = ""
 
@@ -207,17 +208,20 @@ struct SettingsView: View {
                     ForEach(WeightUnit.allCases) { u in Text(u.rawValue).tag(u) }
                 }
                 .pickerStyle(.segmented)
-                Stepper("Descanso por defecto: \(Fmt.rest(store.data.settings.defaultRest))",
-                        value: $store.data.settings.defaultRest, in: 0...600, step: 15)
+                Toggle("Descanso según el ejercicio", isOn: $autoRest)
+                if !autoRest {
+                    Stepper("Descanso por defecto: \(Fmt.rest(store.data.settings.defaultRest))",
+                            value: $store.data.settings.defaultRest, in: 0...600, step: 15)
+                }
                 Stepper("Objetivo semanal: \(store.data.settings.weeklyGoal) días",
                         value: $store.data.settings.weeklyGoal, in: 1...7)
             }
             Section(header: Text("Sistema"),
-                    footer: Text("El descanso de cada ejercicio se cambia tocando su tiempo durante el entrenamiento; Forja lo recuerda.")) {
+                    footer: Text("Con «Descanso según el ejercicio», los compuestos pesados proponen 3 min, los compuestos 2 min y los aislados 75 s. El descanso de cada ejercicio se cambia tocando su tiempo durante el entrenamiento; Forja lo recuerda.")) {
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                 } label: {
-                    Label("Idioma de la app (Español / English)", systemImage: "globe")
+                    Label("Idioma de la app", systemImage: "globe")
                 }
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }

@@ -96,6 +96,7 @@ extension ExerciseSeed {
         "remo en máquina": "seatedRowMachine",
         "remo en polea a una mano": "seatedRowOneArm",
         "remo en t": "tBarRow",
+        "remo en t con pecho apoyado": "chestSupportedRow",
         "remo invertido": "invertedRow",
         "remo meadows": "meadowsRow",
         "remo pendlay": "pendlayRow",
