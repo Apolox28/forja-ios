@@ -155,7 +155,8 @@ final class GoogleSync: ObservableObject {
 
     // Copia de seguridad
     func backup(_ payload: Data) async throws {
-        guard isSignedIn else { throw GoogleError.notSignedIn }
+        // Si la sesión guardada ya no se puede leer (p. ej. tras actualizar la app), se pide entrar de nuevo y se sigue.
+        if !isSignedIn { try await signIn() }
         busy = true
         defer { busy = false }
         let token = try await validToken()
@@ -187,7 +188,8 @@ final class GoogleSync: ObservableObject {
     }
 
     func downloadBackup() async throws -> Data {
-        guard isSignedIn else { throw GoogleError.notSignedIn }
+        // Si la sesión guardada ya no se puede leer (p. ej. tras actualizar la app), se pide entrar de nuevo y se sigue.
+        if !isSignedIn { try await signIn() }
         busy = true
         defer { busy = false }
         guard let id = try await findBackup() else { throw GoogleError.noBackup }
@@ -319,6 +321,11 @@ struct GoogleAccountSection: View {
                 }
             } else if let mail = sync.email {
                 Label(mail, systemImage: "person.crop.circle.badge.checkmark")
+                if !sync.isSignedIn {
+                    Text("Tu sesión de Google caducó. Al guardar o restaurar se te pedirá entrar de nuevo; tu copia en Drive sigue ahí.")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                }
                 Toggle("Copia automática al terminar un entrenamiento", isOn: $sync.autoBackup)
                 Button {
                     Task {

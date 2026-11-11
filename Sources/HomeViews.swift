@@ -3,6 +3,9 @@ import SwiftUI
 // MARK: - Inicio / historial
 
 struct HomeView: View {
+    // Se observan para que el color de las tarjetas cambie al momento (sin reiniciar).
+    @AppStorage("themeCardTint") private var cardTint = ""
+    @AppStorage("themeCardStrength") private var cardStrength = 0.18
     @EnvironmentObject var store: Store
     @State var search = ""
 
@@ -193,6 +196,9 @@ struct WorkoutCard: View {
 // MARK: - Calendario
 
 struct CalendarView: View {
+    // Se observan para que el color de las tarjetas cambie al momento (sin reiniciar).
+    @AppStorage("themeCardTint") private var cardTint = ""
+    @AppStorage("themeCardStrength") private var cardStrength = 0.18
     @EnvironmentObject var store: Store
     @State var month = Date()
     let dayLetters = ["L", "M", "X", "J", "V", "S", "D"]
@@ -324,6 +330,17 @@ struct WorkoutDetailView: View {
                 }
                 if !w.notes.isEmpty {
                     Text(w.notes).font(.subheadline)
+                }
+            }
+            if let r = w.ratings, !r.isEmpty {
+                Section(header: Text("¿Cómo te fue?")) {
+                    ForEach(WorkoutRating.questions.filter { r[$0.key] != nil }, id: \.key) { q in
+                        HStack {
+                            Text(LocalizedStringKey(q.title)).font(.subheadline)
+                            Spacer()
+                            StarRating(value: .constant(r[q.key] ?? 0), editable: false)
+                        }
+                    }
                 }
             }
             Section(header: Text("Músculos trabajados")) {

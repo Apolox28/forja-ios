@@ -196,6 +196,9 @@ enum ProgressScope: String, CaseIterable, Identifiable {
 }
 
 struct ProgressTabView: View {
+    // Se observan para que el color de las tarjetas cambie al momento (sin reiniciar).
+    @AppStorage("themeCardTint") private var cardTint = ""
+    @AppStorage("themeCardStrength") private var cardStrength = 0.18
     @EnvironmentObject var store: Store
     @State var scope: ProgressScope = .week
     @State var showAddMeasurement = false
@@ -588,6 +591,9 @@ struct TrendDetailView: View {
 }
 
 struct WeekWorkoutsView: View {
+    // Se observan para que el color de las tarjetas cambie al momento (sin reiniciar).
+    @AppStorage("themeCardTint") private var cardTint = ""
+    @AppStorage("themeCardStrength") private var cardStrength = 0.18
     @EnvironmentObject var store: Store
     let bucket: WeekBucket
 

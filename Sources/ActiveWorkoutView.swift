@@ -160,10 +160,9 @@ struct ExerciseSection: View {
 
     var body: some View {
         Section(header: header) {
-            if isActive {
-                TextField("Notas del ejercicio", text: $entry.notes)
-                    .font(.subheadline)
-            }
+            // También en las rutinas: la nota queda guardada para la próxima vez.
+            TextField("Notas del ejercicio", text: $entry.notes)
+                .font(.subheadline)
             columnHeader
             ForEach($entry.sets) { $set in
                 SetEditorRow(set: $set,
@@ -545,6 +544,13 @@ struct WorkoutSummaryView: View {
     @EnvironmentObject var store: Store
     @Environment(\.dismiss) var dismiss
     let workout: Workout
+    @State private var ratings: [String: Double] = [:]
+
+    func saveRatings() {
+        guard let i = store.data.workouts.firstIndex(where: { $0.id == workout.id }) else { return }
+        let answered = ratings.filter { $0.value > 0 }
+        store.data.workouts[i].ratings = answered.isEmpty ? nil : answered
+    }
 
     var prs: [WorkoutExercise] {
         workout.exercises.filter { store.isPR($0, in: workout) }
@@ -572,6 +578,18 @@ struct WorkoutSummaryView: View {
                         StatTile(title: "Series", value: "\(workout.setCount)")
                     }
                 }
+                Section(header: Text("¿Cómo te fue? (opcional)")) {
+                    ForEach(WorkoutRating.questions, id: \.key) { q in
+                        HStack {
+                            Text(LocalizedStringKey(q.title)).font(.subheadline)
+                            Spacer()
+                            StarRating(value: Binding(
+                                get: { ratings[q.key] ?? 0 },
+                                set: { ratings[q.key] = $0; saveRatings() }))
+                        }
+                    }
+                }
+                .onAppear { ratings = workout.ratings ?? [:] }
                 if !prs.isEmpty {
                     Section(header: Text("Récords personales")) {
                         ForEach(prs) { e in

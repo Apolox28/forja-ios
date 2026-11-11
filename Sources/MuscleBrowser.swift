@@ -88,6 +88,7 @@ extension Equipment {
 /// Imagen del modelo 3D con el músculo resaltado (pre-renderizada).
 struct MuscleImage: View {
     let muscle: MuscleGroup
+    var fit = false
 
     static var cache: [String: UIImage] = [:]
 
@@ -108,7 +109,10 @@ struct MuscleImage: View {
         ZStack {
             Color(red: 0.11, green: 0.12, blue: 0.14)
             if let img = image {
-                Image(uiImage: img).resizable().scaledToFill()
+                Image(uiImage: img)
+                    .resizable()
+                    .interpolation(.high)
+                    .aspectRatio(contentMode: fit ? .fit : .fill)
             } else {
                 Image(systemName: "figure.walk").font(.largeTitle).foregroundColor(.gray)
             }
@@ -354,8 +358,9 @@ struct MuscleExerciseList: View {
         List {
             if let m = muscle {
                 Section {
-                    MuscleImage(muscle: m)
-                        .frame(height: 180)
+                    // Entera (sin recortar) y del tamaño de la imagen, para que no se corte ni se vea borrosa.
+                    MuscleImage(muscle: m, fit: true)
+                        .frame(height: 240)
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         .listRowInsets(EdgeInsets())
                         .listRowBackground(Color.clear)

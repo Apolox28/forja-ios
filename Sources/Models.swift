@@ -202,6 +202,8 @@ struct Workout: Identifiable, Codable, Hashable {
     var end: Date? = nil
     var exercises: [WorkoutExercise] = []
     var notes = ""
+    /// Valoración voluntaria al terminar (0–5 en medias estrellas). Opcional para leer datos antiguos.
+    var ratings: [String: Double]? = nil
 
     var doneSets: [WorkoutSet] { exercises.flatMap { $0.sets.filter { $0.done } } }
     var volume: Double { doneSets.reduce(0) { $0 + $1.volume } }
