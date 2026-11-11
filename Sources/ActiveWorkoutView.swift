@@ -327,7 +327,7 @@ struct SetEditorRow: View {
     var recordToBeat: Double = 0
     var onCompleted: () -> Void = {}
 
-    var isRecord: Bool { set.done && recordToBeat > 0 && set.recordScore(kind) > recordToBeat }
+    var isRecord: Bool { self.set.done && recordToBeat > 0 && self.set.recordScore(kind) > recordToBeat }
 
     var body: some View {
         HStack(spacing: 8) {
