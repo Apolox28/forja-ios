@@ -37,9 +37,11 @@
     A: { hip: [0, 0.96], torso: 18, arms: { ik: [0.04, 1.6, 0.62], pole: [-1, 0.35, 0.55], palm: [0.4, -0.2, -1] } },
     B: { hip: [0, 0.96], torso: 18, arms: { ik: [0.4, 0.94, 0.08], pole: [-0.6, 0.1, 0.9], palm: [0, 0, -1] } } });
   // Pec deck: sentado, antebrazos verticales en las almohadillas, brazos paralelos al suelo; se juntan delante
-  variant('pecDeck', 'cableFly', { load: 'grips', stack: true, scene: ['seatBack'], machinePos: [-0.75, -0.55, 0], twinPos: null, cam: { az: 50, y: 0.85 },
-    A: { hip: [-0.08, 0.52], torso: -4, legs: { ik: [0.4, ANK], fw: 0.16 }, legsL: null, legsR: null, arms: { relC: [0.08, 0.3], gw: 0.48, pole: [0, -0.2, 1], palm: 'neu' } },
-    B: { hip: [-0.08, 0.52], torso: -4, legs: { ik: [0.4, ANK], fw: 0.16 }, legsL: null, legsR: null, arms: { relC: [0.33, 0.3], gw: 0.11, pole: [0, -0.2, 1], palm: 'neu' } } });
+  // Peck deck (mariposa de almohadillas): sentado con la espalda apoyada, brazos a la altura de los hombros con los codos a 90°
+  // y los antebrazos verticales contra las almohadillas; cierra los codos delante del pecho (aducción horizontal)
+  variant('pecDeck', 'cableFly', { load: 'none', stack: true, scene: ['seatBack'], machinePos: [-0.75, -0.55, 0], twinPos: null, pecPads: true, cam: { az: 50, y: 0.95 },
+    A: { hip: [-0.08, 0.52], torso: -4, legs: { ik: [0.4, ANK], fw: 0.16 }, legsL: null, legsR: null, arms: { relC: [-0.02, 0.29], gw: 0.4, pole: [-0.15, -0.35, 1], palm: [0, 0, -1] } },
+    B: { hip: [-0.08, 0.52], torso: -4, legs: { ik: [0.4, ANK], fw: 0.16 }, legsL: null, legsR: null, arms: { relC: [0.22, 0.27], gw: 0.115, pole: [1, -0.35, 0.1], palm: [0, 0, -1] } } });
   // Press inclinado en máquina: los agarres suben y hacia delante (pectoral superior)
   variant('chestPressIncline', 'chestPress', { p: ['pecsU'], s: ['pecs', 'deltsF', 'triceps'],
     A: { arms: { ik: [0.03, 0.96], gw: 0.27, pole: [-1, -0.5, 0.45], palm: [0, 0, -1] } },
@@ -116,10 +118,17 @@
     B: { hip: STAND, torso: 0, legs: FEET, armsR: { ua: 84, fa: 92, plane: 'f', palm: [0, -1, 0] }, armsL: { rel: [0.05, -0.3, -0.02], palm: 'neu' }, arms: null } });
   // Leñador en polea: de arriba a abajo en diagonal con giro del tronco; oblicuos
   (function () {
-    var hi = { hip: [0, 0.95], torso: 0, twist: -45, legs: { ik: [0.0, ANK], fw: 0.22 }, arms: { relC: [0.42, 0.32], gw: 0.03, palm: 'neu', straight: 0.9 } };
-    var lo = { hip: [0, 0.88], torso: 12, twist: 45, legs: { ik: [0.0, ANK], fw: 0.22 }, arms: { relC: [0.4, -0.45], gw: 0.03, palm: 'neu', straight: 0.9 } };
-    variant('woodchop', 'lateralRaise', { p: ['obliques'], s: ['abs', 'deltsF'], load: 'cableR', stack: true, towerPos: [0.1, 0.95], anchor: [0.1, 2.05, 0.88], A: null, B: null,
-      keys: [[0, hi], [0.12, hi], [0.42, lo], [0.55, lo], [0.88, hi], [1, hi]], cam: { az: 40 } });
+    // Giro con cable de arriba hacia abajo (StrengthLog/Motra): polea alta a la derecha, pies algo más abiertos que la cadera,
+    // brazos casi rectos con las dos manos en el asa; el tronco gira y baja en diagonal hasta fuera de la rodilla izquierda;
+    // el pie derecho (el de atrás) pivota sobre la punta al final
+    function hands(x, y, z, st) { return { armsR: { ik: [x, y, z + 0.035], palm: [0, -0.3, -1], straight: st, pole: [0, -1, 0.3] }, armsL: { ik: [x, y, -(z - 0.035)], palm: [0, -0.3, -1], straight: st, pole: [0, -1, 0.3] } }; }
+    function lg(rf) { return { legsL: { ik: [0.0, ANK, 0.22], fw: 0.22, toe: 10 }, legsR: rf ? { ik: [-0.02, ANK + 0.045, 0.22], fw: 0.22, foot: 32, toe: -28 } : { ik: [0.0, ANK, 0.22], fw: 0.22, toe: 10, foot: 0 } }; }
+    var hi = Object.assign({ hip: [0, 0.95], torso: 0, head: -10, twist: -38 }, lg(false), hands(0.34, 1.6, 0.3, 0.9));
+    var md = Object.assign({ hip: [-0.02, 0.9], torso: 14, head: 0, twist: 0 }, lg(false), hands(0.42, 1.18, 0.1, 0.9));
+    var lo = Object.assign({ hip: [-0.08, 0.76], torso: 42, head: 12, twist: 40 }, lg(true), hands(0.3, 0.68, -0.3, 0.9));
+    variant('woodchop', 'lateralRaise', { p: ['obliques'], s: ['abs', 'delts'], load: 'cableR', stack: true, towerPos: [0.1, 0.95], anchor: [0.1, 2.05, 0.88], A: null, B: null, period: 3000, thumb: 0.45,
+      keys: [[0, hi], [0.1, hi], [0.27, md], [0.45, lo], [0.55, lo], [0.78, md], [0.95, hi], [1, hi]], cam: { az: 125, el: 12 } });
   })();
 
   cam2('pecDeck', 92, 12); cam2('chestPressIncline', 95, 12); cam2('ohpMachine', 92, 10); cam2('lateralRaiseMachine', 100, 12); cam2('reverseFlyMachine', -120, 14);
+  cam2('woodchop', 40, 12);

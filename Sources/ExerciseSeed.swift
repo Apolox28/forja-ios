@@ -493,6 +493,7 @@ enum ExerciseSeed {
         ("Aperturas con mancuernas", .chest, .dumbbell, .weightReps, .fly),
         ("Aperturas inclinadas con mancuernas", .chest, .dumbbell, .weightReps, .fly),
         ("Aperturas en máquina", .chest, .machine, .weightReps, .cableFly),
+        ("Aperturas en máquina con brazos estirados", .chest, .machine, .weightReps, .cableFly),
         ("Cruce de poleas", .chest, .cable, .weightReps, .cableFly),
         ("Cruce de poleas de abajo arriba", .chest, .cable, .weightReps, .cableFly),
         ("Cruce de poleas de arriba abajo", .chest, .cable, .weightReps, .cableFly),

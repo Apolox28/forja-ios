@@ -155,5 +155,14 @@
   "patada de glúteo en máquina": "gluteKickbackMachine",
   "curl femoral con mancuerna": "legCurlDb",
   "elevación de talones con mancuerna": "calfDbSingle",
-  "abducción con banda": "bandAbduction"
+  "abducción con banda": "bandAbduction",
+  "aperturas en máquina con brazos estirados": "pecDeckFly",
+  "dominadas lastradas": "pullupWeighted",
+  "dominadas agarre ancho": "pullupWide",
+  "dominadas supinas lastradas": "chinupWeighted",
+  "dominadas supinas asistidas": "chinupAssisted",
+  "remo en t con pecho apoyado": "tbarChestRow",
+  "elevación de piernas en paralelas": "captainLegRaise",
+  "elevación de rodillas en paralelas": "captainKneeRaise",
+  "flexión lateral con mancuerna": "sideBendDb"
 }

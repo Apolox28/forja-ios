@@ -75,10 +75,10 @@
     (function () {
       function sp(th, dy) {
         var c = Math.cos(rad(th)), s = Math.sin(rad(th));
-        return { hip: [0, 0.97], torso: 0, roll: [th, 0, dy, 0, -90], legs: { ik: [0, ANK], fw: 0.07 },
+        return { hip: [0, 0.97], torso: 0, roll: [th, 0, dy, 0, -90], legs: { ik: [0, ANK], fw: 0.07, foot: -14 },
           armsR: { rel: [FA * 0.98, -c * UA * 0.98, s * UA * 0.98], pole: [0, -c, s], palm: [0, 0, 1] }, armsL: { ua: 6, fa: 6, plane: 'f', palm: 'neu' } };
       }
-      variant('sidePlank', 'plank', { side: 'R', p: ['obliques'], s: ['abs', 'gluteMed', 'deltsS'], scene: [], cam: { az: 15, el: 12, y: 0.32 }, A: sp(75, 0.09), B: sp(75.8, 0.088) });
+      variant('sidePlank', 'plank', { side: 'R', p: ['obliques'], s: ['abs', 'gluteMed', 'deltsS'], scene: [], cam: { az: 15, el: 12, y: 0.32 }, A: sp(75.5, 0.1), B: sp(76.2, 0.098) });
     })();
     // Plancha con peso: un disco sobre la parte alta de la espalda
     variant('plankWeighted', 'plank', { backPlate: [0.3, 0.014], cam: { y: 0.3, az: 10, el: 6 } });
