@@ -1778,7 +1778,7 @@
       var legs = smooth(clamp(u / 0.55, 0, 1)), back = smooth(clamp((u - 0.35) / 0.35, 0, 1)), arms = smooth(clamp((u - 0.55) / 0.45, 0, 1));
       if (ph >= 0.48) { var v = 1 - u; arms = 1 - smooth(clamp(v / 0.35, 0, 1)); back = 1 - smooth(clamp((v - 0.2) / 0.35, 0, 1)); legs = 1 - smooth(clamp((v - 0.4) / 0.6, 0, 1)); }
       // en el agarre (catch) las rodillas quedan junto al pecho sin atravesarlo
-      var hx = lerp(0.02, -0.42, legs), tor = lerp(24, -18, back);
+      var hx = lerp(-0.07, -0.42, legs), tor = lerp(24, -18, back); // agarre con las tibias casi verticales: cadera ~135°
       var tt = rad(tor), shx = hx + Math.sin(tt) * SPINE, shy = 0.36 + Math.cos(tt) * SPINE;
       var reach = [shx + 0.5, 0.7], pull = [hx + 0.2, 0.68];
       return { hip: [hx, 0.36], torso: tor, head: -5, legs: { ik: [0.66, 0.36], fw: 0.12, foot: -62, pole: [0.2, 1, 0.25] },
