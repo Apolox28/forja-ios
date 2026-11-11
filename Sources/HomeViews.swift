@@ -22,23 +22,29 @@ struct HomeView: View {
                         WeekSummaryCard()
                     }
                 }
-                Section(header: Text("Historial")) {
-                    if filtered.isEmpty {
+                if filtered.isEmpty {
+                    Section(header: Text("Historial")) {
                         Text(store.data.workouts.isEmpty
                              ? "Aún no hay entrenamientos. Ve a «Entrenar» para empezar el primero."
                              : "Sin resultados.")
                             .foregroundColor(.secondary)
                             .padding(.vertical, 8)
                     }
-                    ForEach(filtered) { w in
+                }
+                // Cada entrenamiento en su propia tarjeta, separada de las demás.
+                ForEach(Array(filtered.enumerated()), id: \.element.id) { index, w in
+                    Section(header: index == 0 ? Text("Historial") : nil) {
                         NavigationLink(destination: WorkoutDetailView(workoutID: w.id)) {
-                            WorkoutRow(workout: w)
+                            WorkoutCard(workout: w)
                         }
                         .listRowBackground(AppTheme.cardBackground)
-                    }
-                    .onDelete { offsets in
-                        let ids = offsets.map { filtered[$0].id }
-                        store.data.workouts.removeAll { ids.contains($0.id) }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                store.data.workouts.removeAll { $0.id == w.id }
+                            } label: {
+                                Label("Eliminar", systemImage: "trash")
+                            }
+                        }
                     }
                 }
             }
@@ -128,6 +134,59 @@ struct WorkoutRow: View {
             .foregroundColor(.secondary)
         }
         .padding(.vertical, 4)
+    }
+}
+
+/// Tarjeta del historial en Inicio: título, fecha, cifras clave y los primeros ejercicios.
+struct WorkoutCard: View {
+    @EnvironmentObject var store: Store
+    let workout: Workout
+    private let shown = 3
+
+    var records: Int { workout.exercises.filter { store.isPR($0, in: workout) }.count }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(workout.name)
+                    .font(.headline)
+                    .lineLimit(1)
+                Text(Fmt.shortDate(workout.start))
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            HStack(alignment: .top, spacing: 0) {
+                stat("Tiempo", Fmt.duration(workout.duration))
+                stat("Volumen", "\(Fmt.int(workout.volume)) \(store.unit)")
+                stat("Récords", records > 0 ? "🏅 \(records)" : "—")
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(workout.exercises.prefix(shown)) { e in
+                    HStack(spacing: 10) {
+                        if let ex = store.exercise(e.exerciseID) {
+                            ExerciseThumbnail(exercise: ex, size: 32)
+                        }
+                        Text("\(e.sets.count) × \(store.exerciseName(e.exerciseID))")
+                            .font(.subheadline)
+                            .lineLimit(1)
+                    }
+                }
+                if workout.exercises.count > shown {
+                    Text("Ver \(workout.exercises.count - shown) ejercicios más")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 8)
+    }
+
+    func stat(_ title: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title).font(.caption).foregroundColor(.secondary)
+            Text(value).font(.subheadline.bold()).lineLimit(1).minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
