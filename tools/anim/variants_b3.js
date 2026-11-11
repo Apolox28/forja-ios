@@ -65,8 +65,8 @@
     A: { armsR: { ik: [0.2, 0.8, 0.12], pole: [-1, -0.4, 0.8], palm: 'neu' }, armsL: { rel: [0.32, -0.3, 0.02], hand: 'flat', flatDir: [1, -0.3, 0] }, arms: null, twist: -10 },
     B: { armsR: { ik: [-0.22, 0.76, 0.2], pole: [-1, -0.4, 0.8], palm: 'neu' }, armsL: { rel: [0.32, -0.3, 0.02], hand: 'flat', flatDir: [1, -0.3, 0] }, arms: null, twist: 12 } });
   variant('seatedRowMachine', 'seatedRow', { load: 'grips', stack: true, scene: ['chestPad'], machinePos: [0.75, -0.55, 0], s: ['deltsR', 'biceps'], cam: { az: 40 },
-    A: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.38, ANK], fw: 0.16 }, arms: { relC: [0.46, -0.06], gw: 0.19, palm: 'neu', pole: [-1, -0.2, 0.6] } },
-    B: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.38, ANK], fw: 0.16 }, arms: { relC: [-0.04, -0.1], gw: 0.22, palm: 'neu', pole: [-1, -0.2, 0.6] } } });
+    A: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.38, ANK], fw: 0.16 }, arms: { relC: [0.46, -0.1], gw: 0.19, palm: 'neu', pole: [-1, -0.45, 0.6] } },
+    B: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.38, ANK], fw: 0.16 }, arms: { relC: [0.12, -0.25], gw: 0.21, palm: 'neu', pole: [-1, -0.45, 0.6] } } }); // final: manos junto a las costillas bajas, codos atrás
   // ---------------- Bisagra de cadera ----------------
   // Sumo: piernas muy abiertas con las puntas hacia fuera, agarre por dentro de las rodillas, tronco más vertical
   (function () {
@@ -107,5 +107,5 @@
   eachArm('hyperextWeighted', function (a) { a.relC = [0.2, -0.1]; a.gw = -0.06; return a; });
   // Superman: boca abajo en el suelo; se elevan a la vez el pecho, los brazos y las piernas
   variant('superman', 'hyperext', { scene: ['mat'], cam: { az: 30, y: 0.25 },
-    A: { hip: [0, 0.115], torso: 90, head: 0, legs: { th: -90, sh: -90, fw: 0.1, foot: 90 }, arms: { ua: 90, fa: 90, palm: [0, -1, 0], gw: 0.25 } },
-    B: { hip: [0, 0.115], torso: 76, head: -8, legs: { th: -101, sh: -101, fw: 0.1, foot: 90 }, arms: { ua: 104, fa: 104, palm: [0, -1, 0], gw: 0.25 } } });
+    A: { hip: [0, 0.165], torso: 89, head: -14, legs: { th: -90, sh: -90, fw: 0.1, foot: 72 }, arms: { ua: 90, fa: 90, palm: [0, -1, 0], gw: 0.25 } },
+    B: { hip: [0, 0.165], torso: 76, head: -18, legs: { th: -101, sh: -101, fw: 0.1, foot: 72 }, arms: { ua: 104, fa: 104, palm: [0, -1, 0], gw: 0.25 } } });

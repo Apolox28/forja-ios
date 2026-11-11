@@ -158,7 +158,7 @@
   function bridge(hip, sho) { var up = V(sho[0] - hip[0], sho[1] - hip[1], 0).normalize(); return { hip: hip, torso: Math.atan2(up.x, up.y) * 180 / Math.PI }; }
   (function () {
     var SH0 = [-0.43, 0.12], lo = bridge([-0.03, 0.14], SH0), hi = bridge([0.05, 0.37], SH0);
-    var lg = { ik: [0.36, ANK], fw: 0.15 }, flat = { ik: [-0.16, 0.045], gw: 0.3, hand: 'flat', flatDir: [1, 0, 0] };
+    var lg = { ik: [0.36, ANK], fw: 0.15 }, flat = { ik: [0.06, 0.05], gw: 0.27, hand: 'flat', flatDir: [1, 0, 0], pole: [0, 0.4, 1] }; // brazos estirados en el suelo junto al cuerpo
     variant('gluteBridgeBar', 'hipThrust', { scene: ['mat'], load: 'hip', A: { hip: lo.hip, torso: lo.torso, legs: lg }, B: { hip: hi.hip, torso: hi.torso, legs: lg } });
     variant('gluteBridge', 'hipThrust', { scene: ['mat'], load: 'none', A: { hip: lo.hip, torso: lo.torso, legs: lg, arms: flat }, B: { hip: hi.hip, torso: hi.torso, legs: lg, arms: flat } });
     var fr = { ik: [0.2, ANK, 0.035], fw: 0.03, pole: [0, 0.4, 1], toe: 55 }, hf = bridge([0.03, 0.29], SH0);
@@ -166,7 +166,7 @@
     // Puente con fitball: talones sobre el balón; la cadera sube y las rodillas traen el balón hacia el glúteo
     var a1 = [0.84, 0.66], a2 = [0.4, 0.52], b1 = bridge([0.04, 0.38], SH0), b2 = bridge([0.06, 0.48], SH0);
     variant('ballLegCurl', 'hipThrust', { scene: ['mat'], load: 'stabBall', p: ['hams'], s: ['glutes', 'calves'], cam: { az: 30, y: 0.4 },
-      A: { hip: b1.hip, torso: b1.torso, legs: { ik: a1, fw: 0.1, foot: -58 }, arms: flat }, B: { hip: b2.hip, torso: b2.torso, legs: { ik: a2, fw: 0.1, foot: -55 }, arms: flat } });
+      A: { hip: b1.hip, torso: b1.torso, legs: { ik: a1, fw: 0.1, foot: -58, pole: [0.3, 1, 0.1] }, arms: flat }, B: { hip: b2.hip, torso: b2.torso, legs: { ik: a2, fw: 0.1, foot: -55, pole: [0.3, 1, 0.1] }, arms: flat } });
   })();
   // Hip thrust a una pierna: apoyada la derecha; la izquierda flexionada en el aire
   variant('hipThrustSingle', 'hipThrust', { side: 'R', A: { legs: null, legsR: P.hipThrust.A.legs, legsL: { th: 118, sh: 22, fw: 0.15 } }, B: { legs: null, legsR: P.hipThrust.B.legs, legsL: { th: 162, sh: 76, fw: 0.15 } } });

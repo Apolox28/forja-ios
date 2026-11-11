@@ -1,8 +1,8 @@
 # Animaciones publicadas que hay que revisar (detectadas con romtest.js y a ojo)
 
-- **seatedRowMachine**: el brazo se dobla por detrás de la cabeza al tirar (fase 0,2–0,4). Grave.
+- ~~**seatedRowMachine**~~ (arreglado el 11-11): el brazo se dobla por detrás de la cabeza al tirar (fase 0,2–0,4). Grave.
 - **curlIncline**: el brazo cuelga demasiado por detrás del cuerpo (extensión del hombro ≈ 97°).
-- **ballLegCurl**: rodillas con flexión rara en la fase 0,23 y muñecas > 80°.
+- ~~**ballLegCurl**~~ (rodillas arregladas el 11-11): rodillas con flexión rara en la fase 0,23 y muñecas > 80°.
 - **benchDip / dip / dipMachine**: extensión del hombro excesiva en la bajada (90–97°).
 - **cableFlyHigh, chestSupportedRow, pendlayRow**: hombro por detrás del cuerpo y codo > 155° al final del tirón.
 - **rowErg**: flexión de cadera de 156° en el agarre; debería estar en torno a 135°.
@@ -32,3 +32,5 @@
    - elevación de piernas y de rodillas en paralelas (silla del capitán);
    - flexión lateral con mancuerna.
 5. **Los 219 de Hevy** están en `release-1.5`, `Resources/hevy_extra.json`. La clave es el nombre en minúsculas.
+
+- Arreglados el 11-11: puente de glúteo, frog pump y puente con fitball (brazos bajo el suelo), superman (cara en el suelo), press en el suelo (codo) y patada de glúteo (pie y extensión de cadera).
