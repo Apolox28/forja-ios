@@ -84,10 +84,12 @@
     variant('plankWeighted', 'plank', { backPlate: [0.3, 0.014], cam: { y: 0.3, az: 10, el: 6 } });
     // Escaladores: plancha alta con los brazos estirados; las rodillas van al pecho alternando rápido
     (function () {
-      var arms = P.pushup.A.arms, back = { ik: [-0.92, 0.207], fw: 0.1, foot: 65, pole: [0, -1, 0] }, fr = { ik: [-0.32, 0.24], fw: 0.1, foot: 40, pole: [0.3, -1, 0] };
+      var arms = P.pushup.A.arms, back = { ik: [-0.92, 0.207], fw: 0.1, foot: 65, pole: [0.6, -1, 0] }, fr = { ik: [-0.2, 0.17], fw: 0.1, foot: 40, pole: [1, 0.12, 0] };
       var r = { hip: [-0.08, 0.44], torso: 70, legsL: back, legsR: fr, arms: arms }, l = { hip: [-0.08, 0.44], torso: 70, legsL: fr, legsR: back, arms: arms };
+      // el cambio de piernas es un pequeño salto: los dos pies despegan al cruzarse
+      var sw = { ik: [-0.5, 0.36], fw: 0.1, foot: 50, pole: [1, -0.05, 0] }, m = { hip: [-0.08, 0.44], torso: 70, legsL: sw, legsR: sw, arms: arms };
       variant('mountainClimber', 'pushup', { p: ['abs', 'hipFlex'], s: ['deltsF', 'quads', 'obliques'], A: null, B: null, period: 900, thumb: 0.0,
-        keys: [[0, r], [0.5, l], [1, r]] });
+        keys: [[0, r], [0.25, m], [0.5, l], [0.75, m], [1, r]] });
     })();
   })();
   cam2('sidePlank', 172, 16);
@@ -95,14 +97,14 @@
   // Levantamiento turco: de tumbado a de pie con la pesa rusa siempre vertical sobre el hombro derecho, y vuelta
   (function () {
     var KB = { ua: 180, fa: 180, palm: 'pro' };
-    function lh(x, y, z, st) { return { ik: [x, y, z], hand: 'flat', flatDir: [-0.4, 0, 1], pole: [0, -1, 0.3], straight: st ? 1 : 0, palm: 'neu' }; }
+    function lh(x, y, z, st, dir) { return { ik: [x, y, z], hand: 'flat', flatDir: dir || [-0.8, 0, 0.6], pole: [0, -1, 0.3], straight: st ? 1 : 0, palm: 'neu' }; }
     function tg(hip, tor, tw, lL, lR, aL, head) { return { hip: hip, torso: tor, twist: tw, head: head || 0, legsL: lL, legsR: lR, armsL: aL, armsR: KB }; }
     var RB = { ik: [0.42, ANK, 0.14], fw: 0.14, foot: 0 };
-    var P1 = tg([0, 0.145], -90, 0, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -88 }, RB, lh(-0.28, 0.045, 0.46, 1));
-    var P2 = tg([0, 0.145], -58, 22, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -88 }, RB, lh(-0.2, 0.045, 0.4, 0), 8);
-    var P3 = tg([0, 0.145], -32, 28, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -88 }, RB, lh(-0.32, 0.045, 0.4, 1), 8);
-    var P4 = tg([0.08, 0.45], -72, 26, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -70 }, RB, lh(-0.36, 0.045, 0.4, 1), 10);
-    var P4b = tg([0.0, 0.43], -70, 22, { ik: [0.02, 0.13, 0.3], fw: 0.14, foot: 20, pole: [0, -0.3, 1] }, RB, lh(-0.4, 0.045, 0.4, 1), 10);
+    var P1 = tg([0, 0.145], -90, 0, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -88 }, RB, lh(-0.28, 0.06, 0.46, 1, [0.5, 0, 1]));
+    var P2 = tg([0, 0.145], -58, 22, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -88 }, RB, Object.assign(lh(-0.24, 0.06, 0.42, 0, [0.4, 0, 1]), { pole: [-0.4, -0.15, 1] }), 8);
+    var P3 = tg([0, 0.145], -32, 28, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -88 }, RB, lh(-0.32, 0.06, 0.4, 1), 8);
+    var P4 = tg([0.08, 0.45], -72, 26, { ik: [0.84, ANK, 0.36], fw: 0.14, foot: -70 }, RB, lh(-0.36, 0.06, 0.4, 1), 10);
+    var P4b = tg([0.0, 0.43], -70, 22, { ik: [0.02, 0.13, 0.24], fw: 0.14, foot: 20, pole: [0.4, 0.3, 1] }, RB, lh(-0.4, 0.06, 0.4, 1), 10);
     var P6 = tg([-0.1, 0.55], 0, 0, { ik: [-0.52, 0.11, 0.13], fw: 0.14, foot: 90, pole: [0.2, -1, 0] }, RB, lh(-0.1, 0.6, 0.28, 0));
     var P6b = tg([0.14, 0.84], 6, 0, { ik: [-0.42, ANK + 0.04, 0.13], fw: 0.14, foot: 45, pole: [0.2, -1, 0] }, RB, lh(0.15, 0.74, 0.25, 0));
     var P7 = tg([0.4, 0.97], 0, 0, { ik: [0.42, ANK, 0.13], fw: 0.14, foot: 0 }, { ik: [0.42, ANK, 0.13], fw: 0.14, foot: 0 }, lh(0.42, 0.87, 0.24, 0));

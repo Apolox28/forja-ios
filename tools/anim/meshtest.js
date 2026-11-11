@@ -21,7 +21,7 @@ load(() => {
       let best = 0, bw = -1; for (let c = 0; c < 4; c++) { const w = sw.getComponent ? sw.getComponent(i, c) : [sw.getX(i), sw.getY(i), sw.getZ(i), sw.getW(i)][c]; if (w > bw) { bw = w; best = [si.getX(i), si.getY(i), si.getZ(i), si.getW(i)][c]; } }
       handV[i] = /Hand/.test(bones[best]) ? 1 : 0; foreV[i] = /ForeArm/.test(bones[best]) ? 1 : 0;
     }
-    let worst = 0, where = '', worstFloor = 0;
+    let worst = 0, where = '', worstFloor = 0, floorWhere = '';
     for (let f = 0; f <= 10; f++) {
       const ph = f / 10; st.update(ph); st.scene.updateMatrixWorld(true);
       const objs = [];
@@ -36,7 +36,7 @@ load(() => {
       });
       for (let i = 0; i < P.count; i += 2) {
         v.fromBufferAttribute(P, i); body.boneTransform(i, v); v.applyMatrix4(body.matrixWorld);
-        if (v.y < worstFloor) worstFloor = v.y;
+        if (v.y < worstFloor) { worstFloor = v.y; floorWhere = bones[si.getX(i)] + ' fase ' + ph.toFixed(1); }
         for (const ob of objs) {
           if (!ob.solid && handV[i]) continue; // la mano sí agarra pesas
           if (!ob.solid && foreV[i] && (v.distanceTo(st.state.j.hand.L) < (st.def.load === 'overhead' ? 0.2 : 0.12) || v.distanceTo(st.state.j.hand.R) < (st.def.load === 'overhead' ? 0.2 : 0.12))) continue; // muñeca junto al agarre (sobre la cabeza el disco inferior apoya en las muñecas)
@@ -55,7 +55,8 @@ load(() => {
         }
       }
     }
-    out.push(`${it}: choque ${(worst * 100).toFixed(1)} cm${worst > 0 ? ' (' + where + ')' : ''} | suelo ${(worstFloor * 100).toFixed(1)} cm`);
+    out.push(`${it}: choque ${(worst * 100).toFixed(1)} cm${worst > 0 ? ' (' + where + ')' : ''} | suelo ${(worstFloor * 100).toFixed(1)} cm${worstFloor < 0 ? ' (' + floorWhere + ')' : ''}`);
+    if (worstFloor < -0.02) probs.push(`${it}: se hunde en el suelo ${(-worstFloor * 100).toFixed(1)} cm (${floorWhere})`);
     if (worst > 0.015) probs.push(`${it}: ${(worst * 100).toFixed(1)} cm (${where})`);
   });
   console.log(out.join('\n'));

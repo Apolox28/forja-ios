@@ -131,5 +131,17 @@
   "bicicleta de aire": "airBike",
   "ciclismo": "roadCycling",
   "empuje de trineo": "sledPush",
-  "natación": "swim"
+  "natación": "swim",
+  "swing con kettlebell a una mano": "kbSwingOne",
+  "cargada con kettlebell": "kbClean",
+  "arrancada con kettlebell": "kbSnatch",
+  "pull-through en polea": "pullThrough",
+  "cargada y press": "cleanPress",
+  "envión": "cleanJerk",
+  "arrancada": "snatch",
+  "burpees": "burpee",
+  "flexiones con palmada": "pushupClap",
+  "caminata del oso": "bearCrawl",
+  "devil press": "devilPress",
+  "man maker": "manMaker"
 }

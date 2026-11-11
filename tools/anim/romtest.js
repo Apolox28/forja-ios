@@ -29,7 +29,7 @@ for (const k of list) {
       const tu = th.clone().normalize(), down = up.clone().negate();
       const fl = deg(Math.atan2(tu.dot(fwd), tu.dot(down))); // + flexión, − extensión
       const ab = deg(Math.asin(Math.max(-1, Math.min(1, tu.dot(side) * sg))));
-      if (fl > 140) note('cadera ' + s + ' flexión > 140°', fl - 140, ph);
+      if (fl > 150) note('cadera ' + s + ' flexión > 150°', fl - 150, ph); // el tronco es rígido: incluye la flexión lumbar
       if (fl < -30 && ab < 30) note('cadera ' + s + ' extensión > 30°', -fl - 30, ph);
       if (ab > 55) note('cadera ' + s + ' abducción > 55°', ab - 55, ph);
       if (ab < -30) note('cadera ' + s + ' cruza > 30°', -ab - 30, ph);
