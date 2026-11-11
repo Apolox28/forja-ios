@@ -247,6 +247,19 @@ enum ExerciseFocus {
     }
 }
 
+extension WorkoutSet {
+    /// Marca comparable para detectar récords: 1RM estimado, repeticiones o segundos según el tipo.
+    func recordScore(_ kind: ExerciseKind) -> Double {
+        guard type != .warmup else { return 0 }
+        switch kind {
+        case .weightReps: return estimated1RM
+        case .repsOnly: return Double(reps)
+        case .duration: return Double(seconds)
+        case .distanceTime: return 0
+        }
+    }
+}
+
 /// Tarjeta de aviso para rutinas y entrenamientos.
 struct RedundancyNote: View {
     @EnvironmentObject var store: Store

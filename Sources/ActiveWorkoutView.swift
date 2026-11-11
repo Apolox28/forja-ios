@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import AudioToolbox
 
 struct ActiveWorkoutView: View {
     @EnvironmentObject var store: Store
@@ -154,6 +155,16 @@ struct ExerciseSection: View {
     var kind: ExerciseKind { exercise?.kind ?? .weightReps }
     var previous: [WorkoutSet] { store.previousSets(for: entry.exerciseID) }
 
+    /// Mejor marca guardada antes de este entrenamiento (0 si nunca se hizo: la primera vez no cuenta como récord).
+    var recordToBeat: Double {
+        store.data.workouts
+            .flatMap { $0.exercises }
+            .filter { $0.exerciseID == entry.exerciseID }
+            .flatMap { $0.sets }
+            .map { $0.recordScore(kind) }
+            .max() ?? 0
+    }
+
     var body: some View {
         Section(header: header) {
             if isActive {
@@ -168,6 +179,7 @@ struct ExerciseSection: View {
                              previous: previousSet(for: set),
                              unit: store.unit,
                              showCheck: isActive,
+                             recordToBeat: recordToBeat,
                              onCompleted: { onSetCompleted(entry.restSeconds) })
             }
             .onDelete { offsets in
@@ -312,7 +324,10 @@ struct SetEditorRow: View {
     let previous: WorkoutSet?
     let unit: String
     let showCheck: Bool
+    var recordToBeat: Double = 0
     var onCompleted: () -> Void = {}
+
+    var isRecord: Bool { set.done && recordToBeat > 0 && set.recordScore(kind) > recordToBeat }
 
     var body: some View {
         HStack(spacing: 8) {
@@ -342,6 +357,17 @@ struct SetEditorRow: View {
                 .frame(width: 30, height: 30)
                 .background(Color(.tertiarySystemFill))
                 .cornerRadius(6)
+                .overlay(alignment: .topTrailing) {
+                    if isRecord {
+                        Image(systemName: "medal.fill")
+                            .font(.system(size: 13))
+                            .foregroundColor(.yellow)
+                            .shadow(radius: 1)
+                            .offset(x: 6, y: -6)
+                            .transition(.scale)
+                            .accessibilityLabel("Récord personal")
+                    }
+                }
             }
             Text(previousText)
                 .font(.caption)
@@ -360,7 +386,8 @@ struct SetEditorRow: View {
                 .buttonStyle(.borderless)
             }
         }
-        .listRowBackground(set.done ? Color.green.opacity(0.15) : Color(.secondarySystemGroupedBackground))
+        .listRowBackground(isRecord ? Color.yellow.opacity(0.22)
+                           : set.done ? Color.green.opacity(0.15) : Color(.secondarySystemGroupedBackground))
     }
 
     @ViewBuilder
@@ -402,10 +429,15 @@ struct SetEditorRow: View {
             if set.seconds == 0 { set.seconds = p.seconds }
             if set.distance == 0 { set.distance = p.distance }
         }
-        set.done.toggle()
+        withAnimation(.spring()) { set.done.toggle() }
         if set.done {
             hideKeyboard()
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            if isRecord {
+                AudioServicesPlaySystemSound(1025) // fanfarria del sistema
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+            } else {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            }
             onCompleted()
         }
     }
