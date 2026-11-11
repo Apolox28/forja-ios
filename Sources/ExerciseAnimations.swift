@@ -9,8 +9,13 @@ extension ExerciseSeed {
         "aducción en máquina": "adductionMachine",
         "aperturas en máquina": "pecDeck",
         "aperturas inclinadas con mancuernas": "flyIncline",
+        "bicicleta de aire": "airBike",
+        "caminar": "walkFree",
+        "caminar en cinta inclinada": "treadmillIncline",
         "cargada de potencia": "powerClean",
+        "ciclismo": "roadCycling",
         "colgarse de la barra": "deadHang",
+        "correr": "runOutdoor",
         "cruce de poleas de abajo arriba": "cableFlyLow",
         "cruce de poleas de arriba abajo": "cableFlyHigh",
         "crunch bicicleta": "bicycleCrunch",
@@ -42,6 +47,9 @@ extension ExerciseSeed {
         "elevación de puntas (tibial)": "tibialisRaise",
         "elevación de rodillas colgado": "hangKnee",
         "elevación de talones en prensa": "calfPress",
+        "elíptica": "elliptical",
+        "empuje de trineo": "sledPush",
+        "escaladora": "stairClimber",
         "escaladores": "mountainClimber",
         "extensión de cuádriceps a una pierna": "legExtSingle",
         "extensión de tríceps a una mano en polea": "pushdownOneArm",
@@ -63,6 +71,7 @@ extension ExerciseSeed {
         "jalón con brazos rectos": "straightArmPulldown",
         "levantamiento turco": "turkishGetUp",
         "leñador en polea": "woodchop",
+        "natación": "swim",
         "pallof press": "pallof",
         "peso muerto a una pierna": "singleLegRdl",
         "peso muerto con barra hexagonal": "trapBarDeadlift",
@@ -101,6 +110,7 @@ extension ExerciseSeed {
         "remo pendlay": "pendlayRow",
         "rueda abdominal": "abWheel",
         "salto al cajón": "boxJump",
+        "senderismo": "hike",
         "sentadilla búlgara": "bulgarian",
         "sentadilla búlgara con barra": "bulgarianBar",
         "sentadilla con mancuernas": "squatDb",
@@ -130,8 +140,6 @@ extension ExerciseSeed {
 
     /// Clave de animación: la variante del ejercicio o, si no tiene, su patrón de movimiento.
     static func animationKey(for exercise: Exercise) -> String {
-        animationByName[exercise.name.lowercased()]
-            ?? ExerciseMatcher.catalogName(for: exercise.name).flatMap { animationByName[$0.lowercased()] }
-            ?? pattern(for: exercise).rawValue
+        animationByName[exercise.name.lowercased()] ?? pattern(for: exercise).rawValue
     }
 }
