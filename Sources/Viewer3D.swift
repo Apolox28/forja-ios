@@ -16,17 +16,68 @@ final class WeakScriptHandler: NSObject, WKScriptMessageHandler {
     }
 }
 
-final class Viewer3DHost: NSObject, WKScriptMessageHandler {
+final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate {
     enum Mode { case exercise, muscleMap }
 
     static let exercise = Viewer3DHost(mode: .exercise)
     static let muscleMap = Viewer3DHost(mode: .muscleMap)
 
-    /// Carga los visores en segundo plano (se llama al abrir la app).
+    /// Prepara las páginas fuera del hilo principal y luego crea los visores de uno en uno,
+    /// para no dar tirones mientras la app termina de abrirse.
     static func warmUp() {
-        _ = exercise
-        _ = muscleMap
+        DispatchQueue.global(qos: .utility).async {
+            _ = pagesDir
+            DispatchQueue.main.async {
+                _ = exercise
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { _ = muscleMap }
+            }
+        }
     }
+
+    /// Los dos visores comparten proceso web: el motor 3D se compila una sola vez.
+    private static let processPool = WKProcessPool()
+
+    /// Carpeta en Caches con las páginas y scripts del visor (se genera una vez por versión).
+    /// El modelo va en su propio .js para no convertirlo a base64 en cada arranque.
+    static let pagesDir: URL? = {
+        let fm = FileManager.default
+        let bundle = Bundle.main
+        guard let engineURL = bundle.url(forResource: "forja3d", withExtension: "js"),
+              let glbURL = bundle.url(forResource: "body", withExtension: "glb") else { return nil }
+        let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+        let engineSize = (try? fm.attributesOfItem(atPath: engineURL.path)[.size] as? Int) ?? 0
+        let caches = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let name = "forja3d-\(build)-\(engineSize)"
+        let dir = caches.appendingPathComponent(name)
+        let marker = dir.appendingPathComponent("ok")
+        if fm.fileExists(atPath: marker.path) { return dir }
+        // Borra versiones anteriores.
+        for old in (try? fm.contentsOfDirectory(at: caches, includingPropertiesForKeys: nil)) ?? []
+        where old.lastPathComponent.hasPrefix("forja3d-") && old.lastPathComponent != name {
+            try? fm.removeItem(at: old)
+        }
+        do {
+            try? fm.removeItem(at: dir)
+            try fm.createDirectory(at: dir, withIntermediateDirectories: true)
+            for lib in ["three.min", "GLTFLoader", "SkeletonUtils"] {
+                guard let src = bundle.url(forResource: lib, withExtension: "js") else { return nil }
+                try fm.copyItem(at: src, to: dir.appendingPathComponent(lib + ".js"))
+            }
+            // El motor se usa tal cual; solo se expone el punto al que mira la cámara para poder girarla.
+            let engine = try String(contentsOf: engineURL, encoding: .utf8).replacingOccurrences(
+                of: "return { scene: scene, camera: camera, update: update,",
+                with: "return { target: tgt, scene: scene, camera: camera, update: update,")
+            try engine.write(to: dir.appendingPathComponent("engine.js"), atomically: true, encoding: .utf8)
+            let model = "window.FORJA_MODEL='" + (try Data(contentsOf: glbURL)).base64EncodedString() + "';"
+            try model.write(to: dir.appendingPathComponent("model.js"), atomically: true, encoding: .utf8)
+            try page(.exercise).write(to: dir.appendingPathComponent("exercise.html"), atomically: true, encoding: .utf8)
+            try page(.muscleMap).write(to: dir.appendingPathComponent("map.html"), atomically: true, encoding: .utf8)
+            try Data().write(to: marker)
+            return dir
+        } catch {
+            return nil
+        }
+    }()
 
     let webView: WKWebView
     let mode: Mode
@@ -38,6 +89,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
     private init(mode: Mode) {
         self.mode = mode
         let config = WKWebViewConfiguration()
+        config.processPool = Viewer3DHost.processPool
         let controller = WKUserContentController()
         config.userContentController = controller
         webView = WKWebView(frame: CGRect(x: 0, y: 0, width: 320, height: 320), configuration: config)
@@ -49,7 +101,21 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
         webView.scrollView.isScrollEnabled = false
         webView.scrollView.bounces = false
         webView.isUserInteractionEnabled = (mode == .exercise)
-        webView.loadHTMLString(Viewer3DHost.page(mode), baseURL: nil)
+        webView.navigationDelegate = self
+        load()
+    }
+
+    private func load() {
+        guard let dir = Viewer3DHost.pagesDir else { return }
+        let file = dir.appendingPathComponent(mode == .exercise ? "exercise.html" : "map.html")
+        webView.loadFileURL(file, allowingReadAccessTo: dir)
+    }
+
+    /// iOS puede cerrar el proceso web en segundo plano: se recarga y se vuelve a mostrar lo último.
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        ready = false
+        pendingJS = containers.allObjects.last(where: { $0.window != nil })?.lastJS ?? pendingJS
+        load()
     }
 
     func userContentController(_ c: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -80,10 +146,6 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
     // MARK: Página
 
     static func page(_ mode: Mode) -> String {
-        // El motor se usa tal cual; solo se expone el punto al que mira la cámara para poder girarla.
-        let engine = ExerciseAnimationView.engine.replacingOccurrences(
-            of: "return { scene: scene, camera: camera, update: update,",
-            with: "return { target: tgt, scene: scene, camera: camera, update: update,")
         let script: String
         switch mode {
         case .exercise:
@@ -116,6 +178,8 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
               T0 = null; yaw = 0; vel = 0; homing = false;
               base = { c: ST.camera.position.clone(), t: ST.target ? ST.target.clone() : guessTarget() };
               size();
+              // Dibuja ya la escena nueva para reutilizar los shaders antes de liberar la anterior.
+              ST.update(0); R.render(ST.scene, ST.camera);
               if (old) disposeScene(old.scene);
             }
             window.forjaShow = show;
@@ -153,8 +217,10 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
             canvas.addEventListener('pointercancel', endDrag);
             setTimeout(function () { hint.style.opacity = 0; }, 3500);
             requestAnimationFrame(frame);
-            var data = '\(ExerciseAnimationView.modelBase64)';
-            function ready() { loaded = true; if (want) show.apply(null, want); }
+            var data = window.FORJA_MODEL || '';
+            // Si nadie ha pedido aún una animación, se prepara una de calentamiento:
+            // así la primera que abra el usuario no espera a compilar los gráficos.
+            function ready() { loaded = true; show.apply(null, want || ['bench', 'barbell', '', 1]); }
             if (data.length > 0) FORJA3D.loadModel(data, ready); else ready();
             window.webkit.messageHandlers.forjaReady.postMessage(1);
             """
@@ -167,7 +233,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
               M = FORJA3D.bodyMap(canvas, intens, { view: 'both', rotate: false });
             }
             window.forjaMap = showMap;
-            var data = '\(ExerciseAnimationView.modelBase64)';
+            var data = window.FORJA_MODEL || '';
             function ready() { loaded = true; if (want) showMap(want); }
             if (data.length > 0) FORJA3D.loadModel(data, ready); else ready();
             window.webkit.messageHandlers.forjaReady.postMessage(1);
@@ -188,10 +254,11 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler {
            color:rgba(255,255,255,.75);transition:opacity .6s;pointer-events:none}
         </style>
         </head><body><div id="w"><canvas id="c"></canvas>\(hint)</div>
-        <script>\(ExerciseAnimationView.three)</script>
-        <script>\(ExerciseAnimationView.gltfLoader)</script>
-        <script>\(ExerciseAnimationView.skeletonUtils)</script>
-        <script>\(engine)</script>
+        <script src="three.min.js"></script>
+        <script src="GLTFLoader.js"></script>
+        <script src="SkeletonUtils.js"></script>
+        <script src="engine.js"></script>
+        <script src="model.js"></script>
         <script>\(script)</script>
         </body></html>
         """
@@ -252,22 +319,6 @@ struct ExerciseAnimationView: UIViewRepresentable {
     let exercise: Exercise
     /// 1 = vista principal, 2 = otra perspectiva
     var view: Int = 1
-
-    static func resource(_ name: String) -> String {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "js"),
-              let js = try? String(contentsOf: url, encoding: .utf8) else { return "" }
-        return js
-    }
-    static let three: String = resource("three.min")
-    static let engine: String = resource("forja3d")
-    static let gltfLoader: String = resource("GLTFLoader")
-    static let skeletonUtils: String = resource("SkeletonUtils")
-    /// Modelo humano (GLB) en base64 para cargarlo dentro de la vista web sin red.
-    static let modelBase64: String = {
-        guard let url = Bundle.main.url(forResource: "body", withExtension: "glb"),
-              let data = try? Data(contentsOf: url) else { return "" }
-        return data.base64EncodedString()
-    }()
 
     var patternKey: String { ExerciseSeed.animationKey(for: exercise) }
     var equipmentKey: String { ExerciseSeed.animationEquipment(exercise.equipment) }

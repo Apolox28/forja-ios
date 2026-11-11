@@ -17,8 +17,14 @@ struct PendingStart {
 
 final class Store: ObservableObject {
     @Published var data: AppData {
-        didSet { scheduleSave() }
+        didSet {
+            // Comparar el historial es casi gratis si no cambió (mismo almacenamiento).
+            if oldValue.workouts != data.workouts { prCache = nil; bestScoreCache = [:] }
+            scheduleSave()
+        }
     }
+    private var prCache: [UUID: Set<UUID>]? = nil
+    private var bestScoreCache: [UUID: Double] = [:]
     @Published var showActiveWorkout = false
     @Published var restEnd: Date? = nil
     @Published var restTotal = 0
@@ -66,7 +72,7 @@ final class Store: ObservableObject {
         }
         data = loaded
         UNUserNotificationCenter.current().delegate = notificationDelegate
-        saveNow()
+        saveInBackground()
         if data.activeWorkout != nil {
             showActiveWorkout = false
         }
@@ -108,17 +114,30 @@ final class Store: ObservableObject {
 
     func scheduleSave() {
         pendingSave?.cancel()
-        let work = DispatchWorkItem { [weak self] in self?.saveNow() }
+        let work = DispatchWorkItem { [weak self] in self?.saveInBackground() }
         pendingSave = work
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: work)
     }
 
+    /// Una sola cola en orden: el último guardado siempre es el que queda en disco.
+    private static let saveQueue = DispatchQueue(label: "forja.save", qos: .utility)
+
+    /// Guarda una copia de los datos sin bloquear la interfaz.
+    func saveInBackground() {
+        let snapshot = data, url = fileURL
+        Store.saveQueue.async { Store.write(snapshot, to: url) }
+    }
+
+    /// Guarda y espera a que termine (para cuando la app va a cerrarse).
     func saveNow() {
+        pendingSave?.cancel()
+        let snapshot = data, url = fileURL
+        Store.saveQueue.sync { Store.write(snapshot, to: url) }
+    }
+
+    private static func write(_ data: AppData, to url: URL) {
         do {
-            let encoder = JSONEncoder()
-            encoder.outputFormatting = [.prettyPrinted]
-            let raw = try encoder.encode(data)
-            try raw.write(to: fileURL, options: .atomic)
+            try JSONEncoder().encode(data).write(to: url, options: .atomic)
         } catch {
             print("Error al guardar: \(error)")
         }
@@ -292,7 +311,39 @@ final class Store: ObservableObject {
         return items
     }
 
+    /// Récords de todo el historial calculados de una pasada (antes se recorría todo por cada ejercicio).
+    private func prTable() -> [UUID: Set<UUID>] {
+        if let t = prCache { return t }
+        var table: [UUID: Set<UUID>] = [:]
+        var prior: [UUID: Double] = [:]
+        let byDate = Dictionary(grouping: data.workouts, by: { $0.start }).sorted { $0.key < $1.key }
+        for (_, group) in byDate {
+            for w in group {
+                for e in w.exercises {
+                    let best = e.bestE1RM
+                    if best > 0, let p = prior[e.exerciseID], best > p { table[w.id, default: []].insert(e.exerciseID) }
+                }
+            }
+            // Solo cuentan los entrenamientos anteriores, así que se actualiza tras cada fecha.
+            for w in group { for e in w.exercises { prior[e.exerciseID] = max(prior[e.exerciseID] ?? 0, e.bestE1RM) } }
+        }
+        prCache = table
+        return table
+    }
+
+    /// Mejor marca guardada de un ejercicio (para la medalla de récord durante el entrenamiento).
+    func bestScore(for exerciseID: UUID, kind: ExerciseKind) -> Double {
+        if let v = bestScoreCache[exerciseID] { return v }
+        let v = data.workouts.flatMap { $0.exercises }.filter { $0.exerciseID == exerciseID }
+            .flatMap { $0.sets }.map { $0.recordScore(kind) }.max() ?? 0
+        bestScoreCache[exerciseID] = v
+        return v
+    }
+
     func isPR(_ entry: WorkoutExercise, in workout: Workout) -> Bool {
+        if data.workouts.contains(where: { $0.id == workout.id && $0.exercises == workout.exercises }) {
+            return prTable()[workout.id]?.contains(entry.exerciseID) ?? false
+        }
         let best = entry.bestE1RM
         guard best > 0 else { return false }
         var prior = 0.0

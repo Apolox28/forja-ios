@@ -156,14 +156,7 @@ struct ExerciseSection: View {
     var previous: [WorkoutSet] { store.previousSets(for: entry.exerciseID) }
 
     /// Mejor marca guardada antes de este entrenamiento (0 si nunca se hizo: la primera vez no cuenta como récord).
-    var recordToBeat: Double {
-        store.data.workouts
-            .flatMap { $0.exercises }
-            .filter { $0.exerciseID == entry.exerciseID }
-            .flatMap { $0.sets }
-            .map { $0.recordScore(kind) }
-            .max() ?? 0
-    }
+    var recordToBeat: Double { store.bestScore(for: entry.exerciseID, kind: kind) }
 
     var body: some View {
         Section(header: header) {

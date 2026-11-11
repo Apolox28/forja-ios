@@ -7,22 +7,26 @@ struct ExerciseThumbnail: View {
     let exercise: Exercise
     var size: CGFloat = 44
 
-    static var cache: [String: UIImage] = [:]
+    /// Por ejercicio (nombre + equipo): evita recalcular claves y buscar archivos en cada redibujado.
+    /// Guarda también los que no tienen imagen (nil) para no volver a buscarlos.
+    static var cache: [String: UIImage?] = [:]
 
     var image: UIImage? {
+        let id = exercise.name + "|" + exercise.equipment.rawValue
+        if let hit = ExerciseThumbnail.cache[id] { return hit }
         let a = ExerciseSeed.animationKey(for: exercise)
         let p = ExerciseSeed.pattern(for: exercise).rawValue
         let e = ExerciseSeed.animationEquipment(exercise.equipment)
-        let key = "thumb_\(a)_\(e)"
-        if let img = ExerciseThumbnail.cache[key] { return img }
-        let candidates = [key, "thumb_\(a)_none", "thumb_\(p)_\(e)", "thumb_\(p)_none"]
-        for name in candidates {
+        var found: UIImage? = nil
+        for name in ["thumb_\(a)_\(e)", "thumb_\(a)_none", "thumb_\(p)_\(e)", "thumb_\(p)_none"] {
             if let path = Bundle.main.path(forResource: name, ofType: "jpg"), let img = UIImage(contentsOfFile: path) {
-                ExerciseThumbnail.cache[key] = img
-                return img
+                // Decodificada ya, para que no se haga al dibujar mientras se desplaza la lista.
+                found = img.preparingForDisplay() ?? img
+                break
             }
         }
-        return nil
+        ExerciseThumbnail.cache[id] = .some(found)
+        return found
     }
 
     var body: some View {

@@ -11,6 +11,7 @@ struct ForjaApp: App {
     }
 
     @State var showSplash = true
+    @Environment(\.scenePhase) var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -27,6 +28,10 @@ struct ForjaApp: App {
                         .transition(.opacity)
                         .zIndex(1)
                 }
+            }
+            .onChange(of: scenePhase) { phase in
+                // Al salir de la app se guarda al momento (el guardado normal va con un pequeño retraso).
+                if phase == .background { store.saveNow() }
             }
             .onAppear {
                 // El logo sigue al de la pantalla de arranque y se desvanece al terminar de cargar.
