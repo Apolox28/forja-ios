@@ -165,6 +165,8 @@ extension ExerciseSeed {
 
     /// Clave de animación: la variante del ejercicio o, si no tiene, su patrón de movimiento.
     static func animationKey(for exercise: Exercise) -> String {
-        animationByName[exercise.name.lowercased()] ?? pattern(for: exercise).rawValue
+        animationByName[exercise.name.lowercased()]
+            ?? ExerciseMatcher.catalogName(for: exercise.name).flatMap { animationByName[$0.lowercased()] }
+            ?? pattern(for: exercise).rawValue
     }
 }
