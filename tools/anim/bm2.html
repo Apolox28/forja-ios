@@ -1,0 +1,5 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#16181d}canvas{width:640px;height:420px;display:block;background:radial-gradient(120% 90% at 50% 25%,#30333c 0%,#1b1d23 55%,#121317 100%)}</style></head><body>
+<canvas id="c"></canvas>
+<script>var B='file:///C:/Users/sinbr/Desktop/2026/4.-%20Manual%20Dise%C3%B1o%20Operaciones%20+%20IA/Claude/Primer%20Proyecto/Forja-iOS/Resources/';
+['three.min.js','GLTFLoader.js','SkeletonUtils.js','forja3d.js'].forEach(function(f){document.write('<script src="'+B+f+'"><\/script>');});</script>
+<script>new THREE.GLTFLoader().load(B+'body.glb',function(g){FORJA3D.setModel(g.scene);var q=JSON.parse(decodeURIComponent(location.hash.slice(1)));FORJA3D.bodyMap(document.getElementById("c"),q.i,q.o);setTimeout(function(){document.title='listo'},500)});</script></body></html>

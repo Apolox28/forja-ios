@@ -1,0 +1,21 @@
+<!doctype html><html><head><meta charset="utf-8"><title>pm</title>
+<style>body{margin:6px;background:#000;color:#aaa;font:11px sans-serif}.g{display:flex;flex-wrap:wrap;gap:6px}.c{text-align:center}canvas{background:radial-gradient(120% 90% at 50% 25%,#30333c 0%,#1b1d23 55%,#121317 100%);border-radius:8px}</style></head><body>
+<div class="g" id="g"></div><pre id="err" style="color:#f66"></pre>
+<script src="file:///C:/Users/sinbr/Desktop/2026/4.-%20Manual%20Dise%C3%B1o%20Operaciones%20+%20IA/Claude/Primer%20Proyecto/Forja-iOS/Resources/three.min.js"></script>
+<script src="file:///C:/Users/sinbr/Desktop/2026/4.-%20Manual%20Dise%C3%B1o%20Operaciones%20+%20IA/Claude/Primer%20Proyecto/Forja-iOS/Resources/GLTFLoader.js"></script>
+<script src="file:///C:/Users/sinbr/Desktop/2026/4.-%20Manual%20Dise%C3%B1o%20Operaciones%20+%20IA/Claude/Primer%20Proyecto/Forja-iOS/Resources/SkeletonUtils.js"></script>
+<script src="file:///C:/Users/sinbr/Desktop/2026/4.-%20Manual%20Dise%C3%B1o%20Operaciones%20+%20IA/Claude/Primer%20Proyecto/Forja-iOS/Resources/forja3d.js"></script>
+<script>
+var SZ=+(new URLSearchParams(location.search).get('s')||260);
+var phs=(new URLSearchParams(location.search).get('ph')||'0,0.2,0.42').split(',').map(Number);
+var list=location.hash.slice(1).split(',');
+new THREE.GLTFLoader().load('file:///C:/Users/sinbr/Desktop/2026/4.-%20Manual%20Dise%C3%B1o%20Operaciones%20+%20IA/Claude/Primer%20Proyecto/Forja-iOS/Resources/body.glb',function(g){
+  FORJA3D.setModel(g.scene);
+  var off=document.createElement('canvas');off.width=off.height=SZ;var r=FORJA3D.makeRenderer(off);r.setPixelRatio(1);r.setSize(SZ,SZ,false);
+  var G=document.getElementById('g');
+  list.forEach(function(it){var p=it.split(':');try{var st=FORJA3D.createStage(p[0],p[1],undefined,+(new URLSearchParams(location.search).get('v')||1));st.camera.aspect=1;st.camera.updateProjectionMatrix();
+    phs.forEach(function(ph){st.update(ph);r.render(st.scene,st.camera);var d=document.createElement('div');d.className='c';var c=document.createElement('canvas');c.width=c.height=SZ;c.getContext('2d').drawImage(off,0,0);d.appendChild(c);d.appendChild(document.createTextNode(it+' '+ph));G.appendChild(d);});
+  }catch(e){document.getElementById('err').textContent+=it+': '+e.message+'\n'+e.stack+'\n';}});
+  document.title='listo';
+},undefined,function(e){document.getElementById('err').textContent='GLB: '+e;});
+</script></body></html>
