@@ -39,7 +39,7 @@ for (const k of list) {
       if (ua.dot(fwd) < 0 && ua.dot(up) < 0.2 && ext > 65 && ext < 150 && ua.dot(side) * sg < 0.3) note('hombro ' + s + ' extensión > 65°', ext - 65, ph);
       const ef = ang(ua, fa);
       if (ef > 155) note('codo ' + s + ' > 155°', ef - 155, ph);
-      if (j.handDir && j.handDir[s]) { const wr = ang(fa, j.handDir[s]); if (wr > 80) note('muñeca ' + s + ' > 80°', wr - 80, ph); }
+      if (j.handDir && j.handDir[s]) { const wr = ang(fa, j.handDir[s]); if (wr > 90) note('muñeca ' + s + ' > 90°', wr - 90, ph); } // con carga sobre la mano (flexiones) la muñeca llega a ~90°
     }
   }
   const keys = Object.keys(worst);

@@ -86,12 +86,18 @@
     var LS = { ik: [0, ANK], fw: 0.14 }, LP = { ik: [-0.92, 0.207], fw: 0.1, foot: 65, pole: [0.6, -1, 0.15] }; // boca abajo la rodilla se dobla hacia el suelo
     // Burpee: de pie, cuclillas con manos al suelo, pies atrás a plancha, pecho al suelo, plancha, pies adelante, salto con palmada arriba
     var B0 = { hip: STAND, torso: 0, legs: LS, arms: hd(0.03, 0.9, 0.22, [0, -1, 0.05], [-0.2, 0, -1]) };
-    var B1 = { hip: [-0.12, 0.5], torso: 76, head: -18, legs: { ik: [0, ANK], fw: 0.15, pole: [1, -0.3, 0.25] }, arms: floor(0.3, 0.24) };
+    var B1 = { hip: [-0.08, 0.44], torso: 72, head: -18, legs: { ik: [0, ANK], fw: 0.15, pole: [1, -0.3, 0.25] }, arms: floor(0.28, 0.24) };
     var B2 = { hip: [-0.08, 0.425], torso: 68, head: -8, legs: LP, arms: floor(0.33) }, B3 = { hip: [-0.03, 0.25], torso: 82, head: -6, legs: LP, arms: floor(0.33) };
     var BJ = { hip: [-0.1, 0.46], torso: 72, head: -14, legs: { ik: [-0.48, 0.26], fw: 0.12, foot: 50, pole: [0.8, -1, 0.2] }, arms: floor(0.31, 0.26) }; // salto de pies: los pies despegan del suelo
+    var Bu0 = { hip: [-0.06, 0.72], torso: 34, head: -6, legs: { ik: [0, ANK], fw: 0.15, pole: [1, -0.1, 0.25] } }, Bu = Object.assign({ arms: at(Bu0, 0.15, -1, 0.22, [0.15, -1, 0], [-0.3, 0, -1]) }, Bu0); // se incorpora con las manos despegando del suelo
+    // mano a 0,48 m del hombro en la dirección indicada (siempre alcanzable)
+    function at(b, dx, dy, gw, dir, palm) { var s0 = shoAt(b), n = Math.hypot(dx, dy); return hd(s0.x + dx / n * 0.48, s0.y + dy / n * 0.48, gw, dir, palm); }
+    var Bd0 = { hip: [-0.07, 0.72], torso: 40, head: -10, legs: { ik: [0, ANK], fw: 0.15, pole: [1, -0.1, 0.25] } }, Bd = Object.assign({ arms: at(Bd0, 0.25, -1, 0.23, [0.3, -1, 0], [-0.3, 0, -1]) }, Bd0); // bajando: las manos van al suelo a la vez que el cuerpo
+    var Br0 = { hip: [-0.09, 0.6], torso: 56, head: -12, legs: { ik: [0, ANK], fw: 0.15, pole: [1, -0.2, 0.25] } }, Br = Object.assign({ arms: at(Br0, 0.2, -1, 0.23, [0.3, -1, 0], [-0.3, 0, -1]) }, Br0);
+    var Ba = { hip: STAND, torso: 0, legs: LS, arms: hd(0.04, 1.42, 0.69, [0, 0.1, 1], [0, -1, 0]) }; // al bajar, los brazos estirados abren por los lados
     var B6 = { hip: [0, 1.07], torso: -2, legs: { ik: [0, ANK + 0.1], fw: 0.12, foot: 32, pole: [1, 0.1, 0.2] }, arms: hd(0.08, 1.98, 0.05, [0.15, 1, 0], [0, 0, -1]) };
     variant('burpee', 'pushup', { p: ['quads', 'pecs', 'glutes'], s: ['triceps', 'deltsF', 'abs', 'calves', 'hams'], A: null, B: null, liftAt: null, period: 3200, thumb: 0.36, cam: { az: 35, y: 1.0, dist: 1.2 },
-      keys: [[0, B0], [0.07, B0], [0.16, B1], [0.21, BJ], [0.27, B2], [0.36, B3], [0.45, B2], [0.5, BJ], [0.56, B1], [0.59, B1], [0.67, B6], [0.76, B0], [1, B0]] });
+      keys: [[0, B0], [0.07, B0], [0.12, Bd], [0.16, B1], [0.21, BJ], [0.27, B2], [0.36, B3], [0.45, B2], [0.5, BJ], [0.56, B1], [0.585, Br], [0.61, Bu], [0.67, B6], [0.73, Ba], [0.8, B0], [1, B0]] });
     // Flexión con palmada: bajada controlada, empuje explosivo que despega las manos, palmada delante del pecho y recepción
     var CT = { hip: [-0.08, 0.415], torso: 69, legs: LP, arms: floor(0.33) }, CB = { hip: [-0.03, 0.27], torso: 81, legs: LP, arms: floor(0.33) };
     var CA = { hip: [-0.06, 0.56], torso: 60, legs: LP, arms: hd(0.24, 0.42, 0.03, [1, 0.4, 0], [0, 0, -1]) };
