@@ -34,3 +34,4 @@
 5. **Los 219 de Hevy** están en `release-1.5`, `Resources/hevy_extra.json`. La clave es el nombre en minúsculas.
 
 - Arreglados el 11-11: puente de glúteo, frog pump y puente con fitball (brazos bajo el suelo), superman (cara en el suelo), press en el suelo (codo) y patada de glúteo (pie y extensión de cadera).
+- Arreglados el 11-11: fondos y fondos en máquina (bajada hasta unos 90° de codo), curl inclinado (codos abajo, brazos algo abiertos). Fondos en banco: el hombro llega a unos 90° de extensión abajo, que es propio del ejercicio.

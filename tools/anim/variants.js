@@ -34,8 +34,8 @@
   })();
   // Inclinado: sentado en banco a 45-60°, brazos colgando por detrás del torso; supina al subir
   variant('curlIncline', 'curl', { scene: ['inclineBench'], s: ['brachiorad'], cam: { az: 70, y: 0.75 },
-    A: { hip: [0.05, 0.56], torso: -50, legs: { ik: [0.52, ANK], fw: 0.22 }, arms: { rel: [-0.05, HANG + 0.01, 0.075], palm: 'neu', pole: [-1, -0.2, 0.4] } },
-    B: { hip: [0.05, 0.56], torso: -50, legs: { ik: [0.52, ANK], fw: 0.22 }, arms: { rel: [0.1, -0.13, 0.07], palm: 'sup', pole: [-1, -0.6, 0.35] } } });
+    A: { hip: [0.05, 0.56], torso: -50, legs: { ik: [0.52, ANK], fw: 0.22 }, arms: { rel: [-0.05, HANG + 0.01, 0.12], palm: 'neu', pole: [-1, -0.2, 0.4] } },
+    B: { hip: [0.05, 0.56], torso: -50, legs: { ik: [0.52, ANK], fw: 0.22 }, arms: { rel: [0.1, -0.13, 0.09], palm: 'sup', pole: [-1, -0.6, 0.35] } } });
   // Araña: boca abajo sobre banco inclinado, brazos colgando en vertical; el codo no se mueve
   variant('curlSpider', 'curl', { scene: ['proneIncline'], s: ['brachiorad'], cam: { az: 60, y: 0.75 },
     A: { hip: [-0.1, 0.88], torso: 45, head: 10, legs: { ik: [-0.45, ANK], fw: 0.14 }, arms: { ua: 22, fa: 24, palm: 'sup' } },
@@ -85,11 +85,11 @@
   eachArm('pushupDiamond', function (a) { a.gw = 0.07; a.flatDir = [1, 0, -0.45]; a.pole = [-1, 0.2, 0.25]; return a; });
   // Fondos en banco: manos en el borde del banco detrás de la cadera, piernas estiradas
   variant('benchDip', 'dip', { p: ['triceps'], s: ['deltsF', 'pecs'], scene: ['dipBench'], cam: { az: 45, y: 0.5 },
-    A: { hip: [0.06, 0.5], torso: -2, legs: { ik: [0.78, ANK], fw: 0.12 }, arms: { ik: [-0.12, 0.47], gw: 0.22, hand: 'flat', flatDir: [1, 0, 0], pole: [-1, 0.2, 0.3] } },
-    B: { hip: [0.08, 0.27], torso: 6, legs: { ik: [0.78, ANK], fw: 0.12 }, arms: { ik: [-0.12, 0.47], gw: 0.22, hand: 'flat', flatDir: [1, 0, 0], pole: [-1, 0.2, 0.3] } } });
+    A: { hip: [0.04, 0.5], torso: -2, legs: { ik: [0.76, ANK], fw: 0.12 }, arms: { ik: [-0.12, 0.47], gw: 0.22, hand: 'flat', flatDir: [1, 0, 0], pole: [-1, 0.2, 0.3] } },
+    B: { hip: [0.05, 0.37], torso: 4, legs: { ik: [0.76, ANK], fw: 0.12 }, arms: { ik: [-0.12, 0.47], gw: 0.22, hand: 'flat', flatDir: [1, 0, 0], pole: [-1, 0.2, 0.3] } } });
   // Fondos en máquina: sentado, empuja los agarres hacia abajo junto a la cadera
   variant('dipMachine', 'dip', { p: ['triceps'], s: ['pecs', 'deltsF'], load: 'grips', stack: true, scene: ['stool'], cam: { az: 40, y: 0.8 },
-    A: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.36, ANK], fw: 0.15 }, arms: { rel: [-0.02, -0.26, 0.09], palm: 'neu', pole: [-1, 0.2, 0.3] } },
+    A: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.36, ANK], fw: 0.15 }, arms: { rel: [0.03, -0.33, 0.09], palm: 'neu', pole: [-1, 0.2, 0.3] } },
     B: { hip: [-0.05, 0.52], torso: 6, legs: { ik: [0.36, ANK], fw: 0.15 }, arms: { rel: [0.02, -0.52, 0.07], palm: 'neu', pole: [-1, 0.2, 0.3] } } });
   // segunda perspectiva de las variantes de brazo: de frente al músculo que trabaja
   cam2('concentrationCurl', 95, 14); cam2('wristCurl', 95, 26); cam2('wristCurlRev', 95, 26); cam2('curlSpider', 105, 8);
