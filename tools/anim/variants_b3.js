@@ -59,10 +59,6 @@
       keys: [[0, up], [0.38, dn], [0.5, dn], [1, up]] });
   })();
   // Dominadas: agarre neutro, supinas (chin-up) y colgarse de la barra
-  variant('pullupNeutral', 'pullup', { s: ['biceps', 'brachiorad', 'deltsR', 'traps'] });
-  eachArm('pullupNeutral', function (a) { a.gw = 0.26; a.palm = 'neu'; return a; });
-  variant('chinup', 'pullup', { s: ['biceps', 'deltsR', 'traps'] });
-  eachArm('chinup', function (a) { a.gw = 0.2; a.palm = 'sup'; return a; });
   variant('deadHang', 'pullup', { p: ['forearms'], s: ['lats', 'deltsR'], B: { hip: [-0.03, 1.34], torso: 0, head: 0 } });
   // Remo sentado a una mano y remo en máquina con pecho apoyado
   variant('seatedRowOneArm', 'seatedRow', { side: 'R', load: 'cableR', anchor: [0.95, 0.8, 0.12],
