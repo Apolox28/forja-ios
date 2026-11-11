@@ -16,7 +16,7 @@ function bodySamples(j) {
   const out = [];
   function seg(a, b, r, n, name) { for (let i = 0; i <= n; i++) out.push({ p: a.clone().lerp(b, i / n), r, name }); }
   seg(j.hip, j.shoC, 0.095, 6, "tronco"); out.push({ p: j.head, r: 0.08, name: "cabeza" });
-  ['L', 'R'].forEach(k => { seg(j.hipJ[k], j.knee[k], 0.058, 5, "muslo"+k); seg(j.knee[k], j.ank[k], 0.042, 5, "pierna"+k); seg(j.sho[k], j.el[k], 0.038, 3, "brazo"+k); seg(j.el[k], j.hand[k], 0.032, 3, "antebrazo"+k); });
+  ['L', 'R'].forEach(k => { seg(j.hipJ[k], j.knee[k], 0.058, 5, "muslo"+k); seg(j.knee[k], j.ank[k], 0.042, 5, "pierna"+k); seg(j.sho[k], j.el[k], 0.038, 3, "brazo"+k); seg(j.el[k], j.hand[k].clone().lerp(j.el[k], 0.25), 0.032, 3, "antebrazo"+k); }); // sin el extremo de la mano: el agarre la toca por diseño (meshtest revisa la piel)
   return out;
 }
 F.patterns.forEach(key => {
