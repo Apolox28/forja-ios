@@ -36,3 +36,4 @@
 - Arreglados el 11-11: puente de glúteo, frog pump y puente con fitball (brazos bajo el suelo), superman (cara en el suelo), press en el suelo (codo) y patada de glúteo (pie y extensión de cadera).
 - Arreglados el 11-11: fondos y fondos en máquina (bajada hasta unos 90° de codo), curl inclinado (codos abajo, brazos algo abiertos). Fondos en banco: el hombro llega a unos 90° de extensión abajo, que es propio del ejercicio.
 - Arreglado el 11-11: remo ergómetro (agarre con las tibias casi verticales, cadera ~135°).
+- Arreglados el 11-11: remo Pendlay (la barra toca la parte baja del pecho) y remo con pecho apoyado (codo menos atrás).

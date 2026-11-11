@@ -243,7 +243,7 @@
   (function () {
     var b = { hip: [-0.3, 0.74], torso: 85, head: -30, legs: { ik: [-0.16, ANK], fw: 0.15 } };
     var fl = Object.assign({}, b, { arms: { ik: relIk(b, [0.52, -0.03]), gw: 0.27, pole: [-1, 0.5, 0.4], palm: 'pro' } });
-    var ch = Object.assign({}, b, { arms: { ik: relIk(b, [0.1, -0.03]), gw: 0.27, pole: [-1, 0.5, 0.4], palm: 'pro' } });
+    var ch = Object.assign({}, b, { arms: { ik: relIk(b, [0.17, -0.15]), gw: 0.27, pole: [-1, 0.5, 0.4], palm: 'pro' } }); // la barra toca la parte baja del pecho
     var md = Object.assign({}, b, { arms: { ik: [0.17, 0.46], gw: 0.27, pole: [-1, 0.5, 0.4], palm: 'pro' } });
     variant('pendlayRow', 'row', { A: null, B: null, bakeBar: true, cam: { az: 25 },
       // la barra rodea las rodillas por delante en un ligero arco (las rodillas no se mueven)
@@ -268,7 +268,7 @@
   // Remo con pecho apoyado (banco inclinado boca abajo): los brazos cuelgan y los codos suben hacia atrás
   (function () {
     var b = { hip: [-0.1, 0.88], torso: 45, head: 10, legs: { ik: [-0.45, ANK], fw: 0.14 } };
-    var s0 = shoAt(b), top = relIk(b, [0.08, -0.14]);
+    var s0 = shoAt(b), top = relIk(b, [0.12, -0.12]); // las mancuernas llegan a la altura de las costillas sin llevar el codo demasiado atrás
     variant('chestSupportedRow', 'row', { load: 'hands', scene: ['proneBench'], cam: { az: 55, y: 0.75 },
       A: Object.assign({}, b, { arms: { ik: [s0.x + 0.04, s0.y - REACH + 0.014, 0.22], palm: 'neu', pole: [-1, 0.6, 0.4] } }),
       B: Object.assign({}, b, { arms: { ik: [top[0], top[1], 0.34], palm: 'neu', pole: [-1, 0.6, 0.4] } }) });
