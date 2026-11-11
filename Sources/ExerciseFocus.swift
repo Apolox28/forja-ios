@@ -218,7 +218,7 @@ enum ExerciseFocus {
         switch kind(of: exercise) {
         case .heavy: return 180
         case .compound: return 120
-        case .isolation: return 75
+        case .isolation: return 90
         case .cardio: return 60
         }
     }
@@ -227,7 +227,7 @@ enum ExerciseFocus {
         switch kind(of: exercise) {
         case .heavy: return "Compuesto pesado: 2–3 min para rendir igual en cada serie."
         case .compound: return "Compuesto: unos 2 min."
-        case .isolation: return "Aislado: 60–90 s bastan."
+        case .isolation: return "Aislado: unos 90 s."
         case .cardio: return "Cardio o circuito: descanso corto."
         }
     }

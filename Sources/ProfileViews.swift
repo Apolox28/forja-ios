@@ -217,7 +217,7 @@ struct SettingsView: View {
                         value: $store.data.settings.weeklyGoal, in: 1...7)
             }
             Section(header: Text("Sistema"),
-                    footer: Text("Con «Descanso según el ejercicio», los compuestos pesados proponen 3 min, los compuestos 2 min y los aislados 75 s. El descanso de cada ejercicio se cambia tocando su tiempo durante el entrenamiento; Forja lo recuerda.")) {
+                    footer: Text("Con «Descanso según el ejercicio», los compuestos pesados proponen 3 min, los compuestos 2 min y los aislados 90 s. El descanso de cada ejercicio se cambia tocando su tiempo durante el entrenamiento; Forja lo recuerda.")) {
                 Button {
                     if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                 } label: {
