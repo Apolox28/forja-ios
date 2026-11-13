@@ -205,3 +205,16 @@
 "Energía" = "Energy";
 "Motivación" = "Motivation";
 "Molestias o dolor" = "Discomfort or pain";
+"¡Bienvenido a Forja!" = "Welcome to Forja!";
+"Cuéntanos un poco de ti para ajustar calorías, récords y consejos. Es opcional: puedes omitirlo y cambiarlo cuando quieras en Perfil." = "Tell us a bit about yourself to tune calories, records and tips. It's optional: you can skip it and change it anytime in Profile.";
+"Sobre ti" = "About you";
+"Sexo" = "Sex";
+"Hombre" = "Male";
+"Mujer" = "Female";
+"Edad (años)" = "Age (years)";
+"Altura (cm)" = "Height (cm)";
+"Peso (%@)" = "Weight (%@)";
+"Empezar" = "Get started";
+"Omitir" = "Skip";
+"Récord personal" = "Personal record";
+"Tu sesión de Google caducó. Al guardar o restaurar se te pedirá entrar de nuevo; tu copia en Drive sigue ahí." = "Your Google session expired. You'll be asked to sign in again when saving or restoring; your Drive backup is still there.";

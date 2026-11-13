@@ -25,8 +25,8 @@ targets:
           - fr
           - it
           - de
-        CFBundleShortVersionString: "1.5.2"
-        CFBundleVersion: "39"
+        CFBundleShortVersionString: "1.5.3"
+        CFBundleVersion: "40"
         UILaunchStoryboardName: LaunchScreen
         NSCameraUsageDescription: Forja usa la cámara para grabar tu técnica y que el Coach la revise.
         NSMicrophoneUsageDescription: Al grabar vídeo, iOS también usa el micrófono; Forja no envía el audio.

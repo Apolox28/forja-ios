@@ -349,17 +349,6 @@ struct SetEditorRow: View {
                 .frame(width: 30, height: 30)
                 .background(Color(.tertiarySystemFill))
                 .cornerRadius(6)
-                .overlay(alignment: .topTrailing) {
-                    if isRecord {
-                        Image(systemName: "medal.fill")
-                            .font(.system(size: 13))
-                            .foregroundColor(.yellow)
-                            .shadow(radius: 1)
-                            .offset(x: 6, y: -6)
-                            .transition(.scale)
-                            .accessibilityLabel("Récord personal")
-                    }
-                }
             }
             Text(previousText)
                 .font(.caption)
@@ -370,16 +359,20 @@ struct SetEditorRow: View {
             fields
             if showCheck {
                 Button(action: toggle) {
-                    Image(systemName: set.done ? "checkmark.circle.fill" : "circle")
-                        .font(.title2)
-                        .foregroundColor(set.done ? .green : .secondary)
-                        .frame(width: 30)
+                    if isRecord {
+                        RecordMedal()
+                    } else {
+                        Image(systemName: set.done ? "checkmark.circle.fill" : "circle")
+                            .font(.title2)
+                            .foregroundColor(set.done ? .green : .secondary)
+                            .frame(width: 30)
+                    }
                 }
                 .buttonStyle(.borderless)
             }
         }
-        .listRowBackground(isRecord ? Color.yellow.opacity(0.22)
-                           : set.done ? Color.green.opacity(0.15) : Color(.secondarySystemGroupedBackground))
+        .listRowBackground(isRecord ? AnyView(RecordGlow())
+                           : AnyView(set.done ? Color.green.opacity(0.15) : Color(.secondarySystemGroupedBackground)))
     }
 
     @ViewBuilder
@@ -623,5 +616,54 @@ struct WorkoutSummaryView: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Récord personal
+
+private let gold = LinearGradient(colors: [Color(red: 1, green: 0.88, blue: 0.4), Color(red: 0.93, green: 0.66, blue: 0.13)],
+                                  startPoint: .top, endPoint: .bottom)
+
+/// Medalla de oro que sustituye al check: entra girando, rebota y suelta un destello.
+struct RecordMedal: View {
+    @State private var shown = false
+    @State private var burst = false
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .stroke(Color.yellow.opacity(burst ? 0 : 0.8), lineWidth: 3)
+                .scaleEffect(burst ? 1.9 : 0.6)
+            Image(systemName: "medal.fill")
+                .font(.title2)
+                .foregroundStyle(gold)
+                .shadow(color: .orange.opacity(0.6), radius: 3)
+                .scaleEffect(shown ? 1 : 0.1)
+                .rotationEffect(.degrees(shown ? 0 : -200))
+        }
+        .frame(width: 30, height: 30)
+        .onAppear {
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.5)) { shown = true }
+            withAnimation(.easeOut(duration: 0.7).delay(0.15)) { burst = true }
+        }
+        .accessibilityLabel("Récord personal")
+    }
+}
+
+/// Fondo dorado de toda la serie, con un brillo que la recorre una vez.
+struct RecordGlow: View {
+    @State private var sweep = false
+
+    var body: some View {
+        GeometryReader { g in
+            ZStack {
+                gold.opacity(0.45)
+                LinearGradient(colors: [.clear, .white.opacity(0.55), .clear], startPoint: .leading, endPoint: .trailing)
+                    .frame(width: g.size.width * 0.35)
+                    .offset(x: sweep ? g.size.width * 1.2 : -g.size.width * 0.6)
+            }
+            .clipped()
+        }
+        .onAppear { withAnimation(.easeInOut(duration: 0.9).delay(0.2)) { sweep = true } }
     }
 }

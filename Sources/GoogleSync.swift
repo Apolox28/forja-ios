@@ -56,11 +56,26 @@ enum Keychain {
                                    kSecAttrAccount as String: key,
                                    kSecAttrService as String: "com.forja.app"]
         SecItemDelete(base as CFDictionary)
+        try? FileManager.default.removeItem(at: fallbackURL(key))
         guard let v = value, let data = v.data(using: .utf8) else { return }
         var add = base
         add[kSecValueData as String] = data
         add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        SecItemAdd(add as CFDictionary, nil)
+        if SecItemAdd(add as CFDictionary, nil) != errSecSuccess {
+            // Instalada con TrollStore, iOS puede negar el llavero (-34018): se guarda en un archivo
+            // privado de la app, cifrado por iOS mientras el iPhone está bloqueado tras el primer desbloqueo.
+            try? data.write(to: fallbackURL(key), options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+        }
+    }
+
+    private static func fallbackURL(_ key: String) -> URL {
+        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        var url = dir.appendingPathComponent(".kc-" + key)
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try? url.setResourceValues(values)
+        return url
     }
 
     static func get(_ key: String) -> String? {
@@ -70,7 +85,10 @@ enum Keychain {
                                 kSecReturnData as String: true,
                                 kSecMatchLimit as String: kSecMatchLimitOne]
         var out: AnyObject?
-        guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess, let d = out as? Data else { return nil }
+        if SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess, let d = out as? Data {
+            return String(data: d, encoding: .utf8)
+        }
+        guard let d = try? Data(contentsOf: fallbackURL(key)) else { return nil }
         return String(data: d, encoding: .utf8)
     }
 }

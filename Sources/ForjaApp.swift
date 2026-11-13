@@ -12,6 +12,7 @@ struct ForjaApp: App {
 
     @State var showSplash = true
     @Environment(\.scenePhase) var scenePhase
+    @AppStorage("welcomeDone") var welcomeDone = false
 
     var body: some Scene {
         WindowGroup {
@@ -23,6 +24,10 @@ struct ForjaApp: App {
                     // Al cambiar el tema se reconstruye la interfaz con los nuevos colores.
                     .id(accent + "-" + background)
                     .onChange(of: background) { _ in AppTheme.applyUIKitAppearance() }
+                    .fullScreenCover(isPresented: Binding(get: { !welcomeDone && !showSplash },
+                                                          set: { if !$0 { welcomeDone = true } })) {
+                        WelcomeView().environmentObject(store)
+                    }
                 if showSplash {
                     SplashView()
                         .transition(.opacity)
@@ -34,6 +39,8 @@ struct ForjaApp: App {
                 if phase == .background { store.saveNow() }
             }
             .onAppear {
+                // Quien ya usaba Forja no ve la bienvenida.
+                if !store.data.workouts.isEmpty || !store.data.routines.isEmpty { welcomeDone = true }
                 // El logo sigue al de la pantalla de arranque y se desvanece al terminar de cargar.
                 // Prepara el visor 3D en segundo plano para que las animaciones abran al instante.
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { Viewer3DHost.warmUp() }

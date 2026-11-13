@@ -69,7 +69,7 @@ struct HomeView: View {
 
 struct WeekSummaryCard: View {
     @EnvironmentObject var store: Store
-    let dayLetters = ["L", "M", "X", "J", "V", "S", "D"]
+    let dayLetters = ["L", "M", "M", "J", "V", "S", "D"]
 
     var body: some View {
         let count = store.workouts(inWeekOf: Date()).count
@@ -201,7 +201,7 @@ struct CalendarView: View {
     @AppStorage("themeCardStrength") private var cardStrength = 0.18
     @EnvironmentObject var store: Store
     @State var month = Date()
-    let dayLetters = ["L", "M", "X", "J", "V", "S", "D"]
+    let dayLetters = ["L", "M", "M", "J", "V", "S", "D"]
 
     var cal: Calendar { store.calendar }
 

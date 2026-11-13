@@ -205,7 +205,7 @@ struct ProgressTabView: View {
     @State var measureField: MeasureField = .weight
     @State var selectedDay: Int? = nil
 
-    let dayLetters = ["L", "M", "X", "J", "V", "S", "D"]
+    let dayLetters = ["L", "M", "M", "J", "V", "S", "D"]
 
     var thisWeek: [Workout] { store.workouts(inWeekOf: Date()) }
     var lastWeek: [Workout] {
