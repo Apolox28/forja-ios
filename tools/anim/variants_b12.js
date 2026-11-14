@@ -149,4 +149,15 @@
       variant('kbAroundWorld', 'swing', { kbHand: ['R', 'hang'], p: ['obliques', 'abs'], s: ['deltsF', 'forearms', 'lowback'], A: null, B: null, period: 3200, thumb: 0.25, cam: { az: 40 },
         keys: [[0, w({ armsR: F, armsL: F, kbH: 'R' })], [0.25, w({ armsR: S, armsL: RST, kbH: 'R' })], [0.48, w({ armsR: Bk, armsL: Bk, kbH: 'R' })], [0.52, w({ armsR: Bk, armsL: Bk, kbH: 'L' })], [0.75, w({ armsR: RST, armsL: S, kbH: 'L' })], [0.97, w({ armsR: F, armsL: F, kbH: 'L' })], [1, w({ armsR: F, armsL: F, kbH: 'R' })]] });
     })();
+    // Tumbado de lado (sobre el lado derecho): almeja y elevación lateral de pierna con la pierna de arriba (izquierda)
+    (function () {
+      var R0 = [90, 0, 0.17, 0, -90], hd = { rel: [0.14, 0.28, -0.22], palm: 'neu', pole: [0, -1, 0.3] }, top = { rel: [0.24, -0.36, 0.08], palm: 'pro' };
+      function sl(o) { return Object.assign({ hip: [0, 0.97], torso: 0, head: 0, lean: -14, roll: R0, armsR: hd, armsL: top }, o); }
+      var kb = { ik: [0.02, 0.35, 0.07], fw: 0.07, pole: [1, 0, 0], foot: 10 };
+      variant('clamshell', 'plank', { side: 'L', p: ['gluteMed'], s: ['glutes'], scene: ['mat'], cam: { az: 12, el: 28, y: 0.3 },
+        A: sl({ legsR: kb, legsL: kb }), B: sl({ legsR: kb, legsL: { ik: [0.02, 0.35, 0.07], fw: 0.07, pole: [1, 0, 1.3], foot: 10 } }) });
+      var st = { ik: [0, ANK, 0.07], fw: 0.07, foot: 0 };
+      variant('sideLegRaise', 'plank', { side: 'L', p: ['gluteMed'], s: ['glutes', 'obliques'], scene: ['mat'], cam: { az: 12, el: 28, y: 0.3 },
+        A: sl({ legsR: st, legsL: st }), B: sl({ legsR: st, legsL: { ik: [0, 0.36, 0.6], fw: 0.07, foot: 0 } }) });
+    })();
   })();
