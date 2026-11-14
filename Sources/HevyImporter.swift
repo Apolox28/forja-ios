@@ -84,17 +84,58 @@ enum HevyImporter {
         uniquingKeysWith: { a, _ in a })
 
     /// Todos los nombres de Hevy en inglés y en español (Resources/hevy_names.json, generado con tools/hevy_names/build.js).
-    static let hevyNames: [String: String] = {
+    struct HevyNames: Decodable {
+        let exact: [String: String]
+        let moves: [String: [String: String]]
+        let phrases: [[String]]
+        let words: [String: String]
+        let stop: Set<String>
+        let equip: Set<String>
+    }
+
+    static let hevyNames: HevyNames? = {
         guard let url = Bundle.main.url(forResource: "hevy_names", withExtension: "json"),
-              let data = try? Data(contentsOf: url),
-              let map = try? JSONDecoder().decode([String: String].self, from: data) else { return [:] }
-        return map
+              let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(HevyNames.self, from: data)
     }()
 
-    /// Coincidencia exacta (sin tildes ni mayúsculas); si el equipo entre paréntesis no está en la tabla, prueba sin él.
+    private static func singular(_ w: String) -> String {
+        w.count > 3 && w.hasSuffix("s") && !w.hasSuffix("ss") ? String(w.dropLast()) : w
+    }
+
+    /// Fichas en inglés del nombre (sin importar idioma ni orden): movimiento y equipo por separado.
+    /// Mismo algoritmo que tools/hevy_names/match.js, con el que se prueba.
+    static func tokens(_ title: String, _ h: HevyNames) -> (move: String, eq: String) {
+        var n = " " + ExerciseMatcher.normalize(title) + " "
+        for p in h.phrases where p.count == 2 {
+            n = n.replacingOccurrences(of: " \(p[0]) ", with: " \(p[1]) ")
+        }
+        var set = Set<String>()
+        for w in n.split(separator: " ").map(String.init) where !h.stop.contains(w) {
+            let m = h.words[w] ?? h.words[singular(w)] ?? w
+            for t in m.split(separator: " ").map(String.init) where !h.stop.contains(t) { set.insert(singular(t)) }
+        }
+        let all = set.sorted()
+        let eq = all.filter { h.equip.contains($0) }.joined(separator: " ")
+        return (all.filter { !h.equip.contains($0) }.joined(separator: " "), eq.isEmpty ? "-" : eq)
+    }
+
+    /// 1) nombre exacto (inglés o español, sin tildes ni mayúsculas); 2) mismas fichas de movimiento y equipo
+    /// (si falta el equipo: peso corporal, barra o la única variante; un equipo que no existe no se adivina);
+    /// 3) nombre exacto sin lo que va entre paréntesis.
     static func hevyName(_ title: String) -> String? {
-        hevyNames[ExerciseMatcher.normalize(title)]
-            ?? title.firstIndex(of: "(").flatMap { hevyNames[ExerciseMatcher.normalize(String(title[..<$0]))] }
+        guard let h = hevyNames else { return nil }
+        if let hit = h.exact[ExerciseMatcher.normalize(title)] { return hit }
+        let t = tokens(title, h)
+        if let c = h.moves[t.move] {
+            if let hit = c[t.eq] { return hit }
+            if t.eq == "-" {
+                if let hit = c["bodyweight"] ?? c["barbell"] ?? (c.count == 1 ? c.values.first : nil) { return hit }
+            } else if let hit = c["-"] {
+                return hit
+            }
+        }
+        return title.firstIndex(of: "(").flatMap { h.exact[ExerciseMatcher.normalize(String(title[..<$0]))] }
     }
 
     private static let baseNameMap: [String: String] = [

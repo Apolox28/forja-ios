@@ -1,7 +1,7 @@
 // Genera Resources/hevy_names.json: nombre de Hevy (inglés o español, normalizado) → ejercicio de Forja.
 // Uso: node tools/hevy_names/build.js   (desde Forja-iOS). Traducciones en es_table.js.
 const fs = require('fs'), path = require('path');
-const root = path.join(__dirname, '..', '..'), T = require('./es_table.js');
+const root = path.join(__dirname, '..', '..'), T = require('./es_table.js'), V = require('./vocab.js'), M = require('./match.js');
 const swift = fs.readFileSync(path.join(root, 'Sources/HevyImporter.swift'), 'utf8');
 const base = [...swift.matchAll(/^\s*"([^"]+)": "([^"]+)",$/gm)].map(x => [x[1], x[2]]);
 const extra = JSON.parse(fs.readFileSync(path.join(root, 'Resources/hevy_extra.json'), 'utf8'));
@@ -26,13 +26,23 @@ for (const b in byBase) {
 }
 if (missing.length) { console.error('Sin traducción:', missing.join(' | ')); process.exit(1); }
 const flat = {}; for (const k of Object.keys(out).sort()) flat[k] = out[k].v;
-fs.writeFileSync(path.join(root, 'Resources/hevy_names.json'), JSON.stringify(flat));
+// Por fichas: movimiento → { equipo → ejercicio }. Entran los nombres en inglés y las traducciones exactas.
+const moves = {}, clash = [];
+for (const [k, v] of Object.entries(out).sort((a, b) => a[1].p - b[1].p)) {
+  if (out[k].p === 2) continue;
+  const t = M.tokens(k), c = (moves[t.move] = moves[t.move] || {});
+  if (!c[t.eq]) c[t.eq] = v.v; else if (c[t.eq] !== v.v && out[k].p === 0) clash.push(k + ' → ' + c[t.eq] + ' / ' + v.v);
+}
+if (process.argv.includes('-v')) console.log('Mismas fichas, ejercicio distinto (gana el primero):\n' + clash.join('\n'));
+fs.writeFileSync(path.join(root, 'Resources/hevy_names.json'), JSON.stringify({ exact: flat, moves, phrases: V.phrases, words: V.words, stop: V.stop, equip: V.equip }));
 // Comprobación: cada nombre inglés de Hevy da su ejercicio, y unos títulos en español típicos
 const check = { 'Press de Banca (Barra)': 'bench press (barbell)', 'Jalón al Pecho (Polea)': 'lat pulldown (cable)', 'Sentadilla (Barra)': 'squat (barbell)',
   'Curl de Bíceps (Mancuerna)': 'bicep curl (dumbbell)', 'Peso Muerto Rumano (Barra)': 'romanian deadlift (barbell)', 'Elevación Lateral (Mancuerna)': 'lateral raise (dumbbell)',
   'Prensa de Piernas (Máquina)': 'leg press (machine)', 'Dominadas': 'pull up', 'Remo Sentado en Polea': 'seated cable row - v grip (cable)' };
 const nm = Object.fromEntries(all);
 let bad = all.filter(([en, f]) => flat[norm(en)] !== f).map(([en]) => en);
+const S = require('./simulate.js');
 for (const [es, en] of Object.entries(check)) if (nm[en] !== undefined && flat[norm(es)] !== nm[en]) bad.push(es + ' → ' + flat[norm(es)] + ' (esperado ' + nm[en] + ')');
+for (const [t, want] of Object.entries(require('./expected.json'))) { const got = S.resolve(t)[0]; if (got !== want) bad.push(t + ' → ' + got + ' (esperado ' + want + ')'); }
 if (bad.length) { console.error('FALLA:', bad.join(' | ')); process.exit(1); }
 console.log('hevy_names.json:', Object.keys(flat).length, 'nombres →', new Set(Object.values(flat)).size, 'ejercicios. OK');
