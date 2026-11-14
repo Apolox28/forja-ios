@@ -83,6 +83,20 @@ enum HevyImporter {
         ExerciseSeed.extras.flatMap { x in x.hevy.map { ($0.lowercased(), x.name) } },
         uniquingKeysWith: { a, _ in a })
 
+    /// Todos los nombres de Hevy en inglés y en español (Resources/hevy_names.json, generado con tools/hevy_names/build.js).
+    static let hevyNames: [String: String] = {
+        guard let url = Bundle.main.url(forResource: "hevy_names", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let map = try? JSONDecoder().decode([String: String].self, from: data) else { return [:] }
+        return map
+    }()
+
+    /// Coincidencia exacta (sin tildes ni mayúsculas); si el equipo entre paréntesis no está en la tabla, prueba sin él.
+    static func hevyName(_ title: String) -> String? {
+        hevyNames[ExerciseMatcher.normalize(title)]
+            ?? title.firstIndex(of: "(").flatMap { hevyNames[ExerciseMatcher.normalize(String(title[..<$0]))] }
+    }
+
     private static let baseNameMap: [String: String] = [
         "21s bicep curl": "Curl 21",
         "ab wheel": "Rueda abdominal",
@@ -510,7 +524,7 @@ enum HevyImporter {
             // Ejercicio
             let exTitle = value(row, cExercise)
             guard !exTitle.isEmpty else { continue }
-            let mapped = nameMap[exTitle.lowercased()] ?? ExerciseMatcher.catalogName(for: exTitle) ?? exTitle
+            let mapped = nameMap[exTitle.lowercased()] ?? hevyName(exTitle) ?? ExerciseMatcher.catalogName(for: exTitle) ?? exTitle
             var exID = exerciseByName[mapped.lowercased()]
             if exID == nil {
                 let kind: ExerciseKind
