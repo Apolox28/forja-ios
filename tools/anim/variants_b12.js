@@ -37,15 +37,15 @@
     // ---- Cuello ----
     variant('neckFlexion', 'crunch', { p: ['neck'], s: [], stack: false, machinePos: null, cam: { y: 0.3, az: 60 }, period: 2600,
       A: { torso: -90, head: 10, arms: { ua: 88, fa: 88, palm: [0, -1, 0] } }, B: { torso: -90, head: -38, arms: { ua: 88, fa: 88, palm: [0, -1, 0] } } });
-    variant('neckFlexionWeighted', 'neckFlexion', { load: 'plate', plateAtHands: 'squeeze', B: { torso: -90, head: -28 },
+    variant('neckFlexionWeighted', 'neckFlexion', { load: 'plate', plateAtHands: 'grip', B: { torso: -90, head: -28 },
       A: { arms: { relC: [0.28, 0.32], gw: 0.17, palm: 'neu', pole: [0, 1, 0.5] } }, B: { arms: { relC: [0.28, 0.32], gw: 0.17, palm: 'neu', pole: [0, 1, 0.5] } } });
     variant('neckExtension', 'superman', { p: ['neck'], s: ['trapsU'], cam: { y: 0.3, az: 55 }, period: 2600,
       A: { torso: 89, head: -2, legs: P.superman.A.legs, arms: P.superman.A.arms }, B: { torso: 89, head: -32, legs: P.superman.A.legs, arms: P.superman.A.arms } });
     // ---- Barra: dragon flag, L-sit y front lever ----
     (function () {
       // cuerpo rígido apoyado en los hombros sobre el banco; las manos agarran el banco detrás de la cabeza
-      var SH = [-0.45, 0.63], L = 0.36;
-      function df(a) { var r = a * Math.PI / 180; return { hip: [SH[0] + L * Math.cos(r), SH[1] + L * Math.sin(r)], torso: -90 - a, head: 6 + a * 0.6, legs: { th: 90 + a, sh: 91 + a, footRel: 25, fw: 0.08 }, arms: { ik: [-0.6, 0.43], gw: 0.32, palm: 'neu', pole: [0, 1, 0.3] } }; }
+      var SH = [-0.45, 0.65], L = 0.36;
+      function df(a) { var r = a * Math.PI / 180; return { hip: [SH[0] + L * Math.cos(r), SH[1] + L * Math.sin(r)], torso: -90 - a, head: 6 + a * 0.75, legs: { th: 90 + a, sh: 91 + a, footRel: 25, fw: 0.08 }, arms: { ik: [-0.6, 0.43], gw: 0.32, palm: 'neu', pole: [0, 1, 0.3] } }; }
       variant('dragonFlag', 'bench', { load: 'none', scene: [], boxes: [[-0.05, 0.45, 0, 1.25, 0.3]], p: ['abs'], s: ['hipFlex', 'obliques', 'lats'], A: null, B: null, period: 4200, thumb: 0.3, cam: { az: 70, y: 0.6 },
         keys: [[0, df(55)], [0.12, df(55)], [0.55, df(14)], [0.64, df(14)], [1, df(55)]] });
     })();
@@ -79,11 +79,13 @@
       var PA = P.pushup.A, arms = PA.arms;
       function up(o) { return Object.assign({}, PA, o); }
       // Toques de hombro: desde arriba, una mano toca el hombro contrario
-      var tR = { armsL: arms, armsR: { ik: [0.3, 0.42, 0.04], palm: 'pro', pole: [-0.3, -1, 0.4] }, arms: null, twist: 0 };
-      var tL = { armsR: arms, armsL: { ik: [0.3, 0.42, 0.04], palm: 'pro', pole: [-0.3, -1, 0.4] }, arms: null, twist: 0 };
-      var b0 = { armsL: arms, armsR: arms, arms: null };
+      var S3 = Object.assign({}, arms, { ik: [arms.ik[0], arms.ik[1], arms.gw / 2] }); delete S3.gw;
+      var tR = { armsL: S3, armsR: { ik: [0.3, 0.36, -0.1], palm: 'pro', pole: [-0.3, -1, 0.4], hand: 'flat', flatDir: [0.3, 0, -1] }, arms: null, twist: 0 };
+      var tL = { armsR: S3, armsL: { ik: [0.3, 0.36, -0.1], palm: 'pro', pole: [-0.3, -1, 0.4], hand: 'flat', flatDir: [0.3, 0, -1] }, arms: null, twist: 0 };
+      var b0 = { armsL: arms, armsR: arms, arms: null }; var t0 = null;
+      t0 = { armsL: S3, armsR: S3, arms: null };
       variant('shoulderTap', 'pushup', { p: ['abs', 'deltsF'], s: ['obliques', 'triceps', 'pecs'], A: null, B: null, liftAt: null, period: 2000, thumb: 0.25, cam: { az: 50, y: 0.4 },
-        keys: [[0, up(b0)], [0.25, up(tR)], [0.5, up(b0)], [0.75, up(tL)], [1, up(b0)]] });
+        keys: [[0, up(t0)], [0.2, up(tR)], [0.4, up(t0)], [0.5, up(t0)], [0.7, up(tL)], [0.9, up(t0)], [1, up(t0)]] });
       // Remo renegado: en plancha sobre mancuernas, rema con un brazo y luego con el otro
       var DA = { ik: [0.33, 0.11], gw: 0.29, palm: 'neu', pole: [-1, 0.3, 0.45] }; b0 = { armsL: DA, armsR: DA, arms: null };
       var rR = { armsL: DA, armsR: { ik: [0.05, 0.36], gw: 0.29, palm: 'neu', pole: [-1, 0.6, 0.2] }, arms: null, twist: -6 };
@@ -91,14 +93,14 @@
       variant('renegadeRow', 'pushup', { load: 'hands', p: ['lats', 'abs'], s: ['deltsR', 'biceps', 'obliques'], A: null, B: null, liftAt: null, period: 2800, thumb: 0.25, cam: { az: 40, y: 0.4 },
         keys: [[0, up(b0)], [0.25, up(rR)], [0.5, up(b0)], [0.75, up(rL)], [1, up(b0)]] });
       // Spiderman: la rodilla derecha va hacia el codo derecho por fuera
-      var LP = PA.legs, sp = { legsL: LP, legsR: { ik: [-0.45, 0.25, 0.0], fw: 0.1, foot: 20, pole: [0.3, 0.3, 0.6] }, legs: null }, s0 = { legsL: LP, legsR: Object.assign({}, LP), legs: null };
-      var spL = { legsR: LP, legsL: { ik: [-0.45, 0.25, 0.0], fw: 0.1, foot: 20, pole: [0.3, 0.3, 0.6] }, legs: null }, s0L = s0;
+      var LP = PA.legs, sp = { legsL: LP, legsR: { ik: [-0.58, 0.22, 0.02], fw: 0.1, foot: 20, pole: [0.5, 0, 0.8] }, legs: null }, s0 = { legsL: LP, legsR: Object.assign({}, LP), legs: null };
+      var spL = { legsR: LP, legsL: { ik: [-0.58, 0.22, 0.02], fw: 0.1, foot: 20, pole: [0.5, 0, 0.8] }, legs: null }, s0L = s0;
       variant('spiderman', 'pushup', { p: ['abs', 'obliques', 'hipFlex'], s: ['deltsF', 'pecs'], A: null, B: null, liftAt: null, period: 2400, thumb: 0.25, cam: { az: 60, y: 0.4 },
         keys: [[0, up(s0)], [0.25, up(sp)], [0.5, up(s0)], [0.75, up(spL)], [1, up(s0L)]] });
       // Navaja en TRX: pies en las correas, las rodillas van al pecho
       var fT = { ik: [-0.98, 0.45], fw: 0.1, foot: 40, pole: [0, -1, 0] }, fK = { ik: [-0.34, 0.5], fw: 0.1, foot: 40, pole: [0, -1, 0] };
       variant('trxJackknife', 'pushup', { trxFeet: [-1.15, 2.35, 0], p: ['abs', 'hipFlex'], s: ['deltsF', 'quads'], A: null, B: null, liftAt: null, period: 2400, cam: { az: 40, y: 0.5 },
-        keys: [[0, up({ hip: [-0.105, 0.535], torso: 82, legs: fT })], [0.12, up({ hip: [-0.105, 0.535], torso: 82, legs: fT })], [0.45, up({ hip: [-0.05, 0.6], torso: 94, legs: fK })], [0.6, up({ hip: [-0.05, 0.6], torso: 94, legs: fK })], [1, up({ hip: [-0.105, 0.535], torso: 82, legs: fT })]] });
+        keys: [[0, up({ hip: [-0.105, 0.505], torso: 83, legs: fT })], [0.12, up({ hip: [-0.105, 0.505], torso: 83, legs: fT })], [0.45, up({ hip: [-0.06, 0.58], torso: 92, legs: fK })], [0.6, up({ hip: [-0.06, 0.58], torso: 92, legs: fK })], [1, up({ hip: [-0.105, 0.505], torso: 83, legs: fT })]] });
     })();
     // Plancha invertida: boca arriba, manos bajo los hombros, cuerpo recto apoyado en los talones
     variant('reversePlank', 'plank', { p: ['glutes', 'lowback'], s: ['hams', 'deltsR', 'triceps'], cam: { az: 30, y: 0.35 },

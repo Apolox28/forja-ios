@@ -49,7 +49,7 @@
     // Halo con kettlebell: la pesa, cogida por el asa boca abajo, rodea la cabeza
     (function () {
       function hh(x, y, z) { return st({ armsR: { ik: [x, y, z + 0.04], palm: [0, 0, -1], pole: [0, -1, 0.4] }, armsL: { ik: [x, y, -(z - 0.04)], palm: [0, 0, -1], pole: [0, -1, 0.4] } }); }
-      var F0 = hh(0.24, 1.52, 0), R0 = hh(0.02, 1.63, 0.24), B0 = hh(-0.2, 1.6, 0), L0 = hh(0.02, 1.63, -0.24);
+      var F0 = hh(0.24, 1.52, 0), R0 = hh(0.02, 1.63, 0.24), B0 = hh(-0.24, 1.56, 0), L0 = hh(0.02, 1.63, -0.24);
       variant('kbHalo', 'ohExt', { load: 'kb', p: ['deltsF', 'triceps'], s: ['deltsS', 'traps', 'abs'], A: null, B: null, period: 3600, cam: { az: 40 },
         keys: [[0, F0], [0.25, R0], [0.5, B0], [0.75, L0], [1, F0]] });
     })();
@@ -67,8 +67,8 @@
     variant('dipRings', 'dip', { scene: [], rings: 2.7, s: ['triceps', 'deltsF', 'abs'] });
     // Fondos en el suelo: sentado con las manos detrás; la cadera sube un poco y los codos se doblan hacia atrás
     variant('floorDip', 'dip', { p: ['triceps'], s: ['deltsF'], scene: ['mat'], cam: { az: 45, y: 0.4 },
-      A: { hip: [0.04, 0.24], torso: -16, legs: { ik: [0.5, ANK], fw: 0.13 }, arms: { ik: [-0.2, 0.092], gw: 0.22, hand: 'flat', flatDir: [1, 0, 0], pole: [-1, 0.2, 0.3], straight: 1 } },
-      B: { hip: [0.06, 0.15], torso: -8, legs: { ik: [0.5, ANK], fw: 0.13 }, arms: { ik: [-0.2, 0.092], gw: 0.22, hand: 'flat', flatDir: [1, 0, 0], pole: [-1, 0.2, 0.3] } } });
+      A: { hip: [0.04, 0.24], torso: -20, legs: { ik: [0.5, ANK], fw: 0.13 }, arms: { ik: [-0.2, 0.092], gw: 0.22, hand: 'flat', flatDir: [0.25, 0, 0.97], pole: [-1, 0.2, 0.3], straight: 1 } },
+      B: { hip: [-0.02, 0.17], torso: -18, legs: { ik: [0.5, ANK], fw: 0.13 }, arms: { ik: [-0.2, 0.092], gw: 0.22, hand: 'flat', flatDir: [0.25, 0, 0.97], pole: [-1, 0.2, 0.3] } } });
   })();
   // Remo al mentón con mancuernas: las mancuernas suben por delante y algo separadas del cuerpo
   variant('uprightRowDb', 'uprightRow', { load: 'hands', A: { arms: { rel: [0.1, HANG, 0.0], pole: [-0.2, 0.6, 1.4], palm: 'pro' } }, B: { arms: { rel: [0.2, -0.08, 0.04], pole: [-0.5, 0.75, 1.5], palm: 'pro' } } });

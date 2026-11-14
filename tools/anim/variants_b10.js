@@ -71,7 +71,7 @@
     // Remo bajo en TRX: inclinado hacia atrás de cara al anclaje; el pecho sube hasta las manos con los codos atrás
     variant('trxRow', 'row', { load: 'none', trx: [1.25, 2.35, 0], cam: { az: 40 },
       A: { hip: [-0.27, 0.83], torso: -30, head: 8, legs: { ik: [0.14, ANK], fw: 0.12 }, arms: { relC: [0.52, 0.0], gw: 0.12, palm: 'neu', straight: 0.95, pole: [-1, -0.5, 0.4] } },
-      B: { hip: [-0.15, 0.91], torso: -14, head: 4, legs: { ik: [0.14, ANK], fw: 0.12 }, arms: { relC: [0.14, -0.04], gw: 0.2, palm: 'neu', pole: [-1, -0.5, 0.4] } } });
+      B: { hip: [-0.15, 0.91], torso: -14, head: 4, legs: { ik: [0.14, ANK], fw: 0.12 }, arms: { relC: [0.18, -0.04], gw: 0.2, palm: 'neu', pole: [-1, -0.5, 0.4] } } });
     // Remo gorila con kettlebells: bisagra con las rodillas flexionadas; rema una mientras la otra apoya en el suelo
     (function () {
       var b = { hip: [-0.2, 0.62], torso: 66, head: -24, legs: { ik: [0, ANK], fw: 0.32, toe: 14 } };

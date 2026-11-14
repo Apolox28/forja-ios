@@ -1,14 +1,14 @@
 # Animaciones publicadas que hay que revisar (detectadas con romtest.js y a ojo)
 
 - ~~**seatedRowMachine**~~ (arreglado el 11-11): el brazo se dobla por detrás de la cabeza al tirar (fase 0,2–0,4). Grave.
-- **curlIncline**: el brazo cuelga demasiado por detrás del cuerpo (extensión del hombro ≈ 97°).
+- ~~**curlIncline**~~ (arreglado el 14-11): el brazo cuelga demasiado por detrás del cuerpo (extensión del hombro ≈ 97°).
 - ~~**ballLegCurl**~~ (rodillas arregladas el 11-11): rodillas con flexión rara en la fase 0,23 y muñecas > 80°.
-- **benchDip / dip / dipMachine**: extensión del hombro excesiva en la bajada (90–97°).
-- **cableFlyHigh, chestSupportedRow, pendlayRow**: hombro por detrás del cuerpo y codo > 155° al final del tirón.
-- **rowErg**: flexión de cadera de 156° en el agarre; debería estar en torno a 135°.
-- **deadlift / sumoDeadlift / powerClean**: flexión de cadera de 145–149° al inicio, algo profunda.
-- **turkishGetUp**: abducción de la cadera izquierda de 82° al barrer la pierna y muñeca izquierda a 114°.
-- **gluteKickback**: extensión de cadera de 48°, que debería ser ≤ 35°.
+- ~~**benchDip / dip / dipMachine**~~ (arreglado el 14-11): extensión del hombro excesiva en la bajada (90–97°).
+- ~~**cableFlyHigh, chestSupportedRow, pendlayRow**~~ (sin avisos el 14-11): hombro por detrás del cuerpo y codo > 155° al final del tirón.
+- ~~**rowErg**~~: flexión de cadera de 156° en el agarre; debería estar en torno a 135°.
+- ~~**deadlift / sumoDeadlift / powerClean**~~ (arreglado el 14-11): flexión de cadera de 145–149° al inicio, algo profunda.
+- ~~**turkishGetUp**~~ (arreglado el 14-11): abducción de la cadera izquierda de 82° al barrer la pierna y muñeca izquierda a 114°.
+- ~~**gluteKickback**~~: extensión de cadera de 48°, que debería ser ≤ 35°.
 - **Agarre en la espalda (squat, boxSquat, lungeBar, goodMorning, hipThrust…)**: muñeca a 90°. Vale, pero se puede suavizar.
 
 # Pedidos del usuario (pasados por la sesión de la app el 10-11)
@@ -37,3 +37,5 @@
 - Arreglados el 11-11: fondos y fondos en máquina (bajada hasta unos 90° de codo), curl inclinado (codos abajo, brazos algo abiertos). Fondos en banco: el hombro llega a unos 90° de extensión abajo, que es propio del ejercicio.
 - Arreglado el 11-11: remo ergómetro (agarre con las tibias casi verticales, cadera ~135°).
 - Arreglados el 11-11: remo Pendlay (la barra toca la parte baja del pecho) y remo con pecho apoyado (codo menos atrás).
+
+- 14-11: prueba completa de las 504 combinaciones sin ningún aviso (choques, suelo, alcance de manos, rangos humanos y coherencia).

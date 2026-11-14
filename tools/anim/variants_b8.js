@@ -105,9 +105,9 @@
     // ---- Por encima de la cabeza ----
     // Flexiones en pino (contra la pared) y pino: el cuerpo entero invertido (giro de 180º); las manos fijas en el suelo
     (function () {
-      function hs(hipY, st) { return { hip: [0, hipY], torso: 0, head: 6, roll: [180, 0, 2.07, 0], legs: { th: 0, sh: 0, fw: 0.08, foot: 20 }, arms: { ik: [0.02, 1.95], gw: 0.27, palm: [0, -1, 0], pole: [0.4, -1, 0.5], straight: st, hand: 'flat', flatDir: [1, 0, 0.1] } }; }
+      function hs(hipY, st, hx, pl) { return { hip: [0, hipY], torso: 0, head: 6, roll: [180, 0, 2.07, 0], legs: { th: 0, sh: 0, fw: 0.08, foot: 20 }, arms: { ik: [hx == null ? 0.02 : hx, 1.95], gw: 0.27, palm: [0, -1, 0], pole: pl || [0.4, -1, 0.5], straight: st, hand: 'flat', flatDir: [1, 0, 0.1] } }; }
       var W = [[-0.22, 2.6, 0, 0.08, 1.4, 2.6, 1]];
-      variant('hspu', 'ohp', { load: 'none', stack: false, p: ['deltsF', 'triceps'], s: ['deltsS', 'traps', 'abs'], boxes: W, A: hs(0.97, 1), B: hs(1.22, 0), cam: { az: 55, y: 1.0 } });
+      variant('hspu', 'ohp', { load: 'none', stack: false, p: ['deltsF', 'triceps'], s: ['deltsS', 'traps', 'abs'], boxes: W, A: hs(0.97, 1, 0.05), B: hs(1.22, 0, -0.06, [-0.3, -1, 1.2]), cam: { az: 55, y: 1.0 } });
       variant('handstand', 'ohp', { load: 'none', stack: false, p: ['deltsF', 'abs'], s: ['triceps', 'traps', 'forearms'], boxes: W, A: hs(0.97, 1), B: hs(0.985, 1), cam: { az: 55, y: 1.0 } });
     })();
     // Press de hombro con kettlebell (a una mano): desde la posición de rack hasta el bloqueo arriba; la otra mano en la cadera

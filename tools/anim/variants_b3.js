@@ -90,7 +90,7 @@
   (function () {
     var ft = { ik: [-0.04, ANK], fw: 0.13 };
     function hp(h, t, bar, extra) { return Object.assign({ hip: h, torso: t, head: -t * 0.3, legs: ft, arms: { ik: bar, gw: 0.25, palm: 'pro' } }, extra || {}); }
-    var P0 = hp([-0.34, 0.63], 75, [0.082, 0.225]), P1 = hp([-0.33, 0.84], 74, [0.082, 0.45]), P2 = hp([-0.14, 0.95], 22, [0.05, 0.86]);
+    var P0 = hp([-0.34, 0.635], 74, [0.082, 0.225]), P1 = hp([-0.33, 0.84], 74, [0.082, 0.45]), P2 = hp([-0.14, 0.95], 22, [0.05, 0.86]);
     var P3 = hp([0.0, 1.0], -4, [0.03, 0.91], { shr: 0.05 });
     var b4 = { hip: [-0.04, 0.94], torso: 4, legs: ft }, P4 = Object.assign({}, b4, { arms: { ik: relIk(b4, [0.14, -0.04]), gw: 0.27, palm: 'pro', pole: [0, 1, 0.8] } });
     var b5 = { hip: [-0.12, 0.84], torso: 10, head: 0, legs: ft }, P5 = Object.assign({}, b5, { arms: { ik: relIk(b5, [0.19, 0.06]), gw: 0.25, palm: 'pro', pole: [1, 0.5, 0.3] } });
