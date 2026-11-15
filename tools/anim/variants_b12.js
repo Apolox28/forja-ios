@@ -162,4 +162,34 @@
       variant('sideLegRaise', 'plank', { side: 'L', p: ['gluteMed'], s: ['glutes', 'obliques'], scene: ['mat'], cam: { az: 12, el: 28, y: 0.3 },
         A: sl({ legsR: st, legsL: st }), B: sl({ legsR: st, legsL: { ik: [0, 0.36, 0.6], fw: 0.07, foot: 0 } }) });
     })();
+    // Poleas siempre al frente o a la izquierda de la persona: los ejercicios con la torre a la derecha se reflejan
+    (function () {
+      function mp(f) {
+        if (!f) return f; var q = cloneP(f), t;
+        t = q.armsL; q.armsL = q.armsR; q.armsR = t; t = q.legsL; q.legsL = q.legsR; q.legsR = t;
+        if (q.armsL === undefined) delete q.armsL; if (q.armsR === undefined) delete q.armsR; if (q.legsL === undefined) delete q.legsL; if (q.legsR === undefined) delete q.legsR;
+        if (q.hip && q.hip.length > 2) q.hip[2] = -q.hip[2];
+        if (q.twist) q.twist = -q.twist; if (q.lean) q.lean = -q.lean;
+        return q;
+      }
+      ['woodchop', 'woodchopLowHigh', 'cableFlyOne'].forEach(function (k) {
+        var d = P[k]; if (!d) return;
+        if (d.side) d.side = d.side === 'R' ? 'L' : 'R';
+        if (d.load === 'cableR') d.load = 'cableL';
+        if (d.towerPos) d.towerPos = [d.towerPos[0], -d.towerPos[1]];
+        if (d.anchor) d.anchor = [d.anchor[0], d.anchor[1], -d.anchor[2]];
+        if (d.cam && d.cam.az != null) d.cam = Object.assign({}, d.cam, { az: 180 - d.cam.az });
+        d.A = mp(d.A); d.B = mp(d.B); if (d.keys) d.keys = d.keys.map(function (kv) { return [kv[0], mp(kv[1])]; });
+      });
+    })();
+    // Poleas genéricas: al frente (encogimientos y remo al mentón con barra desde la polea baja), detrás solo cuando la
+    // técnica lo exige (elevación frontal: el cable pasa entre las piernas), y el remo a una mano con la torre al frente
+    P.shrug.towerPos = [0.85, 0]; P.shrug.anchor = [0.78, 0.14, 0];
+    P.uprightRow.towerPos = [0.85, 0]; P.uprightRow.anchor = [0.78, 0.14, 0];
+    if (P.lateral) { P.lateral.towerPos = [-0.9, 0]; P.lateral.anchor = [-0.82, 0.14, 0]; }
+    P.seatedRowOneArm.towerPos = [1.02, 0.12];
+    // Press de pecho en polea: de pie entre las dos torres, cables desde atrás a la altura del pecho; empuja al frente
+    variant('cablePress', 'cableFly', { p: ['pecs'], s: ['deltsF', 'triceps', 'pecsU'], pulleyY: 1.3,
+      A: { arms: { relC: [0.1, -0.06], gw: 0.42, palm: 'pro', pole: [-1, -0.3, 0.6] } },
+      B: { arms: { relC: [0.5, -0.02], gw: 0.22, palm: 'pro', straight: 0.95, pole: [-1, -0.3, 0.6] } } });
   })();

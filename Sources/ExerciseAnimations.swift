@@ -254,6 +254,7 @@ extension ExerciseSeed {
         "press de hombro en máquina de discos": "ohpMachine",
         "press de hombro sentado con mancuernas": "ohpSeated",
         "press de pecho con banda": "bandChestPress",
+        "press de pecho en polea": "cablePress",
         "press de pecho isolateral en máquina": "chestPress",
         "press de suelo con barra": "floorPress",
         "press de suelo con mancuernas": "floorPress",
