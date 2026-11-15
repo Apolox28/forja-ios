@@ -417,11 +417,12 @@
   // ---------------------------------------------------------------- suelo precalculado
   // Para cada conducta se recorre su ciclo una vez y se guarda el punto más bajo del cuerpo en cada instante.
   // En cada fotograma solo se interpola: el perro queda apoyado exacto y sin vibrar.
-  var GROUND = {}, STEPS = 48, CAND = null;
+  // Optimizado para iPhone: 32 instantes y 1 de cada 6 vértices (antes 48 y 1 de cada 3: congelaba el visor ~1–2 s).
+  var GROUND = {}, STEPS = 32, CAND = null;
   function candidates(skin) {
     if (CAND) return CAND;
-    var n = skin.geometry.attributes.position.count, out = [];
-    for (var i = 0; i < n; i += 3) out.push(i);
+    var pos = skin.geometry.attributes.position, n = pos.count, out = [];
+    for (var i = 0; i < n; i += 6) out.push(i);
     return (CAND = out);
   }
   function lowest(D) {

@@ -135,6 +135,12 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         }
     }
 
+    /// Pausa el dibujo cuando el visor no está en pantalla.
+    func setVisible(_ visible: Bool) {
+        guard ready else { return }
+        webView.evaluateJavaScript("window.forjaPause && forjaPause(\(visible ? "false" : "true"));", completionHandler: nil)
+    }
+
     func run(_ js: String) {
         if ready {
             webView.evaluateJavaScript(js, completionHandler: nil)
@@ -161,10 +167,11 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             script = """
             var canvas = document.getElementById('c'), hint = document.getElementById('h');
             var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null, dogReady = false;
+            var DPR = Math.min(window.devicePixelRatio || 1, 2), paused = false, running = true;
             var yaw = 0, vel = 0, dragging = false, lastX = 0, base = null, loaded = false, want = null, homing = false, lastTap = 0, hinted = false;
             function size() {
               var w = canvas.clientWidth || 300, h = canvas.clientHeight || w;
-              R.setPixelRatio(window.devicePixelRatio || 1); R.setSize(w, h, false);
+              R.setPixelRatio(DPR); R.setSize(w, h, false);
               if (ST) { ST.camera.aspect = w / h; ST.camera.updateProjectionMatrix(); }
             }
             function disposeScene(s) {
@@ -199,14 +206,19 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
               ST.camera.position.set(t.x + dx * cs + dz * sn, c.y, t.z - dx * sn + dz * cs);
               ST.camera.lookAt(t);
             }
+            window.forjaPause = function (p) {
+              paused = p;
+              if (!p && !running) { running = true; requestAnimationFrame(frame); }
+            };
             function frame(ts) {
+              if (paused) { running = false; return; }
               requestAnimationFrame(frame);
               if (!ST) return;
               if (T0 === null) T0 = ts;
               if (homing) { yaw *= 0.85; if (Math.abs(yaw) < 0.002) { yaw = 0; homing = false; } }
               else if (!dragging && Math.abs(vel) > 0.0003) { yaw += vel; vel *= 0.93; }
               applyYaw();
-              if (Math.abs(canvas.width - canvas.clientWidth * (window.devicePixelRatio || 1)) > 2) size();
+              if (Math.abs(canvas.width - canvas.clientWidth * DPR) > 2) size();
               ST.update(((ts - T0) % PERIOD) / PERIOD);
               R.render(ST.scene, ST.camera);
             }
@@ -309,6 +321,7 @@ final class Viewer3DContainer: UIView {
             web.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             addSubview(web)
         }
+        host.setVisible(true)
         if let js = lastJS { host.run(js) }
     }
 
@@ -327,7 +340,10 @@ final class Viewer3DContainer: UIView {
         if window != nil {
             take()
         } else {
-            DispatchQueue.main.async { [host] in host.reassign() }
+            DispatchQueue.main.async { [host] in
+                host.reassign()
+                if host.webView.window == nil { host.setVisible(false) }
+            }
         }
     }
 }
