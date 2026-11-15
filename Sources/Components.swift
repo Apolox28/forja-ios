@@ -26,6 +26,7 @@ struct NumberField: View {
     let deferred: Bool
     @State var text: String = ""
     @State private var pending: DispatchWorkItem?
+    @State private var dirty = false
 
     /// Pide a los campos diferidos que guarden ya lo escrito (antes de marcar una serie o terminar).
     static let commitAll = Notification.Name("ForjaCommitNumberFields")
@@ -38,8 +39,12 @@ struct NumberField: View {
         self.deferred = deferred
     }
 
+    // Solo toca el dato si quedó algo sin guardar: tras descartar un entrenamiento, la serie ya no
+    // existe y leer o escribir su valor cerraría la app.
     func commit() {
         pending?.cancel()
+        guard dirty else { return }
+        dirty = false
         let parsed = NumberField.parse(text)
         if parsed != value { value = parsed }
     }
@@ -59,6 +64,7 @@ struct NumberField: View {
                     if parsed != value { value = parsed }
                     return
                 }
+                dirty = true
                 pending?.cancel()
                 let work = DispatchWorkItem { commit() }
                 pending = work
@@ -67,7 +73,7 @@ struct NumberField: View {
             .onReceive(NotificationCenter.default.publisher(for: NumberField.commitAll)) { _ in if deferred { commit() } }
             .onDisappear { if deferred { commit() } }
             .onChange(of: value) { newValue in
-                if NumberField.parse(text) != newValue { text = NumberField.format(newValue) }
+                if !dirty, NumberField.parse(text) != newValue { text = NumberField.format(newValue) }
             }
     }
 

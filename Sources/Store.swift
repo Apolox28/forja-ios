@@ -373,6 +373,7 @@ final class Store: ObservableObject {
     }
 
     func startWorkout(name: String?, template: [WorkoutExercise]) {
+        NumberField.flush()
         var w = Workout(name: (name?.isEmpty == false ? name! : Workout.defaultName()))
         w.exercises = template.map { ex in
             var copy = ex
@@ -393,6 +394,7 @@ final class Store: ObservableObject {
     }
 
     func discardWorkout() {
+        NumberField.flush() // guarda lo escrito mientras el entrenamiento aún existe
         data.activeWorkout = nil
         showActiveWorkout = false
         skipRest()
@@ -400,6 +402,7 @@ final class Store: ObservableObject {
 
     /// Guarda el entrenamiento en el historial. Devuelve false si no hay series completadas.
     func finishWorkout() -> Bool {
+        NumberField.flush()
         guard var w = data.activeWorkout else { return false }
         w.exercises = w.exercises.compactMap { ex in
             var e = ex

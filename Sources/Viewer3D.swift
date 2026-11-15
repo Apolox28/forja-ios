@@ -207,7 +207,12 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             var THEMES = {
               grafito: { bg: 'radial-gradient(120% 95% at 50% 30%,#363a44 0%,#22252c 55%,#16181d 100%)', floor: '#262930', floorEdge: 'rgba(38,41,48,0)' },
               claro: { bg: 'radial-gradient(120% 95% at 50% 25%,#ffffff 0%,#eceef1 50%,#d6d9df 100%)', floor: '#e2e5ea', floorEdge: 'rgba(226,229,234,0)' },
-              noche: { bg: 'radial-gradient(120% 95% at 50% 25%,#2b3a5c 0%,#18213a 55%,#0c1222 100%)', floor: '#1c2742', floorEdge: 'rgba(28,39,66,0)' }
+              noche: { bg: 'radial-gradient(120% 95% at 50% 25%,#2b3a5c 0%,#18213a 55%,#0c1222 100%)', floor: '#1c2742', floorEdge: 'rgba(28,39,66,0)' },
+              gimnasio: { bg: 'radial-gradient(45% 55% at 50% -5%,rgba(255,236,200,.28) 0%,transparent 70%),linear-gradient(180deg,#2a2d33 0%,#1b1d22 60%,#121317 100%)', floor: '#24262b', floorEdge: 'rgba(36,38,43,0)', pattern: 'tiles' },
+              madera: { bg: 'radial-gradient(80% 70% at 50% 20%,#6b4a33 0%,#3e2a1d 55%,#21160f 100%)', floor: '#8a5d3b', floorEdge: 'rgba(138,93,59,0)', pattern: 'wood' },
+              atardecer: { bg: 'radial-gradient(60% 45% at 50% 62%,rgba(255,214,140,.55) 0%,transparent 70%),linear-gradient(180deg,#3b2a5c 0%,#a5487a 45%,#f08a5d 78%,#f6c26b 100%)', floor: '#d98c66', floorEdge: 'rgba(217,140,102,0)', pattern: 'sand' },
+              bosque: { bg: 'radial-gradient(22% 18% at 20% 30%,rgba(190,255,190,.18) 0%,transparent 100%),radial-gradient(16% 14% at 78% 22%,rgba(255,255,200,.16) 0%,transparent 100%),radial-gradient(26% 20% at 70% 60%,rgba(140,220,170,.12) 0%,transparent 100%),radial-gradient(120% 95% at 50% 30%,#2f5a45 0%,#1b3a2c 55%,#0d1f17 100%)', floor: '#2c4a36', floorEdge: 'rgba(44,74,54,0)', pattern: 'sand' },
+              neon: { bg: 'radial-gradient(40% 35% at 18% 20%,rgba(255,60,200,.35) 0%,transparent 100%),radial-gradient(40% 35% at 82% 25%,rgba(0,220,255,.3) 0%,transparent 100%),radial-gradient(120% 95% at 50% 40%,#1d1338 0%,#120b26 60%,#08051a 100%)', floor: '#140d2c', floorEdge: 'rgba(20,13,44,0)', pattern: 'grid' }
             };
             window.forjaTheme = function (k) { var th = THEMES[k] || THEMES.grafito; window.FORJA3D_THEME = th; document.getElementById('w').style.background = th.bg; };
             function applyYaw() {

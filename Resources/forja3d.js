@@ -3085,15 +3085,42 @@
     var fill = new T.DirectionalLight(0xffffff, 0.25); fill.position.set(-2, 1.5, 3); scene.add(fill);
     // Suelo de estudio: un degradado radial que se funde con el fondo de la página (sin horizonte ni bordes)
     var TH = global.FORJA3D_THEME || {};
-    function floorTexture(c0, c1) {
+    function floorTexture(c0, c1, pat) {
       if (typeof document === 'undefined') return null; // en Node (pruebas) no hay canvas
-      var cv = document.createElement('canvas'); cv.width = cv.height = 256;
-      var x = cv.getContext('2d'), g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+      var S = pat ? 1024 : 256, H = S / 2;
+      var cv = document.createElement('canvas'); cv.width = cv.height = S;
+      var x = cv.getContext('2d'), g = x.createRadialGradient(H, H, 0, H, H, H);
       g.addColorStop(0, c0); g.addColorStop(0.55, c0); g.addColorStop(1, c1);
-      x.fillStyle = g; x.fillRect(0, 0, 256, 256);
-      var tx = new T.CanvasTexture(cv); tx.encoding = T.sRGBEncoding; return tx;
+      x.fillStyle = g; x.fillRect(0, 0, S, S);
+      // Dibujo del suelo (baldosas, tablas, arena o rejilla); 'source-atop' respeta el desvanecido del borde
+      if (pat) {
+        var seed = 7, rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+        x.save(); x.globalCompositeOperation = 'source-atop';
+        if (pat === 'tiles') {
+          var st = S / 14;
+          for (var i = 0; i <= S; i += st) for (var j = 0; j <= S; j += st) { x.fillStyle = 'rgba(255,255,255,' + (rnd() * 0.035) + ')'; x.fillRect(i, j, st, st); }
+          x.strokeStyle = 'rgba(0,0,0,0.45)'; x.lineWidth = 3;
+          for (var k = 0; k <= S; k += st) { x.beginPath(); x.moveTo(k, 0); x.lineTo(k, S); x.moveTo(0, k); x.lineTo(S, k); x.stroke(); }
+        } else if (pat === 'wood') {
+          var ph = S / 22;
+          for (var y = 0; y < S; y += ph) {
+            var off = rnd() * S;
+            x.fillStyle = 'rgba(' + (rnd() < 0.5 ? '0,0,0,' : '255,220,170,') + (0.05 + rnd() * 0.08) + ')'; x.fillRect(0, y, S, ph);
+            for (var q = 0; q < 6; q++) { x.strokeStyle = 'rgba(60,30,10,' + (0.08 + rnd() * 0.1) + ')'; x.lineWidth = 1; var yy = y + rnd() * ph; x.beginPath(); x.moveTo(0, yy); x.bezierCurveTo(S * 0.3, yy + rnd() * 6 - 3, S * 0.7, yy + rnd() * 6 - 3, S, yy); x.stroke(); }
+            x.strokeStyle = 'rgba(30,15,5,0.55)'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(0, y); x.lineTo(S, y); x.stroke();
+            x.beginPath(); x.moveTo(off, y); x.lineTo(off, y + ph); x.stroke();
+          }
+        } else if (pat === 'sand') {
+          for (var n = 0; n < 9000; n++) { x.fillStyle = rnd() < 0.5 ? 'rgba(0,0,0,0.07)' : 'rgba(255,255,255,0.06)'; x.fillRect(rnd() * S, rnd() * S, 2, 2); }
+        } else if (pat === 'grid') {
+          var gs = S / 16; x.strokeStyle = 'rgba(0,230,255,0.55)'; x.lineWidth = 2; x.shadowColor = '#00e6ff'; x.shadowBlur = 8;
+          for (var m = 0; m <= S; m += gs) { x.beginPath(); x.moveTo(m, 0); x.lineTo(m, S); x.moveTo(0, m); x.lineTo(S, m); x.stroke(); }
+        }
+        x.restore();
+      }
+      var tx = new T.CanvasTexture(cv); tx.encoding = T.sRGBEncoding; tx.anisotropy = 4; return tx;
     }
-    var disc = new T.Mesh(new T.PlaneGeometry(7, 7), new T.MeshBasicMaterial({ map: floorTexture(TH.floor || '#2a2d35', TH.floorEdge || 'rgba(42,45,53,0)'), transparent: true, depthWrite: false }));
+    var disc = new T.Mesh(new T.PlaneGeometry(7, 7), new T.MeshBasicMaterial({ map: floorTexture(TH.floor || '#2a2d35', TH.floorEdge || 'rgba(42,45,53,0)', TH.pattern), transparent: true, depthWrite: false }));
     disc.rotation.x = -Math.PI / 2; disc.position.y = -0.002; scene.add(disc);
     var floor = new T.Mesh(new T.PlaneGeometry(12, 12), new T.ShadowMaterial({ opacity: 0.45 }));
     floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);

@@ -24,11 +24,18 @@ enum DogLook {
     ]
     /// Fondo de los modelos 3D (claves de THEMES en la página del visor).
     static let themeKey = "stageTheme"
-    static let themes: [(String, String)] = [("grafito", "Grafito"), ("claro", "Estudio claro"), ("noche", "Azul noche")]
+    static let themes: [(String, String)] = [("grafito", "Grafito"), ("claro", "Estudio claro"), ("noche", "Azul noche"),
+                                             ("gimnasio", "Gimnasio"), ("madera", "Madera"), ("atardecer", "Atardecer"),
+                                             ("bosque", "Bosque"), ("neon", "Neón")]
     static let themeSwatch: [String: [Color]] = [
         "grafito": [Color(red: 0.21, green: 0.23, blue: 0.27), Color(red: 0.09, green: 0.09, blue: 0.11)],
         "claro": [Color.white, Color(red: 0.84, green: 0.85, blue: 0.87)],
         "noche": [Color(red: 0.17, green: 0.23, blue: 0.36), Color(red: 0.05, green: 0.07, blue: 0.13)],
+        "gimnasio": [Color(red: 0.45, green: 0.42, blue: 0.36), Color(red: 0.07, green: 0.07, blue: 0.09)],
+        "madera": [Color(red: 0.54, green: 0.36, blue: 0.23), Color(red: 0.13, green: 0.09, blue: 0.06)],
+        "atardecer": [Color(red: 0.96, green: 0.62, blue: 0.4), Color(red: 0.4, green: 0.2, blue: 0.4)],
+        "bosque": [Color(red: 0.25, green: 0.48, blue: 0.36), Color(red: 0.05, green: 0.12, blue: 0.09)],
+        "neon": [Color(red: 0.7, green: 0.2, blue: 0.75), Color(red: 0.03, green: 0.02, blue: 0.1)],
     ]
     static let extras: [(String, String)] = [
         ("ninguno", "Nada"), ("panuelo", "Pañuelo"), ("pajarita", "Pajarita"), ("collar", "Collar"), ("gafas", "Gafas"),
@@ -55,6 +62,7 @@ struct StageThemeSection: View {
     @AppStorage(DogLook.themeKey) var theme = "grafito"
     var body: some View {
         Section(header: Text("Fondo 3D"), footer: Text("El fondo de las animaciones de los ejercicios.")) {
+            ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 14) {
                 ForEach(DogLook.themes, id: \.0) { item in
                     let on = theme == item.0
@@ -79,6 +87,7 @@ struct StageThemeSection: View {
                 }
             }
             .padding(.vertical, 6)
+            }
         }
     }
 }
