@@ -44,7 +44,7 @@
       o.frustumCulled = false;
       var g = o.geometry, pos = g.attributes.position;
       if (o.material.name === 'Coco') {
-        var out = new Float32Array(pos.count * 3);
+        var out = new Float32Array(pos.count * 3), W = new Float32Array(pos.count), F = new Float32Array(pos.count);
         if (!g.attributes.normal) g.computeVertexNormals();
         var nrm = g.attributes.normal;
         for (var i = 0; i < pos.count; i++) {
@@ -54,10 +54,11 @@
           var inY = Math.min(smoothE(y, 0.15, 0.19), 1 - smoothE(y, 0.27, 0.31)), inX = 1 - smoothE(Math.abs(x), cx - 0.012, cx + 0.012);
           var face = Math.max(smoothE(-ny, 0.05, 0.25), smoothE(nz, 0.25, 0.45));
           var w = Math.max(0, Math.min(inZ, inY, inX, face));
-          var base = z > 0.74 ? 0.012 : 0.018;
-          out[i * 3] = base + (0.86 - base) * w; out[i * 3 + 1] = base + (0.85 - base) * w; out[i * 3 + 2] = base * 1.15 + (0.82 - base * 1.15) * w;
+          W[i] = w; F[i] = smoothE(z, 0.765, 0.785);
         }
+        g.userData.chest = W; g.userData.nose = F;
         g.setAttribute('color', new T.BufferAttribute(out, 3));
+        COCO = g; paintCoat();
         o.material = furMaterial();
         o.material.name = 'Coco';
       } else if (o.name === 'EyeSparklies' || (o.parent && o.parent.name === 'EyeSparklies')) {
@@ -110,25 +111,176 @@
     return m;
   }
 
-  // Corona en coordenadas del modelo (antes de escalar), pegada al hueso de la cabeza
-  function addCrown(bones, model) {
-    var M = mats(), crown = new T.Group();
-    var r = 0.082;
-    mesh(new T.CylinderGeometry(r, r * 0.88, 0.055, 32, 1, true), M.gold, crown, 0, 0.027, 0);
-    for (var i = 0; i < 5; i++) {
-      var a = (i / 5) * PI * 2, cx = Math.cos(a) * r * 0.93, cz = Math.sin(a) * r * 0.93;
-      mesh(new T.ConeGeometry(0.019, 0.06, 12), M.gold, crown, cx, 0.083, cz);
-      mesh(new T.SphereGeometry(0.0125, 12, 10), M.gold, crown, cx, 0.118, cz);
+  // ---------------------------------------------------------------- aspecto: pelaje, gorro y accesorio
+  // FORJA_DOG.setLook({ coat, hat, extra }) antes de crear perros. El pelaje se pinta en la geometría compartida.
+  var LOOK = { coat: 'clasico', hat: 'corona', extra: 'ninguno' };
+  var COCO = null;
+  // colores en sRGB: [pelo, pecho, trufa, manchas, marcas de fuego en patas, hocico y cejas]
+  var COATS = {
+    clasico: [0x242424, 0xeeece8, 0x161616],
+    chocolate: [0x4a2a18, 0xc48c5c, 0x24140c],
+    fuego: [0x1e1e1e, 0xb8743a, 0x161616, null, true],
+    rojo: [0x8c4019, 0xd29a64, 0x1c1210],
+    crema: [0xd2ae80, 0xf6efe2, 0x2a1e18],
+    gris: [0x5a606c, 0xc8beae, 0x2a2c30],
+    arlequin: [0x242424, 0xeeece8, 0x161616, 0x8f9298]
+  };
+  function lin(h) { return new T.Color(h).convertSRGBToLinear(); }
+  // ruido suave 3D (manchas del arlequín)
+  function hash(x, y, z) { var h = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453; return h - Math.floor(h); }
+  function vnoise(x, y, z) {
+    var xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z), xf = x - xi, yf = y - yi, zf = z - zi;
+    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf), w = zf * zf * (3 - 2 * zf), r = 0;
+    for (var a = 0; a < 2; a++) for (var b = 0; b < 2; b++) for (var c = 0; c < 2; c++)
+      r += hash(xi + a, yi + b, zi + c) * (a ? u : 1 - u) * (b ? v : 1 - v) * (c ? w : 1 - w);
+    return r;
+  }
+  function paintCoat() {
+    if (!COCO) return;
+    var C = COATS[LOOK.coat] || COATS.clasico, fur = lin(C[0]), chest = lin(C[1]), nose = lin(C[2]), spot = C[3] != null ? lin(C[3]) : null, tan = C[4];
+    var pos = COCO.attributes.position, col = COCO.attributes.color, W = COCO.userData.chest, F = COCO.userData.nose, b = new T.Color();
+    for (var i = 0; i < pos.count; i++) {
+      b.copy(fur);
+      if (spot) {
+        var x = pos.getX(i) * 15, y = pos.getY(i) * 15, z = pos.getZ(i) * 15;
+        b.lerp(spot, 0.85 * smoothE(vnoise(x, y, z) * 0.65 + vnoise(x * 2.7, y * 2.7, z * 2.7) * 0.35, 0.6, 0.66));
+      }
+      if (tan) {
+        var px = Math.abs(pos.getX(i)), py = pos.getY(i), pz = pos.getZ(i);
+        var legs = 1 - smoothE(py, 0.06, 0.12), muzzle = smoothE(pz, 0.62, 0.67) * (1 - smoothE(py, 0.63, 0.67));
+        var brow = 1 - smoothE(Math.hypot(px - 0.062, py - 0.765, pz - 0.6), 0.012, 0.022);
+        b.lerp(chest, Math.max(legs, muzzle, brow));
+      }
+      b.lerp(chest, W[i]).lerp(nose, F[i]);
+      col.setXYZ(i, b.r, b.g, b.b);
     }
-    mesh(new T.SphereGeometry(0.014, 12, 10), M.gem, crown, 0, 0.027, r * 0.95);
-    // posición sobre la coronilla en la pose de reposo, y luego se cuelga del hueso Head
+    col.needsUpdate = true;
+  }
+  function setLook(o) {
+    o = o || {};
+    LOOK = { coat: COATS[o.coat] ? o.coat : 'clasico', hat: o.hat in HATS ? o.hat : 'corona', extra: o.extra in EXTRAS ? o.extra : 'ninguno' };
+    paintCoat();
+  }
+  function std(c, r, m, more) { return new T.MeshStandardMaterial(Object.assign({ color: lin(c), roughness: r == null ? 0.7 : r, metalness: m || 0 }, more)); }
+
+  // Gorros: grupo con la base en y = 0 y radio ~0.085 (coordenadas del modelo), centrado en la coronilla
+  var HATS = {
+    ninguno: null,
+    corona: function (g) {
+      var M = mats(), r = 0.082;
+      mesh(new T.CylinderGeometry(r, r * 0.88, 0.055, 32, 1, true), M.gold, g, 0, 0.027, 0);
+      for (var i = 0; i < 5; i++) {
+        var a = (i / 5) * PI * 2, cx = Math.cos(a) * r * 0.93, cz = Math.sin(a) * r * 0.93;
+        mesh(new T.ConeGeometry(0.019, 0.06, 12), M.gold, g, cx, 0.083, cz);
+        mesh(new T.SphereGeometry(0.0125, 12, 10), M.gold, g, cx, 0.118, cz);
+      }
+      mesh(new T.SphereGeometry(0.014, 12, 10), M.gem, g, 0, 0.027, r * 0.95);
+    },
+    fiesta: function (g) {
+      var cols = [std(0xff8a3d, 0.55), std(0xffffff, 0.6)], h = 0.05;
+      for (var i = 0; i < 4; i++) {
+        var r0 = 0.072 * (1 - i / 4), r1 = 0.072 * (1 - (i + 1) / 4) + 0.002;
+        mesh(new T.CylinderGeometry(r1, r0, h, 28), cols[i % 2], g, 0, h * (i + 0.5), 0);
+      }
+      mesh(new T.SphereGeometry(0.02, 14, 10), std(0x3d7bff, 0.5), g, 0, h * 4 + 0.012, 0);
+    },
+    lana: function (g) {
+      mesh(new T.SphereGeometry(0.1, 28, 14, 0, PI * 2, 0, PI / 2), std(0xc0392b, 0.95), g, 0, 0.01, 0).scale.y = 0.95;
+      mesh(new T.CylinderGeometry(0.104, 0.104, 0.04, 28), std(0xa93226, 0.95), g, 0, 0.012, 0);
+      mesh(new T.SphereGeometry(0.032, 14, 10), std(0xf4f1ea, 1), g, 0, 0.118, 0);
+    },
+    gorra: function (g) {
+      var m = std(0x1f2a44, 0.7), o = std(0xff8a3d, 0.5);
+      mesh(new T.SphereGeometry(0.1, 28, 14, 0, PI * 2, 0, PI / 2), m, g, 0, 0.005, 0).scale.y = 0.72;
+      var visor = mesh(new T.CylinderGeometry(0.08, 0.08, 0.008, 28, 1, false, -PI / 2, PI), m, g, 0, 0.008, 0.08);
+      visor.scale.set(1, 1, 1.25); visor.rotation.x = 0.12;
+      mesh(new T.SphereGeometry(0.01, 10, 8), o, g, 0, 0.077, 0);
+      mesh(new T.CircleGeometry(0.024, 20), o, g, 0, 0.04, 0.093).rotation.x = -0.5;
+    },
+    noel: function (g) {
+      var red = std(0xc62828, 0.85), white = std(0xf7f5f0, 1);
+      mesh(new T.TorusGeometry(0.08, 0.018, 12, 32), white, g, 0, 0.012, 0).rotation.x = PI / 2;
+      mesh(new T.CylinderGeometry(0.04, 0.078, 0.09, 28), red, g, 0, 0.055, 0);
+      mesh(new T.ConeGeometry(0.04, 0.12, 24), red, g, 0.03, 0.14, -0.02).rotation.set(-0.35, 0, -0.75);
+      mesh(new T.SphereGeometry(0.022, 14, 10), white, g, 0.085, 0.165, -0.045);
+    },
+    vikingo: function (g) {
+      var steel = std(0x9aa3ad, 0.35, 0.8), horn = std(0xece2c6, 0.55);
+      mesh(new T.SphereGeometry(0.1, 28, 14, 0, PI * 2, 0, PI / 2), steel, g, 0, 0.005, 0).scale.y = 0.85;
+      mesh(new T.TorusGeometry(0.1, 0.01, 10, 32), mats().gold, g, 0, 0.008, 0).rotation.x = PI / 2;
+      [-1, 1].forEach(function (s) {
+        mesh(new T.ConeGeometry(0.022, 0.075, 16), horn, g, s * 0.112, 0.05, 0).rotation.z = -s * 1.05;
+        mesh(new T.ConeGeometry(0.013, 0.055, 16), horn, g, s * 0.142, 0.1, 0).rotation.z = -s * 0.25;
+      });
+    },
+    mago: function (g) {
+      var m = std(0x4b2c83, 0.8);
+      mesh(new T.CylinderGeometry(0.14, 0.14, 0.008, 36), m, g, 0, 0.02, 0);
+      mesh(new T.ConeGeometry(0.075, 0.22, 28), m, g, 0, 0.13, 0).rotation.z = 0.12;
+      mesh(new T.OctahedronGeometry(0.016), std(0xffd54a, 0.4, 0.3), g, 0, 0.085, 0.066);
+    },
+    chef: function (g) {
+      var w = std(0xffffff, 0.9);
+      mesh(new T.CylinderGeometry(0.09, 0.098, 0.075, 28), w, g, 0, 0.03, 0);
+      [[0, 0.1, 0, 0.068], [0.05, 0.09, 0.02, 0.05], [-0.05, 0.09, 0.02, 0.05], [0, 0.09, -0.05, 0.05], [0.02, 0.092, 0.05, 0.045]].forEach(function (p) {
+        mesh(new T.SphereGeometry(p[3], 16, 12), w, g, p[0], p[1], p[2]);
+      });
+    }
+  };
+  // Accesorios: se construyen en coordenadas del modelo en reposo ([x, y, z, rotX, rotY, rotZ]) y se cuelgan de un hueso
+  var NECK = [0, 0.5, 0.3, -1.1, 0, 0];   // cuello en reposo
+  var EXTRAS = {
+    ninguno: null,
+    panuelo: { bone: 'Spine_3', at: NECK, build: function (g) {
+      var m = std(0xd32f2f, 0.85, 0, { side: T.DoubleSide });
+      mesh(new T.TorusGeometry(0.125, 0.016, 10, 40), m, g, 0, 0, 0).scale.set(1.15, 1, 1);
+      var tri = mesh(new T.ConeGeometry(0.08, 0.13, 3), m, g, 0, -0.17, 0.035);
+      tri.rotation.set(PI + 1.1, 0, 0); tri.scale.z = 0.22;
+    } },
+    pajarita: { bone: 'Spine_3', at: NECK, build: function (g) {
+      var m = std(0x111318, 0.5), b = new T.Group();
+      mesh(new T.TorusGeometry(0.125, 0.006, 8, 40), m, g, 0, 0, 0).scale.set(1.15, 1, 1);
+      [-1, 1].forEach(function (s) { var w = mesh(new T.ConeGeometry(0.03, 0.06, 4), m, b, s * 0.03, 0, 0); w.rotation.z = s * PI / 2; w.scale.z = 0.45; });
+      mesh(new T.SphereGeometry(0.014, 10, 8), m, b, 0, 0, 0.004);
+      b.position.set(0, -0.165, 0.035); b.rotation.x = 1.1; b.scale.setScalar(1.2); g.add(b);
+    } },
+    collar: { bone: 'Spine_3', at: NECK, build: function (g) {
+      mesh(new T.TorusGeometry(0.125, 0.014, 10, 40), std(0xff8a3d, 0.6), g, 0, 0, 0).scale.set(1.15, 1, 1);
+      mesh(new T.CylinderGeometry(0.022, 0.022, 0.006, 20), mats().gold, g, 0, -0.15, 0.05).rotation.x = PI / 2 + 1.1;
+    } },
+    gafas: { bone: 'Head', at: [0, 0.705, 0.64, -0.2, 0, 0], build: function (g) {
+      var frame = std(0xff8a3d, 0.4), lens = std(0x10141c, 0.05, 0.5);
+      [-1, 1].forEach(function (s) {
+        mesh(new T.CylinderGeometry(0.036, 0.036, 0.006, 24), lens, g, s * 0.052, 0, 0).rotation.x = PI / 2;
+        mesh(new T.TorusGeometry(0.037, 0.005, 8, 28), frame, g, s * 0.052, 0, 0);
+      });
+      mesh(new T.CylinderGeometry(0.004, 0.004, 0.035, 8), frame, g, 0, 0.008, 0).rotation.z = PI / 2;
+    } }
+  };
+
+  function hang(g, at, bone, model) {
     model.updateMatrixWorld(true);
-    crown.position.set(0.0, 0.74, 0.5);
-    crown.rotation.set(-0.28, 0, 0.12);
-    model.add(crown);
-    crown.updateMatrixWorld(true);
-    bones.Head.attach(crown);
-    return crown;
+    g.position.set(at[0], at[1], at[2]);
+    g.rotation.set(at[3], at[4], at[5]);
+    model.add(g);
+    g.updateMatrixWorld(true);
+    bone.attach(g);
+    return g;
+  }
+  // gorro sobre la coronilla en la pose de reposo, colgado del hueso Head
+  function addHat(bones, model) {
+    var fn = HATS[LOOK.hat];
+    if (!fn) return null;
+    var g = new T.Group();
+    fn(g);
+    return hang(g, [0, 0.74, 0.5, -0.28, 0, LOOK.hat === 'corona' ? 0.12 : 0.06], bones.Head, model);
+  }
+  function addExtra(bones, model) {
+    var e = EXTRAS[LOOK.extra];
+    if (!e) return null;
+    var g = new T.Group();
+    e.build(g);
+    return hang(g, e.at, bones[e.bone], model);
   }
 
   // Lengua: descansa sobre el suelo de la boca; D.tongueOut (0..1) la saca por delante, colgando un poco
@@ -471,7 +623,8 @@
       if (o.isBone && !D.bones[o.name]) { D.bones[o.name] = o; D.boneList.push(o); o.userData.rest = o.quaternion.clone(); }
       if (o.isSkinnedMesh && o.material.name === 'Coco') D.skin = o;
     });
-    D.crown = addCrown(D.bones, model);
+    D.crown = addHat(D.bones, model);
+    D.extra = addExtra(D.bones, model);
     D.tongue = addTongue(D.bones, model);
     D.mouth = addMouth(D.bones, model);
 
@@ -589,5 +742,5 @@
     return db ? 'proud' : 'sit';
   }
 
-  global.FORJA_DOG = { behaviorFor: behaviorFor, period: function (b) { return PERIOD[b] || 4; }, setModel: setModel, create: create, attach: attach, behaviors: Object.keys(BEHAVIORS), ready: function () { return !!SRC; } };
+  global.FORJA_DOG = { setLook: setLook, coats: Object.keys(COATS), hats: Object.keys(HATS), extras: Object.keys(EXTRAS), behaviorFor: behaviorFor, period: function (b) { return PERIOD[b] || 4; }, setModel: setModel, create: create, attach: attach, behaviors: Object.keys(BEHAVIORS), ready: function () { return !!SRC; } };
 })(typeof window !== 'undefined' ? window : this);

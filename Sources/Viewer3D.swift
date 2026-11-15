@@ -48,7 +48,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         let dogGLB = bundle.url(forResource: "dog", withExtension: "glb")
         let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "0"
         let engineSize = (try? fm.attributesOfItem(atPath: engineURL.path)[.size] as? Int) ?? 0
-        let dogSize = dogGLB.flatMap { (try? fm.attributesOfItem(atPath: $0.path)[.size] as? Int) ?? 0 } ?? 0
+        let dogSize = [dogGLB, dogJS].compactMap { $0 }.reduce(0) { $0 + ((try? fm.attributesOfItem(atPath: $1.path)[.size] as? Int) ?? 0) }
         let caches = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         let name = "forja3d-\(build)-\(engineSize)-\(dogSize)"
         let dir = caches.appendingPathComponent(name)
@@ -160,7 +160,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         case .exercise:
             script = """
             var canvas = document.getElementById('c'), hint = document.getElementById('h');
-            var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null, dogReady = false;
+            var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null, dogReady = false, dogOpts = {};
             var yaw = 0, vel = 0, dragging = false, lastX = 0, base = null, loaded = false, want = null, homing = false, lastTap = 0, hinted = false;
             function size() {
               var w = canvas.clientWidth || 300, h = canvas.clientHeight || w;
@@ -184,7 +184,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
               var old = ST;
               ST = FORJA3D.createStage(k, eq, m, v); ST.key = [k, eq, m, v];
               PERIOD = FORJA3D.periodFor ? FORJA3D.periodFor(k) : 2600;
-              if (dogReady) { try { FORJA_DOG.attach(ST, FORJA_DOG.behaviorFor(k, eq)); } catch (e) {} }
+              if (dogReady && !dogOpts.hidden) { try { FORJA_DOG.attach(ST, FORJA_DOG.behaviorFor(k, eq)); } catch (e) {} }
               T0 = null; yaw = 0; vel = 0; homing = false;
               base = { c: ST.camera.position.clone(), t: ST.target ? ST.target.clone() : guessTarget() };
               size();
@@ -194,6 +194,8 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
               if (old) { if (old.dog) old.scene.remove(old.dog.group); disposeScene(old.scene); }
             }
             window.forjaShow = show;
+            // Aspecto del perrito (Apariencia): se aplica antes de crear la escena
+            window.forjaDog = function (o) { dogOpts = o || {}; if (window.FORJA_DOG && FORJA_DOG.setLook) FORJA_DOG.setLook(dogOpts); };
             function applyYaw() {
               var c = base.c, t = base.t, dx = c.x - t.x, dz = c.z - t.z, cs = Math.cos(yaw), sn = Math.sin(yaw);
               ST.camera.position.set(t.x + dx * cs + dz * sn, c.y, t.z - dx * sn + dz * cs);
@@ -349,7 +351,7 @@ struct ExerciseAnimationView: UIViewRepresentable {
         return exercise.muscle.mapKey ?? ""
     }
 
-    var js: String { "forjaShow('\(patternKey)','\(equipmentKey)','\(muscleKey)',\(view == 2 ? 2 : 1));" }
+    var js: String { DogLook.js + "forjaShow('\(patternKey)','\(equipmentKey)','\(muscleKey)',\(view == 2 ? 2 : 1));" }
 
     func makeUIView(context: Context) -> Viewer3DContainer {
         let v = Viewer3DContainer(host: .exercise)
