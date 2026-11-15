@@ -22,12 +22,26 @@ struct NumberField: View {
     let placeholder: String
     @Binding var value: Double
     let allowsDecimal: Bool
+    /// En el entrenamiento: guarda al dejar de escribir (no en cada tecla), para no redibujar toda la app.
+    let deferred: Bool
     @State var text: String = ""
+    @State private var pending: DispatchWorkItem?
 
-    init(_ placeholder: String, value: Binding<Double>, allowsDecimal: Bool = true) {
+    /// Pide a los campos diferidos que guarden ya lo escrito (antes de marcar una serie o terminar).
+    static let commitAll = Notification.Name("ForjaCommitNumberFields")
+    static func flush() { NotificationCenter.default.post(name: commitAll, object: nil) }
+
+    init(_ placeholder: String, value: Binding<Double>, allowsDecimal: Bool = true, deferred: Bool = false) {
         self.placeholder = placeholder
         self._value = value
         self.allowsDecimal = allowsDecimal
+        self.deferred = deferred
+    }
+
+    func commit() {
+        pending?.cancel()
+        let parsed = NumberField.parse(text)
+        if parsed != value { value = parsed }
     }
 
     var body: some View {
@@ -40,9 +54,18 @@ struct NumberField: View {
             .cornerRadius(8)
             .onAppear { text = NumberField.format(value) }
             .onChange(of: text) { newText in
-                let parsed = NumberField.parse(newText)
-                if parsed != value { value = parsed }
+                guard deferred else {
+                    let parsed = NumberField.parse(newText)
+                    if parsed != value { value = parsed }
+                    return
+                }
+                pending?.cancel()
+                let work = DispatchWorkItem { commit() }
+                pending = work
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6, execute: work)
             }
+            .onReceive(NotificationCenter.default.publisher(for: NumberField.commitAll)) { _ in if deferred { commit() } }
+            .onDisappear { if deferred { commit() } }
             .onChange(of: value) { newValue in
                 if NumberField.parse(text) != newValue { text = NumberField.format(newValue) }
             }

@@ -122,6 +122,7 @@ struct ActiveWorkoutView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Terminar") {
+                        NumberField.flush()
                         hideKeyboard()
                         confirmFinish = true
                     }
@@ -136,6 +137,7 @@ struct ActiveWorkoutView: View {
                                 isPresented: $confirmFinish,
                                 titleVisibility: .visible) {
                 Button("Terminar y guardar") {
+                    NumberField.flush()
                     if !store.finishWorkout() {
                         nothingDoneAlert = true
                     }
@@ -187,11 +189,12 @@ struct ExerciseSection: View {
             TextField("Notas del ejercicio", text: $entry.notes)
                 .font(.subheadline)
             columnHeader
+            let prev = previous
             ForEach($entry.sets) { $set in
                 SetEditorRow(set: $set,
                              label: label(for: set),
                              kind: kind,
-                             previous: previousSet(for: set),
+                             previous: entry.sets.firstIndex(where: { $0.id == set.id }).flatMap { $0 < prev.count ? prev[$0] : nil },
                              unit: store.unit,
                              showCheck: isActive,
                              recordToBeat: recordToBeat,
@@ -322,6 +325,7 @@ struct ExerciseSection: View {
     }
 
     func addSet() {
+        NumberField.flush() // la serie nueva copia los valores de la anterior
         var s = WorkoutSet()
         if let last = entry.sets.last {
             s.weight = last.weight
@@ -404,20 +408,20 @@ struct SetEditorRow: View {
     var fields: some View {
         switch kind {
         case .weightReps:
-            NumberField(previous.map { Fmt.num($0.weight) } ?? "0", value: $set.weight)
+            NumberField(previous.map { Fmt.num($0.weight) } ?? "0", value: $set.weight, deferred: true)
                 .frame(width: 64)
-            NumberField(previous.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false)
+            NumberField(previous.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 52)
         case .repsOnly:
-            NumberField(previous.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false)
+            NumberField(previous.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 64)
         case .duration:
-            NumberField(previous.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false)
+            NumberField(previous.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 64)
         case .distanceTime:
-            NumberField(previous.map { Fmt.num($0.distance) } ?? "0", value: $set.distance)
+            NumberField(previous.map { Fmt.num($0.distance) } ?? "0", value: $set.distance, deferred: true)
                 .frame(width: 56)
-            NumberField(previous.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false)
+            NumberField(previous.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 60)
         }
     }
@@ -439,6 +443,7 @@ struct SetEditorRow: View {
             if set.seconds == 0 { set.seconds = p.seconds }
             if set.distance == 0 { set.distance = p.distance }
         }
+        NumberField.flush()
         withAnimation(.spring()) { set.done.toggle() }
         if set.done {
             hideKeyboard()
