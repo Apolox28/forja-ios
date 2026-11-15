@@ -76,7 +76,7 @@
     B: { armsR: { ua: -3, fa: 16, palm: 'sup' }, armsL: { rel: [0.05, -0.3, 0.1], palm: 'neu' }, arms: null } });
   // Press de banca agarre cerrado: manos al ancho de hombros, codos pegados; principal el tríceps
   variant('benchClose', 'bench', { p: ['triceps'], s: ['pecs', 'pecsU', 'deltsF'] });
-  eachArm('benchClose', function (a) { a.gw = 0.19; a.pole = [0.6, -0.4, 0.25]; return a; });
+  eachArm('benchClose', function (a) { a.gw = 0.3; a.pole = [0.05, -1, 0.1]; return a; });
   // Press JM: agarre cerrado, la barra baja hacia la parte alta del pecho/barbilla con los codos hacia los pies
   variant('benchJM', 'benchClose', {});
   eachArm('benchJM', function (a, f) { if (f === 'B') a.ik = [-0.34, 0.78]; a.pole = [1, -0.1, 0.15]; return a; });
@@ -112,8 +112,8 @@
     var base = { hip: [0.08, 0.66], torso: -108, legs: { ik: [0.42, 0.42], fw: 0.14, pole: [0.2, 1, 0.1], foot: 20 } };
     var sc0 = shoAt(base);
     variant('decline', 'bench', { scene: ['declineBench'], smith: false, cam: { y: 0.6, az: 40 },
-      A: Object.assign({}, base, { arms: { ik: [sc0.x + 0.05, sc0.y + 0.46], gw: 0.42, palm: 'pro' } }),
-      B: Object.assign({}, base, { arms: { ik: [sc0.x + 0.13, sc0.y + 0.17], gw: 0.42, palm: 'pro' } }) });
+      A: Object.assign({}, base, { arms: { ik: [sc0.x + 0.05, sc0.y + 0.46], gw: 0.34, palm: 'pro', pole: [0, -1, 0.25] } }),
+      B: Object.assign({}, base, { arms: { ik: [sc0.x + 0.13, sc0.y + 0.17], gw: 0.34, palm: 'pro', pole: [0, -1, 0.25] } }) });
   })();
   // Press de suelo: tumbado en el suelo, rodillas flexionadas; los codos tocan el suelo abajo
   (function () {
@@ -879,9 +879,9 @@
     function arms(k, fn) { eachArm(k, function (a) { return Object.assign(a, fn(a)); }); }
     // ---- Press de banca ----
     // Press apretando mancuernas / hexagonal: las mancuernas juntas, agarre neutro, se aprietan durante todo el recorrido
-    variant('benchSqueeze', 'bench', { load: 'hands', s: ['pecsU', 'triceps', 'deltsF'] }); arms('benchSqueeze', function () { return { gw: 0.065, palm: 'neu' }; });
+    variant('benchSqueeze', 'bench', { load: 'hands', s: ['pecsU', 'triceps', 'deltsF'] }); arms('benchSqueeze', function () { return { gw: 0.065, palm: 'neu', pole: undefined }; });
     // Agarre ancho: más pectoral, menos tríceps
-    variant('benchWide', 'bench', { s: ['pecsU', 'deltsF'] }); arms('benchWide', function () { return { gw: 0.48 }; });
+    variant('benchWide', 'bench', { s: ['pecsU', 'deltsF'] }); arms('benchWide', function () { return { gw: 0.44, pole: [0, -1, 0.6] }; });
     // Con los pies arriba: caderas y rodillas a 90º en el aire, sin impulso de piernas
     variant('benchFeetUp', 'bench', { A: { legs: { th: 178, sh: 94, fw: 0.14, footRel: 10 } }, B: { legs: { th: 178, sh: 94, fw: 0.14, footRel: 10 } } });
     // Larsen: piernas estiradas y pies despegados del suelo
