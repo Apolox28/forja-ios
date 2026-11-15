@@ -8,6 +8,18 @@ struct ActiveWorkoutView: View {
     @State var confirmFinish = false
     @State var confirmDiscard = false
     @State var nothingDoneAlert = false
+    @State var recordName: String? = nil
+    @State var recordToken = 0
+
+    /// Muestra unos segundos el aviso de récord (con el perrito celebrando si está activado).
+    func celebrate(_ name: String) {
+        recordToken += 1
+        let token = recordToken
+        withAnimation(.spring()) { recordName = name }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
+            if recordToken == token { withAnimation(.easeOut) { recordName = nil } }
+        }
+    }
 
     var workout: Binding<Workout> {
         Binding(
@@ -57,7 +69,8 @@ struct ActiveWorkoutView: View {
                                     onAction: { action in
                                         store.data.activeWorkout?.exercises.apply(action, to: entry.id)
                                     },
-                                    onSetCompleted: { seconds in store.startRest(seconds) })
+                                    onSetCompleted: { seconds in store.startRest(seconds) },
+                                    onRecord: { name in celebrate(name) })
                 }
                 RedundancyNote(exerciseIDs: workout.wrappedValue.exercises.map { $0.exerciseID })
 
@@ -84,6 +97,15 @@ struct ActiveWorkoutView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .overlay(alignment: .top) {
+                if let name = recordName {
+                    RecordToast(exercise: name)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 8)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                        .onTapGesture { withAnimation { recordName = nil } }
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 RestTimerBar()
             }
@@ -149,6 +171,7 @@ struct ExerciseSection: View {
     var siblings: [WorkoutExercise] = []
     var onAction: (ExerciseAction) -> Void
     var onSetCompleted: (Int) -> Void = { _ in }
+    var onRecord: (String) -> Void = { _ in }
     @State var showInfo = false
 
     var exercise: Exercise? { store.exercise(entry.exerciseID) }
@@ -172,7 +195,8 @@ struct ExerciseSection: View {
                              unit: store.unit,
                              showCheck: isActive,
                              recordToBeat: recordToBeat,
-                             onCompleted: { onSetCompleted(entry.restSeconds) })
+                             onCompleted: { onSetCompleted(entry.restSeconds) },
+                             onRecord: { onRecord(exercise?.name ?? "") })
             }
             .onDelete { offsets in
                 entry.sets.remove(atOffsets: offsets)
@@ -318,6 +342,7 @@ struct SetEditorRow: View {
     let showCheck: Bool
     var recordToBeat = RecordBests()
     var onCompleted: () -> Void = {}
+    var onRecord: () -> Void = {}
 
     var isRecord: Bool { self.set.done && recordToBeat.isBeaten(by: self.set, kind: kind) }
 
@@ -420,6 +445,7 @@ struct SetEditorRow: View {
             if isRecord {
                 AudioServicesPlaySystemSound(1025) // fanfarria del sistema
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
+                onRecord()
             } else {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
             }
@@ -583,6 +609,14 @@ struct WorkoutSummaryView: View {
                     }
                 }
                 .onAppear { ratings = workout.ratings ?? [:] }
+                if !prs.isEmpty && DogLook.isShown {
+                    Section {
+                        DogSceneView(behavior: "celebrate")
+                            .frame(height: 230)
+                            .listRowInsets(EdgeInsets())
+                            .listRowBackground(Color.clear)
+                    }
+                }
                 if !prs.isEmpty {
                     Section(header: Text("Récords personales")) {
                         ForEach(prs) { e in
@@ -665,5 +699,34 @@ struct RecordGlow: View {
             .clipped()
         }
         .onAppear { withAnimation(.easeInOut(duration: 0.9).delay(0.2)) { sweep = true } }
+    }
+}
+
+/// Aviso de récord personal: el perrito saltando con su medalla y el nombre del ejercicio.
+struct RecordToast: View {
+    let exercise: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            if DogLook.isShown {
+                DogSceneView(behavior: "celebrate")
+                    .frame(width: 96, height: 96)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            } else {
+                Image(systemName: "medal.fill")
+                    .font(.system(size: 40))
+                    .foregroundColor(.yellow)
+                    .frame(width: 64, height: 64)
+            }
+            VStack(alignment: .leading, spacing: 4) {
+                Text("¡Récord personal!").font(.headline)
+                Text(exercise).font(.subheadline).foregroundColor(.secondary).lineLimit(2)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(10)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
+        .accessibilityElement(children: .combine)
     }
 }

@@ -48,7 +48,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         let dogGLB = bundle.url(forResource: "dog", withExtension: "glb")
         let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "0"
         let engineSize = (try? fm.attributesOfItem(atPath: engineURL.path)[.size] as? Int) ?? 0
-        let dogSize = dogGLB.flatMap { (try? fm.attributesOfItem(atPath: $0.path)[.size] as? Int) ?? 0 } ?? 0
+        let dogSize = [dogGLB, dogJS].compactMap { $0 }.reduce(0) { $0 + ((try? fm.attributesOfItem(atPath: $1.path)[.size] as? Int) ?? 0) }
         let caches = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         let name = "forja3d-\(build)-\(engineSize)-\(dogSize)"
         let dir = caches.appendingPathComponent(name)
@@ -166,8 +166,8 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         case .exercise:
             script = """
             var canvas = document.getElementById('c'), hint = document.getElementById('h');
-            var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null, dogReady = false;
-            var DPR = Math.min(window.devicePixelRatio || 1, 2), paused = false, running = true;
+            var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null, dogReady = false, dogOpts = {};
+            var DPR = Math.min(window.devicePixelRatio || 1, 2), paused = false, running = true, wantDog = null;
             var yaw = 0, vel = 0, dragging = false, lastX = 0, base = null, loaded = false, want = null, homing = false, lastTap = 0, hinted = false;
             function size() {
               var w = canvas.clientWidth || 300, h = canvas.clientHeight || w;
@@ -191,7 +191,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
               var old = ST;
               ST = FORJA3D.createStage(k, eq, m, v); ST.key = [k, eq, m, v];
               PERIOD = FORJA3D.periodFor ? FORJA3D.periodFor(k) : 2600;
-              if (dogReady) { try { FORJA_DOG.attach(ST, FORJA_DOG.behaviorFor(k, eq)); } catch (e) {} }
+              if (dogReady && !dogOpts.hidden) { try { FORJA_DOG.attach(ST, FORJA_DOG.behaviorFor(k, eq)); } catch (e) {} }
               T0 = null; yaw = 0; vel = 0; homing = false;
               base = { c: ST.camera.position.clone(), t: ST.target ? ST.target.clone() : guessTarget() };
               size();
@@ -201,6 +201,8 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
               if (old) { if (old.dog) old.scene.remove(old.dog.group); disposeScene(old.scene); }
             }
             window.forjaShow = show;
+            // Aspecto del perrito (Apariencia): se aplica antes de crear la escena
+            window.forjaDog = function (o) { dogOpts = o || {}; if (window.FORJA_DOG && FORJA_DOG.setLook) FORJA_DOG.setLook(dogOpts); };
             function applyYaw() {
               var c = base.c, t = base.t, dx = c.x - t.x, dz = c.z - t.z, cs = Math.cos(yaw), sn = Math.sin(yaw);
               ST.camera.position.set(t.x + dx * cs + dz * sn, c.y, t.z - dx * sn + dz * cs);
@@ -247,8 +249,39 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             // El perrito se carga después del cuerpo; al estar listo se añade a la animación que se esté viendo.
             function loadDog() {
               if (!window.FORJA_DOG || !window.FORJA_DOG_GLB) return;
-              FORJA_DOG.setModel(window.FORJA_DOG_GLB, function (e) { if (e) return; dogReady = true; if (ST && !ST.dog) show.apply(null, ST.key); });
+              FORJA_DOG.setModel(window.FORJA_DOG_GLB, function (e) {
+                if (e) return;
+                dogReady = true;
+                if (wantDog) { var w = wantDog; wantDog = null; window.forjaDogOnly(w); }
+                else if (ST && !ST.dog && ST.key) show.apply(null, ST.key);
+              });
             }
+            // Escena solo con el perrito (celebraciones de récord y resumen del entrenamiento)
+            function dogStage(b) {
+              var scene = new THREE.Scene();
+              scene.add(new THREE.HemisphereLight(0xffffff, 0x30343e, 0.8));
+              var k = new THREE.DirectionalLight(0xffffff, 1.2); k.position.set(2.5, 4.6, 3.2); k.castShadow = true;
+              k.shadow.mapSize.set(1024, 1024); k.shadow.camera.left = k.shadow.camera.bottom = -1.2; k.shadow.camera.right = k.shadow.camera.top = 1.2; k.shadow.radius = 4; scene.add(k);
+              var rim = new THREE.DirectionalLight(0xc6d6ff, 0.5); rim.position.set(-3, 2.6, -2.6); scene.add(rim);
+              var fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(-2, 1.5, 3); scene.add(fill);
+              var floor = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), new THREE.ShadowMaterial({ opacity: 0.45 }));
+              floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+              var disc = new THREE.Mesh(new THREE.CircleGeometry(1.1, 48), new THREE.MeshBasicMaterial({ color: 0x1c1e24 }));
+              disc.rotation.x = -Math.PI / 2; disc.position.y = -0.002; scene.add(disc);
+              var dog = FORJA_DOG.create(b, { x: 0, z: 0, face: 28 });
+              scene.add(dog.group);
+              var cam = new THREE.PerspectiveCamera(30, 1, 0.05, 30), tgt = new THREE.Vector3(0, 0.26, 0);
+              cam.position.set(0.6, 0.6, 1.85); cam.lookAt(tgt);
+              return { scene: scene, camera: cam, target: tgt, dog: dog, key: null, update: function () { dog.update(performance.now()); } };
+            }
+            window.forjaDogOnly = function (b) {
+              if (!dogReady) { wantDog = b; return; }
+              var old = ST;
+              ST = dogStage(b); PERIOD = 2400; T0 = null; yaw = 0; vel = 0; homing = false;
+              base = { c: ST.camera.position.clone(), t: ST.target.clone() };
+              size(); ST.update(0); R.render(ST.scene, ST.camera);
+              if (old) { if (old.dog) old.scene.remove(old.dog.group); disposeScene(old.scene); }
+            };
             if (data.length > 0) FORJA3D.loadModel(data, function () { ready(); setTimeout(loadDog, 0); }); else ready();
             window.webkit.messageHandlers.forjaReady.postMessage(1);
             """
@@ -365,7 +398,25 @@ struct ExerciseAnimationView: UIViewRepresentable {
         return exercise.muscle.mapKey ?? ""
     }
 
-    var js: String { "forjaShow('\(patternKey)','\(equipmentKey)','\(muscleKey)',\(view == 2 ? 2 : 1));" }
+    var js: String { DogLook.js + "forjaShow('\(patternKey)','\(equipmentKey)','\(muscleKey)',\(view == 2 ? 2 : 1));" }
+
+    func makeUIView(context: Context) -> Viewer3DContainer {
+        let v = Viewer3DContainer(host: .exercise)
+        v.show(js)
+        return v
+    }
+
+    func updateUIView(_ v: Viewer3DContainer, context: Context) {
+        if v.lastJS != js { v.show(js) }
+    }
+}
+
+// MARK: - Perrito celebrando
+
+/// El perrito solo (sin persona), por ejemplo celebrando un récord. Usa el mismo visor compartido.
+struct DogSceneView: UIViewRepresentable {
+    var behavior = "celebrate"
+    var js: String { DogLook.js + "forjaDogOnly('\(behavior)');" }
 
     func makeUIView(context: Context) -> Viewer3DContainer {
         let v = Viewer3DContainer(host: .exercise)
