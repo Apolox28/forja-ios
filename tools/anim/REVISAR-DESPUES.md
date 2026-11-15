@@ -55,7 +55,7 @@ Ya hecho:
 Pendiente:
 - Pasada estética «obra de arte» con dos vistas y varias fases por ejercicio. La revisión de hoy fue de un solo fotograma, a tamaño pequeño.
 - Gemelos de pie en máquina: faltan las almohadillas de los hombros. Ahora sale una torre de discos.
-- Hip thrust en Smith: sale una torre de discos detrás en lugar de la Smith.
+- ~~Hip thrust en Smith~~ (arreglado el 15-11 con hipThrustSmith).
 - `floattest.js` da falsos positivos que hay que afinar:
   - asiento móvil del remo ergómetro;
   - barriga en el superman;

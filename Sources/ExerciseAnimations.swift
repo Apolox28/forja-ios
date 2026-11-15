@@ -195,7 +195,7 @@ extension ExerciseSeed {
         "hip thrust con mancuerna": "hipThrustDb",
         "hip thrust con peso corporal": "hipThrustBW",
         "hip thrust en máquina": "hipThrustMachine",
-        "hip thrust en máquina smith": "hipThrust",
+        "hip thrust en máquina smith": "hipThrustSmith",
         "hiperextensiones lastradas": "hyperextWeighted",
         "hiperextensión inversa": "reverseHyper",
         "hollow hold": "hollowHold",

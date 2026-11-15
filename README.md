@@ -5,6 +5,10 @@
 <h3 align="center">Tu diario de gimnasio. Gratis, sin cuentas y sin anuncios.</h3>
 
 <p align="center">
+  <a href="https://github.com/Apolox28/forja-ios/releases/latest"><img src="https://img.shields.io/github/v/release/Apolox28/forja-ios?label=versi%C3%B3n%20actual&color=fa6b2e&style=for-the-badge" alt="Versión actual"></a>
+</p>
+
+<p align="center">
   <a href="https://github.com/Apolox28/forja-ios/releases/latest/download/Forja.ipa"><b>⬇️ Descargar Forja.ipa</b></a>
   &nbsp;·&nbsp; iOS 15 o superior
 </p>
