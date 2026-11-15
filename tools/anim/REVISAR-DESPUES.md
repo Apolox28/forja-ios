@@ -39,3 +39,27 @@
 - Arreglados el 11-11: remo Pendlay (la barra toca la parte baja del pecho) y remo con pecho apoyado (codo menos atrás).
 
 - 14-11: prueba completa de las 504 combinaciones sin ningún aviso (choques, suelo, alcance de manos, rangos humanos y coherencia).
+
+# Revisión del 15-11 (fondo, poleas, perrito y flotación)
+
+Ya hecho:
+- Revisión visual de los 424 ejercicios de la biblioteca, en hojas de 40 y en el punto medio del movimiento.
+- Arreglados:
+  - press de hombro en Smith (ahora tiene animación propia);
+  - patada de tríceps en polea (de cara a la máquina);
+  - poleas a la izquierda o al frente;
+  - escalada (se veía solo la pared).
+- Nueva prueba `floattest.js` en el scratchpad: comprueba que algún punto de apoyo toca el suelo o un equipo fijo.
+- Arreglado lo que flotaba: sentadillas sumo, peso muerto sumo, sentadilla con cinturón, prensa pendular y press bajo la barra. En todos, los pies se despegaban arriba.
+
+Pendiente:
+- Pasada estética «obra de arte» con dos vistas y varias fases por ejercicio. La revisión de hoy fue de un solo fotograma, a tamaño pequeño.
+- Gemelos de pie en máquina: faltan las almohadillas de los hombros. Ahora sale una torre de discos.
+- Hip thrust en Smith: sale una torre de discos detrás en lugar de la Smith.
+- `floattest.js` da falsos positivos que hay que afinar:
+  - asiento móvil del remo ergómetro;
+  - barriga en el superman;
+  - anillas;
+  - manos en el suelo en el pino y el HSPU;
+  - toes to bar.
+- Saltos con fase de vuelo, revisados aparte: remo alto, devil press, man maker.

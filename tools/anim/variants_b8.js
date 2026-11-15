@@ -127,7 +127,7 @@
       variant('powerSnatch', 'snatch', { keys: S.map(function (k) { return [k[0], k[1] === S5 ? p5 : k[1]]; }) });
       var C = P.cleanJerk.keys, C6 = C[7][1], dip = C[9][1], drv = C[10][1], spl = C[11][1], rec = C[13][1], lck = C[14][1];
       variant('splitJerk', 'cleanJerk', { thumb: 0.32, period: 4200, keys: [[0, C6], [0.1, C6], [0.2, dip], [0.26, drv], [0.33, spl], [0.42, spl], [0.52, rec], [0.62, lck], [0.7, lck], [0.85, C6], [1, C6]] });
-      variant('pressUnder', 'snatch', { s: ['deltsF', 'triceps', 'traps'], thumb: 0.5, period: 3600, keys: [[0, S6], [0.1, S6], [0.45, S5], [0.55, S5], [0.9, S6], [1, S6]] });
+      variant('pressUnder', 'snatch', { s: ['deltsF', 'triceps', 'traps'], thumb: 0.5, period: 3600, keys: (function () { var U = Object.assign({}, S6, { hip: [S6.hip[0], S6.hip[1] - 0.035] }); return [[0, U], [0.1, U], [0.45, S5], [0.55, S5], [0.9, U], [0.95, U], [1, U]]; })() });
     })();
     // ---- Flexiones ----
     var PU = P.pushup;

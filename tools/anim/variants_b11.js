@@ -10,12 +10,12 @@
     // Con cinturón en máquina: el peso cuelga del cinturón entre las piernas; los brazos libres al frente
     var PL = { ik: [0.02, ANK], fw: 0.3, toe: 22 };
     variant('beltSquat', 'squatBW', { beltPlate: true, s: ['glutes', 'adductors'], 
-      A: { hip: STAND, torso: 4, legs: PL }, B: { hip: [-0.2, 0.6], torso: 30, head: -14, legs: PL } });
+      A: { hip: [STAND[0], STAND[1] - 0.03], torso: 4, legs: PL }, B: { hip: [-0.2, 0.6], torso: 30, head: -14, legs: PL } });
     // Sumo: pies muy abiertos y puntas hacia fuera, tronco más vertical
     var SUMO = { ik: [0.02, ANK], fw: 0.3, toe: 30 };
     var GOB = P.frontSquat.A.arms;
     function sumo(o) { return variant(o.k, o.base, Object.assign({ p: ['quads', 'adductors', 'glutes'], s: ['hams'] }, o.d, {
-      A: { hip: STAND, torso: 2, legs: SUMO, arms: o.arms }, B: { hip: [-0.13, 0.55], torso: 22, head: -10, legs: SUMO, arms: o.arms } })); }
+      A: { hip: [STAND[0], STAND[1] - 0.03], torso: 2, legs: SUMO, arms: o.arms }, B: { hip: [-0.13, 0.55], torso: 22, head: -10, legs: SUMO, arms: o.arms } })); }
     sumo({ k: 'sumoSquat', base: 'squatBW', d: {}, arms: GOB });
     sumo({ k: 'sumoSquatDb', base: 'squatBW', d: { load: 'goblet' }, arms: GOB });
     sumo({ k: 'sumoSquatKb', base: 'squatBW', d: { load: 'kb' }, arms: { relC: [0.12, -0.5], gw: 0.05, palm: 'pro', pole: [0, -1, 0.25] } });
