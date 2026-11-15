@@ -192,4 +192,8 @@
     variant('cablePress', 'cableFly', { p: ['pecs'], s: ['deltsF', 'triceps', 'pecsU'], pulleyY: 1.3,
       A: { arms: { relC: [0.1, -0.06], gw: 0.42, palm: 'pro', pole: [-1, -0.3, 0.6] } },
       B: { arms: { relC: [0.5, -0.02], gw: 0.22, palm: 'pro', straight: 0.95, pole: [-1, -0.3, 0.6] } } });
+    // Press de hombro en Smith: sentado en el banco con respaldo, la barra guiada por la Smith (sin torre de discos)
+    variant('ohpSmith', 'ohpSeated', { smith: true, stack: false });
+    // Patada de tríceps en polea: de cara a la máquina, polea baja al frente
+    P.kickback.towerPos = [0.95, 0.15]; P.kickback.anchor = [0.88, 0.16, 0.15];
   })();

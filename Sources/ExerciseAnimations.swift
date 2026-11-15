@@ -252,6 +252,7 @@ extension ExerciseSeed {
         "press de hombro con kettlebell": "kbPress",
         "press de hombro en máquina": "ohpMachine",
         "press de hombro en máquina de discos": "ohpMachine",
+        "press de hombro en máquina smith": "ohpSmith",
         "press de hombro sentado con mancuernas": "ohpSeated",
         "press de pecho con banda": "bandChestPress",
         "press de pecho en polea": "cablePress",
