@@ -304,7 +304,7 @@
   // ---------------- Bisagra de cadera ----------------
   // Sumo: piernas muy abiertas con las puntas hacia fuera, agarre por dentro de las rodillas, tronco más vertical
   (function () {
-    var k = hingeKeys([[-0.22, 0.5, 55, 0.225], [-0.18, 0.62, 48, 0.39], [-0.12, 0.78, 35, 0.6], [-0.06, 0.9, 18, 0.76], [-0.02, 0.97, 3, 0.83]], 0.07);
+    var k = hingeKeys([[-0.22, 0.5, 55, 0.225], [-0.18, 0.62, 48, 0.39], [-0.12, 0.78, 35, 0.6], [-0.06, 0.88, 18, 0.74], [-0.02, 0.94, 3, 0.8]], 0.07);
     k.forEach(function (q) { q[1] = cloneP(q[1]); q[1].legs = { ik: [-0.04, ANK], fw: 0.34, toe: 32 }; q[1].arms.gw = 0.17; });
     variant('sumoDeadlift', 'deadlift', { p: ['glutes', 'quads', 'adductors'], s: ['hams', 'lowback', 'traps', 'forearms'], keys: k, thumb: 0.05 });
   })();
@@ -381,7 +381,7 @@
   // Hack: espalda contra el respaldo inclinado que baja con el cuerpo; pies en la plataforma
   (function () {
     function hk(t, d0, rl) {
-      var up = V(Math.sin(rad(t)), Math.cos(rad(t)), 0), a = V(-0.26, 0.98, 0), b = a.clone().sub(up.clone().multiplyScalar(d0));
+      var up = V(Math.sin(rad(t)), Math.cos(rad(t)), 0), a = V(-0.26, t < -30 ? 0.98 : 0.95, 0), b = a.clone().sub(up.clone().multiplyScalar(d0));
       var base = { torso: t, head: -t * 0.55, legs: { ik: [0.2, (t < -30 ? 0.06 : 0.1) + ANK + (t < -30 ? 0.012 : 0)], fw: 0.16, toe: 15, foot: t < -30 ? -20 : 0 }, arms: { rel: rl, palm: 'neu' } };
       return { A: Object.assign({ hip: [a.x, a.y] }, cloneP(base)), B: Object.assign({ hip: [b.x, b.y] }, cloneP(base)) };
     }
@@ -1003,7 +1003,7 @@
       variant('powerSnatch', 'snatch', { keys: S.map(function (k) { return [k[0], k[1] === S5 ? p5 : k[1]]; }) });
       var C = P.cleanJerk.keys, C6 = C[7][1], dip = C[9][1], drv = C[10][1], spl = C[11][1], rec = C[13][1], lck = C[14][1];
       variant('splitJerk', 'cleanJerk', { thumb: 0.32, period: 4200, keys: [[0, C6], [0.1, C6], [0.2, dip], [0.26, drv], [0.33, spl], [0.42, spl], [0.52, rec], [0.62, lck], [0.7, lck], [0.85, C6], [1, C6]] });
-      variant('pressUnder', 'snatch', { s: ['deltsF', 'triceps', 'traps'], thumb: 0.5, period: 3600, keys: [[0, S6], [0.1, S6], [0.45, S5], [0.55, S5], [0.9, S6], [1, S6]] });
+      variant('pressUnder', 'snatch', { s: ['deltsF', 'triceps', 'traps'], thumb: 0.5, period: 3600, keys: (function () { var U = Object.assign({}, S6, { hip: [S6.hip[0], S6.hip[1] - 0.035] }); return [[0, U], [0.1, U], [0.45, S5], [0.55, S5], [0.9, U], [0.95, U], [1, U]]; })() });
     })();
     // ---- Flexiones ----
     var PU = P.pushup;
@@ -1235,12 +1235,12 @@
     // Con cinturón en máquina: el peso cuelga del cinturón entre las piernas; los brazos libres al frente
     var PL = { ik: [0.02, ANK], fw: 0.3, toe: 22 };
     variant('beltSquat', 'squatBW', { beltPlate: true, s: ['glutes', 'adductors'], 
-      A: { hip: STAND, torso: 4, legs: PL }, B: { hip: [-0.2, 0.6], torso: 30, head: -14, legs: PL } });
+      A: { hip: [STAND[0], STAND[1] - 0.03], torso: 4, legs: PL }, B: { hip: [-0.2, 0.6], torso: 30, head: -14, legs: PL } });
     // Sumo: pies muy abiertos y puntas hacia fuera, tronco más vertical
     var SUMO = { ik: [0.02, ANK], fw: 0.3, toe: 30 };
     var GOB = P.frontSquat.A.arms;
     function sumo(o) { return variant(o.k, o.base, Object.assign({ p: ['quads', 'adductors', 'glutes'], s: ['hams'] }, o.d, {
-      A: { hip: STAND, torso: 2, legs: SUMO, arms: o.arms }, B: { hip: [-0.13, 0.55], torso: 22, head: -10, legs: SUMO, arms: o.arms } })); }
+      A: { hip: [STAND[0], STAND[1] - 0.03], torso: 2, legs: SUMO, arms: o.arms }, B: { hip: [-0.13, 0.55], torso: 22, head: -10, legs: SUMO, arms: o.arms } })); }
     sumo({ k: 'sumoSquat', base: 'squatBW', d: {}, arms: GOB });
     sumo({ k: 'sumoSquatDb', base: 'squatBW', d: { load: 'goblet' }, arms: GOB });
     sumo({ k: 'sumoSquatKb', base: 'squatBW', d: { load: 'kb' }, arms: { relC: [0.12, -0.5], gw: 0.05, palm: 'pro', pole: [0, -1, 0.25] } });
@@ -1515,4 +1515,40 @@
       variant('sideLegRaise', 'plank', { side: 'L', p: ['gluteMed'], s: ['glutes', 'obliques'], scene: ['mat'], cam: { az: 12, el: 28, y: 0.3 },
         A: sl({ legsR: st, legsL: st }), B: sl({ legsR: st, legsL: { ik: [0, 0.36, 0.6], fw: 0.07, foot: 0 } }) });
     })();
+    // Poleas siempre al frente o a la izquierda de la persona: los ejercicios con la torre a la derecha se reflejan
+    (function () {
+      function mp(f) {
+        if (!f) return f; var q = cloneP(f), t;
+        t = q.armsL; q.armsL = q.armsR; q.armsR = t; t = q.legsL; q.legsL = q.legsR; q.legsR = t;
+        if (q.armsL === undefined) delete q.armsL; if (q.armsR === undefined) delete q.armsR; if (q.legsL === undefined) delete q.legsL; if (q.legsR === undefined) delete q.legsR;
+        if (q.hip && q.hip.length > 2) q.hip[2] = -q.hip[2];
+        if (q.twist) q.twist = -q.twist; if (q.lean) q.lean = -q.lean;
+        return q;
+      }
+      ['woodchop', 'woodchopLowHigh', 'cableFlyOne'].forEach(function (k) {
+        var d = P[k]; if (!d) return;
+        if (d.side) d.side = d.side === 'R' ? 'L' : 'R';
+        if (d.load === 'cableR') d.load = 'cableL';
+        if (d.towerPos) d.towerPos = [d.towerPos[0], -d.towerPos[1]];
+        if (d.anchor) d.anchor = [d.anchor[0], d.anchor[1], -d.anchor[2]];
+        if (d.cam && d.cam.az != null) d.cam = Object.assign({}, d.cam, { az: 180 - d.cam.az });
+        d.A = mp(d.A); d.B = mp(d.B); if (d.keys) d.keys = d.keys.map(function (kv) { return [kv[0], mp(kv[1])]; });
+      });
+    })();
+    // Poleas genéricas: al frente (encogimientos y remo al mentón con barra desde la polea baja), detrás solo cuando la
+    // técnica lo exige (elevación frontal: el cable pasa entre las piernas), y el remo a una mano con la torre al frente
+    P.shrug.towerPos = [0.85, 0]; P.shrug.anchor = [0.78, 0.14, 0];
+    P.uprightRow.towerPos = [0.85, 0]; P.uprightRow.anchor = [0.78, 0.14, 0];
+    if (P.lateral) { P.lateral.towerPos = [-0.9, 0]; P.lateral.anchor = [-0.82, 0.14, 0]; }
+    P.seatedRowOneArm.towerPos = [1.02, 0.12];
+    // Press de pecho en polea: de pie entre las dos torres, cables desde atrás a la altura del pecho; empuja al frente
+    variant('cablePress', 'cableFly', { p: ['pecs'], s: ['deltsF', 'triceps', 'pecsU'], pulleyY: 1.3,
+      A: { arms: { relC: [0.1, -0.06], gw: 0.42, palm: 'pro', pole: [-1, -0.3, 0.6] } },
+      B: { arms: { relC: [0.5, -0.02], gw: 0.22, palm: 'pro', straight: 0.95, pole: [-1, -0.3, 0.6] } } });
+    // Press de hombro en Smith: sentado en el banco con respaldo, la barra guiada por la Smith (sin torre de discos)
+    variant('ohpSmith', 'ohpSeated', { smith: true, stack: false });
+    // Patada de tríceps en polea: de cara a la máquina, polea baja al frente
+    P.kickback.towerPos = [0.95, 0.15]; P.kickback.anchor = [0.88, 0.16, 0.15];
+    // Escalada: las dos vistas desde la espalda del escalador (de frente lo tapa la pared)
+    P.climbing.cam = Object.assign({}, P.climbing.cam, { az: -60 }); cam2('climbing', -120, 12);
   })();

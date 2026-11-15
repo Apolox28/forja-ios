@@ -710,7 +710,15 @@
       tries.sort(function (x, y) { return pref(x) - pref(y); });
       var pick = function (ok) { for (var i = 0; i < tries.length; i++) { var p = floorPointInView(stage.camera, tries[i][0], tries[i][1]); if (p && ok(p)) return p; } return null; };
       var inFoot = function (p) { return Math.hypot(p.x, p.z) <= 0.6 || foot.some(function (b) { return p.x > b.min.x && p.x < b.max.x && p.z > b.min.z && p.z < b.max.z; }); };
-      var spot = pick(free) || pick(function (p) { return !inFoot(p); });
+      // en la caminadora acompaña al lado de la persona (no detrás) y mira hacia donde corre
+      var spot = null;
+      if (behavior === 'treadmill') {
+        var vis = function (p) { var v = new T.Vector3(p.x, 0.12, p.z).project(stage.camera); return Math.abs(v.x) < 0.85 && v.y > -0.85 && v.y < 0.5; };
+        var clear = function (p) { return !solid.some(function (b) { return p.x > b.min.x - 0.42 && p.x < b.max.x + 0.42 && p.z > b.min.z - 0.15 && p.z < b.max.z + 0.15; }); };
+        for (var dz = 0.55; dz <= 1.3 && !spot; dz += 0.05) [1, -1].forEach(function (sg) { if (!spot) { [0.05, 0.3, -0.25].forEach(function (x) { var p = { x: x, z: sg * dz }; if (!spot && vis(p) && clear(p)) spot = p; }); } });
+        if (spot && opts.face == null) opts.face = 90;
+      }
+      spot = spot || pick(free) || pick(function (p) { return !inFoot(p); });
       if (!spot) return null; // no hay sitio libre a la vista: mejor sin perrito que dentro de una máquina
       opts.x = spot.x; opts.z = spot.z;
     }

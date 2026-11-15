@@ -22,6 +22,14 @@ enum DogLook {
         ("corona", "Corona"), ("ninguno", "Sin gorro"), ("fiesta", "Fiesta"), ("lana", "Lana"), ("gorra", "Gorra"),
         ("noel", "Navidad"), ("vikingo", "Vikingo"), ("mago", "Mago"), ("chef", "Chef"),
     ]
+    /// Fondo de los modelos 3D (claves de THEMES en la página del visor).
+    static let themeKey = "stageTheme"
+    static let themes: [(String, String)] = [("grafito", "Grafito"), ("claro", "Estudio claro"), ("noche", "Azul noche")]
+    static let themeSwatch: [String: [Color]] = [
+        "grafito": [Color(red: 0.21, green: 0.23, blue: 0.27), Color(red: 0.09, green: 0.09, blue: 0.11)],
+        "claro": [Color.white, Color(red: 0.84, green: 0.85, blue: 0.87)],
+        "noche": [Color(red: 0.17, green: 0.23, blue: 0.36), Color(red: 0.05, green: 0.07, blue: 0.13)],
+    ]
     static let extras: [(String, String)] = [
         ("ninguno", "Nada"), ("panuelo", "Pañuelo"), ("pajarita", "Pajarita"), ("collar", "Collar"), ("gafas", "Gafas"),
     ]
@@ -34,11 +42,44 @@ enum DogLook {
             return list.contains { $0.0 == v } ? v : list[0].0
         }
         let shown = d.object(forKey: shownKey) as? Bool ?? true
-        return "forjaDog({hidden:\(!shown),coat:'\(pick(coatKey, coats))',hat:'\(pick(hatKey, hats))',extra:'\(pick(extraKey, extras))'});"
+        return "forjaTheme('\(pick(themeKey, themes))');forjaDog({hidden:\(!shown),coat:'\(pick(coatKey, coats))',hat:'\(pick(hatKey, hats))',extra:'\(pick(extraKey, extras))'});"
     }
 
     static func image(_ group: String, _ key: String) -> UIImage? {
         Bundle.main.path(forResource: "dog_\(group)_\(key)", ofType: "png").flatMap { UIImage(contentsOfFile: $0) }
+    }
+}
+
+/// Fondo de los modelos 3D (Perfil → Apariencia).
+struct StageThemeSection: View {
+    @AppStorage(DogLook.themeKey) var theme = "grafito"
+    var body: some View {
+        Section(header: Text("Fondo 3D"), footer: Text("El fondo de las animaciones de los ejercicios.")) {
+            HStack(spacing: 14) {
+                ForEach(DogLook.themes, id: \.0) { item in
+                    let on = theme == item.0
+                    Button { theme = item.0 } label: {
+                        VStack(spacing: 4) {
+                            RadialGradient(colors: DogLook.themeSwatch[item.0] ?? [.gray, .black],
+                                           center: UnitPoint(x: 0.5, y: 0.3), startRadius: 2, endRadius: 46)
+                                .frame(width: 64, height: 64)
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .stroke(on ? Color.brand : Color.primary.opacity(0.12), lineWidth: on ? 3 : 1))
+                            Text(item.1)
+                                .font(.caption2.weight(on ? .bold : .regular))
+                                .foregroundColor(.primary)
+                                .lineLimit(1)
+                        }
+                        .frame(width: 76)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Fondo 3D: \(item.1)")
+                    .accessibilityAddTraits(on ? .isSelected : [])
+                }
+            }
+            .padding(.vertical, 6)
+        }
     }
 }
 
