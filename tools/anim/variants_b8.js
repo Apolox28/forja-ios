@@ -3,9 +3,9 @@
     function arms(k, fn) { eachArm(k, function (a) { return Object.assign(a, fn(a)); }); }
     // ---- Press de banca ----
     // Press apretando mancuernas / hexagonal: las mancuernas juntas, agarre neutro, se aprietan durante todo el recorrido
-    variant('benchSqueeze', 'bench', { load: 'hands', s: ['pecsU', 'triceps', 'deltsF'] }); arms('benchSqueeze', function () { return { gw: 0.065, palm: 'neu' }; });
+    variant('benchSqueeze', 'bench', { load: 'hands', s: ['pecsU', 'triceps', 'deltsF'] }); arms('benchSqueeze', function () { return { gw: 0.065, palm: 'neu', pole: undefined }; });
     // Agarre ancho: más pectoral, menos tríceps
-    variant('benchWide', 'bench', { s: ['pecsU', 'deltsF'] }); arms('benchWide', function () { return { gw: 0.48 }; });
+    variant('benchWide', 'bench', { s: ['pecsU', 'deltsF'] }); arms('benchWide', function () { return { gw: 0.44, pole: [0, -1, 0.6] }; });
     // Con los pies arriba: caderas y rodillas a 90º en el aire, sin impulso de piernas
     variant('benchFeetUp', 'bench', { A: { legs: { th: 178, sh: 94, fw: 0.14, footRel: 10 } }, B: { legs: { th: 178, sh: 94, fw: 0.14, footRel: 10 } } });
     // Larsen: piernas estiradas y pies despegados del suelo
