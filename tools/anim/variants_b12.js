@@ -196,4 +196,6 @@
     variant('ohpSmith', 'ohpSeated', { smith: true, stack: false });
     // Patada de tríceps en polea: de cara a la máquina, polea baja al frente
     P.kickback.towerPos = [0.95, 0.15]; P.kickback.anchor = [0.88, 0.16, 0.15];
+    // Escalada: las dos vistas desde la espalda del escalador (de frente lo tapa la pared)
+    P.climbing.cam = Object.assign({}, P.climbing.cam, { az: -60 }); cam2('climbing', -120, 12);
   })();
