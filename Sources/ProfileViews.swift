@@ -334,6 +334,17 @@ struct AboutView: View {
                     Label("Buscar actualizaciones", systemImage: "arrow.down.circle.fill")
                 }
             }
+            Section(header: Text("Créditos")) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Mascota 3D: «Dachshund Sculpt» de Angelina (Sketchfab)")
+                    Text("Adaptado para Forja (rig, pesos, boca y animaciones).")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Link(destination: URL(string: "https://creativecommons.org/licenses/by/4.0/")!) {
+                    Label("Licencia CC BY 4.0", systemImage: "doc.text")
+                }
+            }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("Acerca de")
