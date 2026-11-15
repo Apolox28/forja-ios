@@ -84,7 +84,7 @@
   // ---------------- Piernas: zancadas y subidas ----------------
   // Búlgara: pie trasero apoyado en un banco; trabaja sobre todo la pierna delantera (derecha)
   (function () {
-    var rear = { ik: [-0.6, 0.555], fw: 0.1, foot: 150 }, front = { ik: [0.36, ANK], fw: 0.1 };
+    var rear = { ik: [-0.6, 0.555], fw: 0.07, foot: 150 }, front = { ik: [0.36, ANK], fw: 0.1 };
     var top = { hip: [-0.08, 0.93], torso: 4, legsL: rear, legsR: front }, bot = { hip: [-0.12, 0.6], torso: 10, legsL: rear, legsR: front };
     variant('bulgarian', 'lunge', { keys: null, load: 'hands', boxes: [[-0.66, 0.45, -0.1, 0.32, 0.5]], p: ['quads', 'glutes'], s: ['adductors', 'soleus'],
       A: Object.assign({ arms: HANGD }, top), B: Object.assign({ arms: HANGD }, bot) });
@@ -161,7 +161,7 @@
     var lg = { ik: [0.36, ANK], fw: 0.15 }, flat = { ik: [0.06, 0.05], gw: 0.27, hand: 'flat', flatDir: [1, 0, 0], pole: [0, 0.4, 1] }; // brazos estirados en el suelo junto al cuerpo
     variant('gluteBridgeBar', 'hipThrust', { scene: ['mat'], load: 'hip', A: { hip: lo.hip, torso: lo.torso, legs: lg }, B: { hip: hi.hip, torso: hi.torso, legs: lg } });
     variant('gluteBridge', 'hipThrust', { scene: ['mat'], load: 'none', A: { hip: lo.hip, torso: lo.torso, legs: lg, arms: flat }, B: { hip: hi.hip, torso: hi.torso, legs: lg, arms: flat } });
-    var fr = { ik: [0.2, ANK, 0.035], fw: 0.03, pole: [0, 0.4, 1], toe: 55 }, hf = bridge([0.03, 0.29], SH0);
+    var fr = { ik: [0.2, ANK, 0.035], fw: 0.03, pole: [0, 1, 1], toe: 45 }, hf = bridge([0.03, 0.29], SH0);
     variant('frogPump', 'hipThrust', { scene: ['mat'], load: 'none', s: ['adductors', 'hams'], A: { hip: lo.hip, torso: lo.torso, legs: fr, arms: flat }, B: { hip: hf.hip, torso: hf.torso, legs: fr, arms: flat } });
     // Puente con fitball: talones sobre el balón; la cadera sube y las rodillas traen el balón hacia el glúteo
     var a1 = [0.84, 0.66], a2 = [0.4, 0.52], b1 = bridge([0.04, 0.38], SH0), b2 = bridge([0.06, 0.48], SH0);

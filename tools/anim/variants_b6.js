@@ -125,14 +125,14 @@
     var Dc = { hip: [-0.03, 0.24], torso: 84, head: -6, legs: LP, arms: dh(0.33, 0.1, 0.2) };                // pecho al suelo
     var Dh = { hip: [-0.25, 0.68], torso: 62, head: -18, legs: LQ, arms: dh(0.0, 0.42, 0.27, [-1, 0.2, 0.4], true) };   // bisagra: las mancuernas por fuera de las piernas, a la altura de las rodillas
     var Dt = { hip: [-0.08, 0.9], torso: 14, head: -4, legs: LQ, arms: dh(0.26, 0.86, 0.21, [-0.6, -1, 0.4]) };                 // las mancuernas pasan por delante de los muslos
-    var Dd = { hip: [-0.02, 0.95], torso: 6, head: 0, legs: LQ, arms: dh(0.22, 1.18, 0.21, [0.2, -1, 0.6]) };   // impulso de cadera: suben pegadas al cuerpo
-    var stand = { hip: STAND, torso: 0, legs: LQ }, Do = Object.assign({}, stand, { arms: { ik: relIk(stand, [0.02, 0.52]), gw: 0.22, palm: 'neu', pole: [0, -1, 0.5], straight: 1 } });
+    var Dd = { hip: [-0.02, 0.95], torso: 6, head: 0, legs: LQ, arms: dh(0.26, 1.17, 0.21, [0.2, -1, 0.6]) };   // impulso de cadera: suben pegadas al cuerpo
+    var stand = { hip: STAND, torso: 0, legs: LQ }, Do = Object.assign({}, stand, { arms: { ik: relIk(stand, [0.03, 0.5]), gw: 0.22, palm: 'neu', pole: [0, -1, 0.5], straight: 1 } });
     variant('devilPress', 'pushup', { load: 'hands', p: ['glutes', 'delts', 'quads'], s: ['pecs', 'triceps', 'hams', 'abs', 'traps'], A: null, B: null, liftAt: null, period: 5200, thumb: 0.62, cam: { az: 35, y: 0.95, dist: 1.2 },
       keys: [[0, Dq], [0.08, Dj], [0.15, Dp], [0.24, Dc], [0.33, Dp], [0.4, Dj], [0.47, Dq], [0.54, Dh], [0.59, Dt], [0.64, Dd], [0.7, Do], [0.76, Do], [0.82, Dd], [0.87, Dt], [0.93, Dh], [1, Dq]] });
     // Man maker: flexión sobre las mancuernas, remo con cada brazo, pies adelante, cargada a los hombros, sentadilla frontal y press (thruster)
     var row = function (side) { var q = cloneP(Dp); q.arms = null; var up = dh(0.12, 0.36, 0.2, [-1, 0.6, 0.6]); q['arms' + side] = up; q['arms' + (side === 'R' ? 'L' : 'R')] = dh(0.33, 0.1, 0.2); q.twist = side === 'R' ? 6 : -6; return q; };
     var both = function (p) { var q = cloneP(p); if (q.twist == null) q.twist = 0; if (!q.arms) { delete q.arms; return q; } var a = q.arms; delete q.arms; q.armsL = cloneP(a); q.armsR = cloneP(a); if (q.twist == null) q.twist = 0; return q; };
-    var rack = function (b) { var q = cloneP(b), r = relIk(b, [0.16, 0.04]); q.arms = dh(r[0], r[1], 0.2, [0.4, -1, 0.3]); return q; };
+    var rack = function (b) { var q = cloneP(b), r = relIk(b, [0.19, 0.03]); q.arms = dh(r[0], r[1], 0.2, [0.4, -1, 0.3]); return q; };
     var Mr = rack(stand), Mfs = rack({ hip: [-0.17, 0.52], torso: 18, head: -4, legs: LQ });
     var Mm = { hip: [0, 0.99], torso: 0, legs: LQ, arms: dh.apply(null, relIk(stand, [0.08, 0.3]).concat([0.21, [0.3, -1, 0.5]])) };
     var seq = [[0, Dp], [0.07, Dc], [0.14, Dp], [0.2, row('R')], [0.26, Dp], [0.32, row('L')], [0.38, Dp], [0.44, Dj], [0.5, Dq], [0.57, Dd], [0.62, Mr], [0.69, Mfs], [0.75, Mm], [0.8, Do], [0.85, Do], [0.9, Mr], [0.95, Dq], [1, Dp]];

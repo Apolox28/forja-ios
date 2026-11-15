@@ -74,5 +74,5 @@
   })();
   // Flexión lateral con mancuerna: de pie, la mancuerna en la mano derecha; el tronco se inclina hacia ella y sube hasta pasar algo del centro
   variant('sideBendDb', 'lateralRaise', { load: 'handR', side: 'L', p: ['obliques'], s: ['abs', 'lowback'], stack: false, cam: { az: 85, el: 8 },
-    A: { hip: STAND, torso: 0, lean: -7, legs: { ik: [0, ANK], fw: 0.14 }, armsR: { rel: [0.02, HANG, 0.06], palm: 'neu' }, armsL: { rel: [0.04, -0.3, -0.04], palm: 'neu', pole: [-1, 0, 0.3] }, arms: null },
-    B: { hip: STAND, torso: 0, lean: 28, legs: { ik: [0, ANK], fw: 0.14 }, armsR: { rel: [0.02, HANG, 0.06], palm: 'neu' }, armsL: { rel: [0.04, -0.3, -0.04], palm: 'neu', pole: [-1, 0, 0.3] }, arms: null } });
+    A: { hip: STAND, torso: 0, lean: -7, legs: { ik: [0, ANK], fw: 0.14 }, armsR: { rel: [0.02, HANG, 0.06], palm: 'neu' }, armsL: { rel: [0.09, -0.3, -0.04], palm: 'neu', pole: [-1, 0, 0.3] }, arms: null },
+    B: { hip: STAND, torso: 0, lean: 28, legs: { ik: [0, ANK], fw: 0.14 }, armsR: { rel: [0.02, HANG, 0.06], palm: 'neu' }, armsL: { rel: [0.09, -0.3, -0.04], palm: 'neu', pole: [-1, 0, 0.3] }, arms: null } });

@@ -44,10 +44,13 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         let bundle = Bundle.main
         guard let engineURL = bundle.url(forResource: "forja3d", withExtension: "js"),
               let glbURL = bundle.url(forResource: "body", withExtension: "glb") else { return nil }
+        let dogJS = bundle.url(forResource: "forja3d_dog", withExtension: "js")
+        let dogGLB = bundle.url(forResource: "dog", withExtension: "glb")
         let build = bundle.infoDictionary?["CFBundleVersion"] as? String ?? "0"
         let engineSize = (try? fm.attributesOfItem(atPath: engineURL.path)[.size] as? Int) ?? 0
+        let dogSize = dogGLB.flatMap { (try? fm.attributesOfItem(atPath: $0.path)[.size] as? Int) ?? 0 } ?? 0
         let caches = fm.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        let name = "forja3d-\(build)-\(engineSize)"
+        let name = "forja3d-\(build)-\(engineSize)-\(dogSize)"
         let dir = caches.appendingPathComponent(name)
         let marker = dir.appendingPathComponent("ok")
         if fm.fileExists(atPath: marker.path) { return dir }
@@ -70,6 +73,12 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             try engine.write(to: dir.appendingPathComponent("engine.js"), atomically: true, encoding: .utf8)
             let model = "window.FORJA_MODEL='" + (try Data(contentsOf: glbURL)).base64EncodedString() + "';"
             try model.write(to: dir.appendingPathComponent("model.js"), atomically: true, encoding: .utf8)
+            // Mascota en archivos aparte: si faltan, el visor funciona igual sin perrito.
+            if let dogJS = dogJS, let dogGLB = dogGLB {
+                try fm.copyItem(at: dogJS, to: dir.appendingPathComponent("dog.js"))
+                let dogModel = "window.FORJA_DOG_GLB='" + (try Data(contentsOf: dogGLB)).base64EncodedString() + "';"
+                try dogModel.write(to: dir.appendingPathComponent("dogmodel.js"), atomically: true, encoding: .utf8)
+            }
             try page(.exercise).write(to: dir.appendingPathComponent("exercise.html"), atomically: true, encoding: .utf8)
             try page(.muscleMap).write(to: dir.appendingPathComponent("map.html"), atomically: true, encoding: .utf8)
             try Data().write(to: marker)
@@ -151,7 +160,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         case .exercise:
             script = """
             var canvas = document.getElementById('c'), hint = document.getElementById('h');
-            var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null;
+            var R = FORJA3D.makeRenderer(canvas), ST = null, PERIOD = 2600, T0 = null, dogReady = false;
             var yaw = 0, vel = 0, dragging = false, lastX = 0, base = null, loaded = false, want = null, homing = false, lastTap = 0, hinted = false;
             function size() {
               var w = canvas.clientWidth || 300, h = canvas.clientHeight || w;
@@ -173,14 +182,16 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             function show(k, eq, m, v) {
               if (!loaded) { want = [k, eq, m, v]; return; }
               var old = ST;
-              ST = FORJA3D.createStage(k, eq, m, v);
+              ST = FORJA3D.createStage(k, eq, m, v); ST.key = [k, eq, m, v];
               PERIOD = FORJA3D.periodFor ? FORJA3D.periodFor(k) : 2600;
+              if (dogReady) { try { FORJA_DOG.attach(ST, FORJA_DOG.behaviorFor(k, eq)); } catch (e) {} }
               T0 = null; yaw = 0; vel = 0; homing = false;
               base = { c: ST.camera.position.clone(), t: ST.target ? ST.target.clone() : guessTarget() };
               size();
               // Dibuja ya la escena nueva para reutilizar los shaders antes de liberar la anterior.
               ST.update(0); R.render(ST.scene, ST.camera);
-              if (old) disposeScene(old.scene);
+              // El perrito comparte geometría y materiales entre escenas: se saca antes de liberar la anterior.
+              if (old) { if (old.dog) old.scene.remove(old.dog.group); disposeScene(old.scene); }
             }
             window.forjaShow = show;
             function applyYaw() {
@@ -221,7 +232,12 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             // Si nadie ha pedido aún una animación, se prepara una de calentamiento:
             // así la primera que abra el usuario no espera a compilar los gráficos.
             function ready() { loaded = true; show.apply(null, want || ['bench', 'barbell', '', 1]); }
-            if (data.length > 0) FORJA3D.loadModel(data, ready); else ready();
+            // El perrito se carga después del cuerpo; al estar listo se añade a la animación que se esté viendo.
+            function loadDog() {
+              if (!window.FORJA_DOG || !window.FORJA_DOG_GLB) return;
+              FORJA_DOG.setModel(window.FORJA_DOG_GLB, function (e) { if (e) return; dogReady = true; if (ST && !ST.dog) show.apply(null, ST.key); });
+            }
+            if (data.length > 0) FORJA3D.loadModel(data, function () { ready(); setTimeout(loadDog, 0); }); else ready();
             window.webkit.messageHandlers.forjaReady.postMessage(1);
             """
         case .muscleMap:
@@ -239,6 +255,9 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             window.webkit.messageHandlers.forjaReady.postMessage(1);
             """
         }
+        let dogScripts = mode == .exercise
+            ? "<script src=\"dog.js\"></script>\n<script src=\"dogmodel.js\"></script>"
+            : ""
         let hint = mode == .exercise
             ? "<div id=\"h\">↔ Desliza para girar · doble toque para centrar</div>"
             : ""
@@ -259,6 +278,7 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
         <script src="SkeletonUtils.js"></script>
         <script src="engine.js"></script>
         <script src="model.js"></script>
+        \(dogScripts)
         <script>\(script)</script>
         </body></html>
         """

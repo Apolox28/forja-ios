@@ -46,6 +46,9 @@ for (const m of cat.matchAll(/\("([^"]+)", \.(\w+), \.(\w+), \.(\w+), \.(\w+)\)/
   const c = key + ':' + eqMap[m[3]];
   combos.add(c); used.push(c);
 }
+// ejercicios de Hevy añadidos (Resources/hevy_extra.json): mismo criterio de combinación
+const hx = JSON.parse(fs.readFileSync(ROOT + 'Resources/hevy_extra.json', 'utf8'));
+for (const x of hx) { const key = map[x.name.toLowerCase()] || x.pattern; const c = key + ':' + (eqMap[x.equipment] || 'none'); combos.add(c); used.push(c); }
 fs.writeFileSync(path.join(SP, 'combos.json'), JSON.stringify([...combos]));
 fs.writeFileSync(path.join(SP, 'combos_used.json'), JSON.stringify([...new Set(used)]));
 console.log('variantes en el mapa:', keys.length, '| combinaciones:', combos.size, '| usadas por la biblioteca:', new Set(used).size);
