@@ -3047,7 +3047,17 @@
     scene.add(key1);
     var rim = new T.DirectionalLight(0xc6d6ff, 0.5); rim.position.set(-3, 2.6, -2.6); scene.add(rim);
     var fill = new T.DirectionalLight(0xffffff, 0.25); fill.position.set(-2, 1.5, 3); scene.add(fill);
-    var disc = new T.Mesh(new T.CircleGeometry(2.8, 64), new T.MeshBasicMaterial({ color: 0x1c1e24 }));
+    // Suelo de estudio: un degradado radial que se funde con el fondo de la página (sin horizonte ni bordes)
+    var TH = global.FORJA3D_THEME || {};
+    function floorTexture(c0, c1) {
+      if (typeof document === 'undefined') return null; // en Node (pruebas) no hay canvas
+      var cv = document.createElement('canvas'); cv.width = cv.height = 256;
+      var x = cv.getContext('2d'), g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+      g.addColorStop(0, c0); g.addColorStop(0.55, c0); g.addColorStop(1, c1);
+      x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+      var tx = new T.CanvasTexture(cv); tx.encoding = T.sRGBEncoding; return tx;
+    }
+    var disc = new T.Mesh(new T.PlaneGeometry(7, 7), new T.MeshBasicMaterial({ map: floorTexture(TH.floor || '#2a2d35', TH.floorEdge || 'rgba(42,45,53,0)'), transparent: true, depthWrite: false }));
     disc.rotation.x = -Math.PI / 2; disc.position.y = -0.002; scene.add(disc);
     var floor = new T.Mesh(new T.PlaneGeometry(12, 12), new T.ShadowMaterial({ opacity: 0.45 }));
     floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);

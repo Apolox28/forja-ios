@@ -479,6 +479,7 @@ struct AppearanceView: View {
             IconSection()
             AppearanceSection()
             CardColorSection()
+            StageThemeSection()
             DogSection()
         }
         .navigationTitle("Apariencia")

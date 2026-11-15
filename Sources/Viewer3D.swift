@@ -203,6 +203,13 @@ final class Viewer3DHost: NSObject, WKScriptMessageHandler, WKNavigationDelegate
             window.forjaShow = show;
             // Aspecto del perrito (Apariencia): se aplica antes de crear la escena
             window.forjaDog = function (o) { dogOpts = o || {}; if (window.FORJA_DOG && FORJA_DOG.setLook) FORJA_DOG.setLook(dogOpts); };
+            // Fondo 3D (Apariencia): el fondo de la página y el suelo de estudio a juego, sin línea de horizonte
+            var THEMES = {
+              grafito: { bg: 'radial-gradient(120% 95% at 50% 30%,#363a44 0%,#22252c 55%,#16181d 100%)', floor: '#262930', floorEdge: 'rgba(38,41,48,0)' },
+              claro: { bg: 'radial-gradient(120% 95% at 50% 25%,#ffffff 0%,#eceef1 50%,#d6d9df 100%)', floor: '#e2e5ea', floorEdge: 'rgba(226,229,234,0)' },
+              noche: { bg: 'radial-gradient(120% 95% at 50% 25%,#2b3a5c 0%,#18213a 55%,#0c1222 100%)', floor: '#1c2742', floorEdge: 'rgba(28,39,66,0)' }
+            };
+            window.forjaTheme = function (k) { var th = THEMES[k] || THEMES.grafito; window.FORJA3D_THEME = th; document.getElementById('w').style.background = th.bg; };
             function applyYaw() {
               var c = base.c, t = base.t, dx = c.x - t.x, dz = c.z - t.z, cs = Math.cos(yaw), sn = Math.sin(yaw);
               ST.camera.position.set(t.x + dx * cs + dz * sn, c.y, t.z - dx * sn + dz * cs);
