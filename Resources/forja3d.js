@@ -2290,6 +2290,8 @@
     P.kickback.towerPos = [0.95, 0.15]; P.kickback.anchor = [0.88, 0.16, 0.15];
     // Escalada: las dos vistas desde la espalda del escalador (de frente lo tapa la pared)
     P.climbing.cam = Object.assign({}, P.climbing.cam, { az: -60 }); cam2('climbing', -120, 12);
+    // Hip thrust en Smith: la barra guiada por la Smith sobre la cadera (sin torre de discos)
+    variant('hipThrustSmith', 'hipThrust', { smith: true, stack: false });
   })();
   // VARIANTES>>
   function cam2(k, az2, el2) { if (P[k]) P[k].cam = Object.assign({}, P[k].cam, { az2: az2, el2: el2 }); }
