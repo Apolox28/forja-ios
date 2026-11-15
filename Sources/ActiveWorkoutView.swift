@@ -156,7 +156,7 @@ struct ExerciseSection: View {
     var previous: [WorkoutSet] { store.previousSets(for: entry.exerciseID) }
 
     /// Mejor marca guardada antes de este entrenamiento (0 si nunca se hizo: la primera vez no cuenta como récord).
-    var recordToBeat: Double { store.bestScore(for: entry.exerciseID, kind: kind) }
+    var recordToBeat: RecordBests { store.bests(for: entry.exerciseID) }
 
     var body: some View {
         Section(header: header) {
@@ -316,10 +316,10 @@ struct SetEditorRow: View {
     let previous: WorkoutSet?
     let unit: String
     let showCheck: Bool
-    var recordToBeat: Double = 0
+    var recordToBeat = RecordBests()
     var onCompleted: () -> Void = {}
 
-    var isRecord: Bool { self.set.done && recordToBeat > 0 && self.set.recordScore(kind) > recordToBeat }
+    var isRecord: Bool { self.set.done && recordToBeat.isBeaten(by: self.set, kind: kind) }
 
     var body: some View {
         HStack(spacing: 8) {

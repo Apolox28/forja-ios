@@ -24,7 +24,7 @@ final class Store: ObservableObject {
         }
     }
     private var prCache: [UUID: Set<UUID>]? = nil
-    private var bestScoreCache: [UUID: Double] = [:]
+    private var bestScoreCache: [UUID: RecordBests] = [:]
     @Published var showActiveWorkout = false
     @Published var restEnd: Date? = nil
     @Published var restTotal = 0
@@ -332,12 +332,17 @@ final class Store: ObservableObject {
     }
 
     /// Mejor marca guardada de un ejercicio (para la medalla de récord durante el entrenamiento).
-    func bestScore(for exerciseID: UUID, kind: ExerciseKind) -> Double {
+    /// Mejores marcas guardadas de un ejercicio (para la medalla de récord durante el entrenamiento).
+    func bests(for exerciseID: UUID) -> RecordBests {
         if let v = bestScoreCache[exerciseID] { return v }
-        let v = data.workouts.flatMap { $0.exercises }.filter { $0.exerciseID == exerciseID }
-            .flatMap { $0.sets }.map { $0.recordScore(kind) }.max() ?? 0
-        bestScoreCache[exerciseID] = v
-        return v
+        var b = RecordBests()
+        for w in data.workouts {
+            for e in w.exercises where e.exerciseID == exerciseID {
+                for s in e.sets where s.type != .warmup { b.absorb(s) }
+            }
+        }
+        bestScoreCache[exerciseID] = b
+        return b
     }
 
     func isPR(_ entry: WorkoutExercise, in workout: Workout) -> Bool {

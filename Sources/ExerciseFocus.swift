@@ -247,15 +247,31 @@ enum ExerciseFocus {
     }
 }
 
-extension WorkoutSet {
-    /// Marca comparable para detectar récords: 1RM estimado, repeticiones o segundos según el tipo.
-    func recordScore(_ kind: ExerciseKind) -> Double {
-        guard type != .warmup else { return 0 }
+/// Mejores marcas de un ejercicio. Como en Hevy, es récord superar cualquiera de ellas:
+/// más peso, mejor 1RM estimado, más volumen en una serie (peso × reps), más reps o más tiempo.
+struct RecordBests {
+    var sets = 0
+    var weight = 0.0, e1rm = 0.0, volume = 0.0, reps = 0, seconds = 0
+
+    mutating func absorb(_ s: WorkoutSet) {
+        sets += 1
+        weight = max(weight, s.weight)
+        e1rm = max(e1rm, s.estimated1RM)
+        volume = max(volume, s.weight * Double(s.reps))
+        reps = max(reps, s.reps)
+        seconds = max(seconds, s.seconds)
+    }
+
+    /// La primera vez que se hace un ejercicio no cuenta como récord.
+    func isBeaten(by s: WorkoutSet, kind: ExerciseKind) -> Bool {
+        guard sets > 0, s.type != .warmup else { return false }
         switch kind {
-        case .weightReps: return estimated1RM
-        case .repsOnly: return Double(reps)
-        case .duration: return Double(seconds)
-        case .distanceTime: return 0
+        case .weightReps:
+            guard s.weight > 0, s.reps > 0 else { return false }
+            return s.weight > weight || s.estimated1RM > e1rm + 0.01 || s.weight * Double(s.reps) > volume
+        case .repsOnly: return s.reps > reps
+        case .duration: return s.seconds > seconds
+        case .distanceTime: return false
         }
     }
 }
