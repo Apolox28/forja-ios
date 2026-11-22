@@ -460,8 +460,9 @@ struct WorkoutDetailView: View {
 
     func describe(_ s: WorkoutSet, kind: ExerciseKind) -> String {
         switch kind {
-        case .weightReps: return "\(Fmt.num(s.weight)) \(store.unit) × \(s.reps)"
-        case .repsOnly: return "\(s.reps) reps"
+        // El tiempo de la serie se ve siempre que exista (p. ej. importado de Hevy en un ejercicio de peso).
+        case .weightReps: return "\(Fmt.num(s.weight)) \(store.unit) × \(s.reps)" + (s.seconds > 0 ? " · \(Fmt.clock(TimeInterval(s.seconds)))" : "")
+        case .repsOnly: return "\(s.reps) reps" + (s.seconds > 0 ? " · \(Fmt.clock(TimeInterval(s.seconds)))" : "")
         case .duration: return Fmt.clock(TimeInterval(s.seconds))
         case .distanceTime: return "\(Fmt.num(s.distance)) km · \(Fmt.clock(TimeInterval(s.seconds)))"
         }
@@ -494,6 +495,7 @@ struct WorkoutEditorView: View {
     @State var workout: Workout
     @State var endDate: Date
     @State var showPicker = false
+    @State var reordering = false
 
     init(workout: Workout) {
         _workout = State(initialValue: workout)
@@ -513,7 +515,9 @@ struct WorkoutEditorView: View {
                     ExerciseSection(entry: $entry,
                                     isActive: false,
                                     siblings: workout.exercises,
-                                    onAction: { action in workout.exercises.apply(action, to: entry.id) })
+                                    onAction: { action in
+                                        if case .reorder = action { reordering = true } else { workout.exercises.apply(action, to: entry.id) }
+                                    })
                 }
                 Section {
                     Button {
@@ -537,6 +541,9 @@ struct WorkoutEditorView: View {
                     Spacer()
                     Button("Listo") { hideKeyboard() }
                 }
+            }
+            .sheet(isPresented: $reordering) {
+                ReorderExercisesSheet(exercises: $workout.exercises).environmentObject(store)
             }
             .sheet(isPresented: $showPicker) {
                 ExercisePickerView { ids in

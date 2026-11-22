@@ -55,13 +55,30 @@ struct ExerciseInfoSheet: View {
     @EnvironmentObject var store: Store
     @Environment(\.dismiss) var dismiss
     let exercise: Exercise
+    @State var tab = 0
 
     var body: some View {
         NavigationView {
-            List {
-                ExerciseHowToSections(exercise: exercise)
+            Group {
+                if tab == 0 {
+                    List {
+                        ExerciseHowToSections(exercise: exercise)
+                    }
+                    .listStyle(.insetGrouped)
+                } else {
+                    ExerciseDetailView(exerciseID: exercise.id, inWorkout: true)
+                }
             }
-            .listStyle(.insetGrouped)
+            .safeAreaInset(edge: .top) {
+                Picker("Sección", selection: $tab) {
+                    Text("Técnica").tag(0)
+                    Text("Historial y progreso").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+                .background(.bar)
+            }
             .navigationTitle(exercise.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

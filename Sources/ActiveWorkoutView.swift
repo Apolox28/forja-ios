@@ -5,6 +5,7 @@ import AudioToolbox
 struct ActiveWorkoutView: View {
     @EnvironmentObject var store: Store
     @State var showPicker = false
+    @State var reordering = false
     @State var confirmFinish = false
     @State var confirmDiscard = false
     @State var nothingDoneAlert = false
@@ -67,6 +68,7 @@ struct ActiveWorkoutView: View {
                                     isActive: true,
                                     siblings: workout.wrappedValue.exercises,
                                     onAction: { action in
+                                        if case .reorder = action { reordering = true; return }
                                         store.data.activeWorkout?.exercises.apply(action, to: entry.id)
                                     },
                                     onSetCompleted: { seconds in store.startRest(seconds) },
@@ -145,6 +147,9 @@ struct ActiveWorkoutView: View {
                 Button("Cancelar", role: .cancel) {}
             } message: {
                 Text("Solo se guardarán las series marcadas como completadas.")
+            }
+            .sheet(isPresented: $reordering) {
+                ReorderExercisesSheet(exercises: workout.exercises).environmentObject(store)
             }
             .sheet(isPresented: $showPicker) {
                 ExercisePickerView { ids in
@@ -269,8 +274,7 @@ struct ExerciseSection: View {
                 if entry.supersetID != nil {
                     Button("Quitar de la superserie") { onAction(.leaveSuperset) }
                 }
-                Button { onAction(.moveUp) } label: { Label("Mover arriba", systemImage: "arrow.up") }
-                Button { onAction(.moveDown) } label: { Label("Mover abajo", systemImage: "arrow.down") }
+                Button { onAction(.reorder) } label: { Label("Ordenar ejercicios", systemImage: "arrow.up.arrow.down") }
                 Button(role: .destructive) { onAction(.remove) } label: {
                     Label("Quitar ejercicio", systemImage: "trash")
                 }
@@ -408,36 +412,45 @@ struct SetEditorRow: View {
     var fields: some View {
         switch kind {
         case .weightReps:
-            NumberField(previous.map { Fmt.num($0.weight) } ?? "0", value: $set.weight, deferred: true)
+            NumberField(hint.map { Fmt.num($0.weight) } ?? "0", value: $set.weight, deferred: true)
                 .frame(width: 64)
-            NumberField(previous.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false, deferred: true)
+            NumberField(hint.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 52)
         case .repsOnly:
-            NumberField(previous.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false, deferred: true)
+            NumberField(hint.map { "\($0.reps)" } ?? "0", value: $set.reps.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 64)
         case .duration:
-            NumberField(previous.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false, deferred: true)
+            NumberField(hint.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 64)
         case .distanceTime:
-            NumberField(previous.map { Fmt.num($0.distance) } ?? "0", value: $set.distance, deferred: true)
+            NumberField(hint.map { Fmt.num($0.distance) } ?? "0", value: $set.distance, deferred: true)
                 .frame(width: 56)
-            NumberField(previous.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false, deferred: true)
+            NumberField(hint.map { "\($0.seconds)" } ?? "0", value: $set.seconds.asDouble, allowsDecimal: false, deferred: true)
                 .frame(width: 60)
         }
+    }
+
+    /// Lo que se ve en gris y se acepta al marcar: lo de la última vez o, si no hay historial, el objetivo de la rutina.
+    var hint: WorkoutSet? {
+        if let p = previous { return p }
+        guard let t = set.target else { return nil }
+        var s = WorkoutSet()
+        s.weight = t.weight; s.reps = t.reps; s.seconds = t.seconds; s.distance = t.distance
+        return s
     }
 
     var previousText: String {
         guard let p = previous else { return "—" }
         switch kind {
-        case .weightReps: return "\(Fmt.num(p.weight)) \(unit) × \(p.reps)"
-        case .repsOnly: return "\(p.reps) reps"
+        case .weightReps: return "\(Fmt.num(p.weight)) \(unit) × \(p.reps)" + (p.seconds > 0 ? " · \(Fmt.clock(TimeInterval(p.seconds)))" : "")
+        case .repsOnly: return "\(p.reps) reps" + (p.seconds > 0 ? " · \(Fmt.clock(TimeInterval(p.seconds)))" : "")
         case .duration: return Fmt.clock(TimeInterval(p.seconds))
         case .distanceTime: return "\(Fmt.num(p.distance)) km · \(Fmt.clock(TimeInterval(p.seconds)))"
         }
     }
 
     func toggle() {
-        if !set.done, let p = previous {
+        if !set.done, let p = hint {
             if set.weight == 0 { set.weight = p.weight }
             if set.reps == 0 { set.reps = p.reps }
             if set.seconds == 0 { set.seconds = p.seconds }
@@ -539,8 +552,7 @@ struct RestTimerContent: View {
         .padding(.bottom, 6)
         .onChange(of: remaining <= 0) { finished in
             if finished {
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
-                withAnimation(.easeInOut(duration: 0.3)) { store.skipRest() }
+                withAnimation(.easeInOut(duration: 0.3)) { store.endRest() }
             }
         }
     }
@@ -733,5 +745,40 @@ struct RecordToast: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
         .shadow(color: .black.opacity(0.25), radius: 10, y: 4)
         .accessibilityElement(children: .combine)
+    }
+}
+
+// MARK: - Ordenar ejercicios
+
+/// Menú ⋯ → «Ordenar ejercicios»: la lista entera para arrastrar cada ejercicio a su sitio.
+struct ReorderExercisesSheet: View {
+    @EnvironmentObject var store: Store
+    @Environment(\.dismiss) var dismiss
+    @Binding var exercises: [WorkoutExercise]
+
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(exercises) { e in
+                    HStack(spacing: 10) {
+                        if let ss = e.supersetID {
+                            Circle().fill(supersetColor(ss)).frame(width: 8, height: 8)
+                        }
+                        Text(store.exerciseName(e.exerciseID))
+                        Spacer()
+                        Text("\(e.sets.count) series")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .onMove { exercises.move(fromOffsets: $0, toOffset: $1) }
+            }
+            .environment(\.editMode, .constant(.active))
+            .navigationTitle("Ordenar ejercicios")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("Listo") { dismiss() } }
+            }
+        }
     }
 }

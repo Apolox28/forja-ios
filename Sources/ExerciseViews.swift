@@ -43,6 +43,8 @@ struct ExerciseDetailView: View {
     @EnvironmentObject var store: Store
     @Environment(\.dismiss) var dismiss
     let exerciseID: UUID
+    /// Dentro de un entreno (ficha del ejercicio): solo récords, progreso e historial.
+    var inWorkout = false
     @State var metric: ChartMetric = .oneRM
     @State var editing = false
     @State var confirmDelete = false
@@ -75,7 +77,7 @@ struct ExerciseDetailView: View {
     var body: some View {
         List {
             if let ex = exercise {
-                ExerciseHowToSections(exercise: ex)
+                if !inWorkout { ExerciseHowToSections(exercise: ex) }
 
                 Section(header: Text("Récords personales")) {
                     HStack {
@@ -134,7 +136,7 @@ struct ExerciseDetailView: View {
                     }
                 }
 
-                if ex.isCustom {
+                if ex.isCustom && !inWorkout {
                     Section {
                         Button {
                             editing = true
@@ -183,8 +185,8 @@ struct ExerciseDetailView: View {
 
     func setText(_ s: WorkoutSet, kind: ExerciseKind) -> String {
         switch kind {
-        case .weightReps: return "\(Fmt.num(s.weight))×\(s.reps)"
-        case .repsOnly: return "\(s.reps)"
+        case .weightReps: return "\(Fmt.num(s.weight))×\(s.reps)" + (s.seconds > 0 ? " · \(Fmt.clock(TimeInterval(s.seconds)))" : "")
+        case .repsOnly: return "\(s.reps)" + (s.seconds > 0 ? " · \(Fmt.clock(TimeInterval(s.seconds)))" : "")
         case .duration: return Fmt.clock(TimeInterval(s.seconds))
         case .distanceTime: return "\(Fmt.num(s.distance)) km"
         }

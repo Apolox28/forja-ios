@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import UserNotifications
+import AudioToolbox
 
 final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -27,6 +28,7 @@ final class Store: ObservableObject {
     private var bestScoreCache: [UUID: RecordBests] = [:]
     @Published var showActiveWorkout = false
     @Published var restEnd: Date? = nil
+    private var restBuzz: DispatchWorkItem?
     @Published var restTotal = 0
     @Published var lastFinished: Workout? = nil
     @Published var pendingStart: PendingStart? = nil
@@ -384,6 +386,11 @@ final class Store: ObservableObject {
                 var n = s
                 n.id = UUID()
                 n.done = false
+                // Como en Hevy: los valores de la rutina quedan en gris (objetivo) y se aceptan al marcar la serie.
+                if n.weight != 0 || n.reps != 0 || n.seconds != 0 || n.distance != 0 {
+                    n.target = SetTarget(weight: n.weight, reps: n.reps, seconds: n.seconds, distance: n.distance)
+                    n.weight = 0; n.reps = 0; n.seconds = 0; n.distance = 0
+                }
                 return n
             }
             return copy
@@ -467,14 +474,36 @@ final class Store: ObservableObject {
         scheduleRestNotification()
     }
 
+    /// El usuario salta el descanso: sin vibración ni aviso.
     func skipRest() {
+        restBuzz?.cancel()
+        endRest()
+    }
+
+    /// El descanso llegó a cero: se cierra la barra y la vibración programada sigue su curso.
+    func endRest() {
         restEnd = nil
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["forja.rest"])
+    }
+
+    /// Con la app abierta (en cualquier pantalla) el móvil vibra de verdad al acabar el descanso;
+    /// en segundo plano avisa la notificación.
+    private func scheduleRestBuzz() {
+        restBuzz?.cancel()
+        guard let end = restEnd else { return }
+        let item = DispatchWorkItem {
+            guard Date().timeIntervalSince(end) < 3 else { return } // la app estuvo dormida: ya avisó la notificación
+            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) { AudioServicesPlaySystemSound(kSystemSoundID_Vibrate) }
+        }
+        restBuzz = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + max(0, end.timeIntervalSinceNow), execute: item)
     }
 
     func scheduleRestNotification() {
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: ["forja.rest"])
+        scheduleRestBuzz()
         guard let end = restEnd else { return }
         let interval = end.timeIntervalSinceNow
         guard interval > 1 else { return }

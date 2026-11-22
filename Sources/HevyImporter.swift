@@ -587,7 +587,11 @@ enum HevyImporter {
             guard let exerciseID = exID, current != nil else { continue }
 
             if exTitle != lastExerciseTitle || current!.exercises.isEmpty {
-                var entry = WorkoutExercise(exerciseID: exerciseID, restSeconds: data.settings.defaultRest)
+                // El CSV de Hevy no trae el descanso: se usa el que el usuario fijó para ese ejercicio o el sugerido por su tipo.
+                let remembered = (UserDefaults.standard.dictionary(forKey: "restByExercise") as? [String: Int])?[exerciseID.uuidString]
+                let autoRest = UserDefaults.standard.object(forKey: "autoRest") as? Bool ?? true
+                let rest = remembered ?? (autoRest ? data.exercises.first(where: { $0.id == exerciseID }).map { ExerciseFocus.suggestedRest(for: $0) } : nil) ?? data.settings.defaultRest
+                var entry = WorkoutExercise(exerciseID: exerciseID, restSeconds: rest)
                 entry.notes = value(row, cExNotes)
                 let ss = value(row, cSuperset)
                 if !ss.isEmpty {

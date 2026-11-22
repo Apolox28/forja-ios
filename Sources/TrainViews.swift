@@ -175,6 +175,7 @@ struct RoutineEditorView: View {
     @State var routine: Routine
     let isNew: Bool
     @State var showPicker = false
+    @State var reordering = false
 
     init(routine: Routine, isNew: Bool) {
         _routine = State(initialValue: routine)
@@ -208,7 +209,9 @@ struct RoutineEditorView: View {
                     ExerciseSection(entry: $entry,
                                     isActive: false,
                                     siblings: routine.exercises,
-                                    onAction: { action in routine.exercises.apply(action, to: entry.id) })
+                                    onAction: { action in
+                                        if case .reorder = action { reordering = true } else { routine.exercises.apply(action, to: entry.id) }
+                                    })
                 }
                 RedundancyNote(exerciseIDs: routine.exercises.map { $0.exerciseID })
                 Section {
@@ -235,6 +238,9 @@ struct RoutineEditorView: View {
                     Spacer()
                     Button("Listo") { hideKeyboard() }
                 }
+            }
+            .sheet(isPresented: $reordering) {
+                ReorderExercisesSheet(exercises: $routine.exercises).environmentObject(store)
             }
             .sheet(isPresented: $showPicker) {
                 ExercisePickerView { ids in

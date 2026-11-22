@@ -114,6 +114,8 @@ struct WorkoutSet: Identifiable, Codable, Hashable {
     var distance: Double = 0
     var rpe: Double = 0
     var done = false
+    /// Valores que traía la rutina: se muestran en gris (si no hay historial) y se aceptan al marcar la serie.
+    var target: SetTarget? = nil
 
     var volume: Double {
         type == .warmup ? 0 : weight * Double(reps)
@@ -124,6 +126,13 @@ struct WorkoutSet: Identifiable, Codable, Hashable {
         guard weight > 0, reps > 0, type != .warmup else { return 0 }
         return reps == 1 ? weight : weight * (1 + Double(reps) / 30)
     }
+}
+
+struct SetTarget: Codable, Hashable {
+    var weight: Double = 0
+    var reps: Int = 0
+    var seconds: Int = 0
+    var distance: Double = 0
 }
 
 struct WorkoutExercise: Identifiable, Codable, Hashable {
@@ -151,8 +160,8 @@ struct Routine: Identifiable, Codable, Hashable {
 
 enum ExerciseAction {
     case remove
-    case moveUp
-    case moveDown
+    /// Abre la hoja para ordenar los ejercicios arrastrándolos (la gestiona la vista que tiene la lista).
+    case reorder
     case supersetWith(UUID)
     case leaveSuperset
 }
@@ -163,10 +172,8 @@ extension Array where Element == WorkoutExercise {
         switch action {
         case .remove:
             remove(at: i)
-        case .moveUp:
-            if i > 0 { swapAt(i, i - 1) }
-        case .moveDown:
-            if i < count - 1 { swapAt(i, i + 1) }
+        case .reorder:
+            break
         case .supersetWith(let other):
             guard let j = firstIndex(where: { $0.id == other }) else { return }
             let group = self[j].supersetID ?? self[i].supersetID ?? Int.random(in: 1...1_000_000)
