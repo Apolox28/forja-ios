@@ -55,3 +55,31 @@ Lo actualizo al terminar cada paso.
 - Miniaturas: `Resources/thumbs`.
 - Historial: `git log --oneline -- Resources/forja3d.js`.
 - Pendientes de revisar: `tools/anim/REVISAR-DESPUES.md`.
+
+## Ejercicios nuevos (desde el 22-11)
+
+- **Lote 13** (15) y **lote 14** (9): 24 ejercicios nuevos con animación. La biblioteca pasa de 457 a 481.
+- **Dónde se añaden:** las fichas van en `Resources/hevy_extra.json` (nombre, nombre en inglés, músculo, equipo, tipo, patrón, pasos y consejo); `map_bN.json` asigna cada nombre a su animación.
+- **Cómo trabajar:**
+  - Copia de trabajo de `main` en `../Forja-main`. La carpeta Forja-iOS es de otra sesión (rama `mejoras-entreno`): no tocarla.
+  - Herramientas en el scratchpad, con dos scripts nuevos:
+    - `node add_extras.js new_bN.json map_bN.json`: añade las fichas sin duplicar y escribe el mapa.
+    - `node newlist.js new_bN.json`: saca la lista «clave:equipo» para las pruebas.
+  - `sheet.sh` y las miniaturas lanzan Edge desde PowerShell; desde Git Bash no arranca.
+- **Ojo:** `gw` es la distancia de cada mano al centro, no el ancho total del agarre.
+- **Siguientes candidatos:**
+  - remo Kroc;
+  - peso muerto con déficit y con pausa;
+  - press Bradford y press cubano;
+  - elevación lateral inclinada;
+  - curl de concentración en polea;
+  - pronación y supinación de muñeca;
+  - agarre de discos;
+  - sentadilla con barra de seguridad;
+  - zancada con déficit;
+  - subida lateral al cajón;
+  - gemelos sentado con mancuerna;
+  - hip thrust con banda;
+  - plancha Copenhague;
+  - escaladores cruzados;
+  - rotación externa tumbado.
